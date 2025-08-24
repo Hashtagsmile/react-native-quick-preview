@@ -70,12 +70,12 @@
 
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/react-native-quicklook.git"
+    "url": "https://github.com/Hashtagsmile/react-native-quicklook.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/react-native-quicklook/issues"
+    "url": "https://github.com/Hashtagsmile/react-native-quicklook/issues"
   },
-  "homepage": "https://github.com/yourusername/react-native-quicklook#readme",
+  "homepage": "https://github.com/Hashtagsmile/react-native-quicklook#readme",
   "publishConfig": { "access": "public" },
   "engines": { "node": ">=16" }
 }
