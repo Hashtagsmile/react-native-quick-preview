@@ -5,7 +5,7 @@ export type ThemeMode = 'light' | 'dark';
 export type CloseReason = 'programmatic' | 'backdrop' | 'backButton' | 'swipe';
 
 
-export interface QuickLookProps {
+export interface QuickPreviewProps {
   visible: boolean;
   onClose: () => void;
 
@@ -13,8 +13,6 @@ export interface QuickLookProps {
    onOpen?: () => void;                     // fires when animating in
    onClosed?: (reason: CloseReason) => void; // fires after fully closed
  
-   /** Optional: press whole card (prefer explicit CTAs as well) */
-   onPressCard?: () => void;
 
   theme?: ThemeMode;
   backdropOpacity?: number;    // default 0.5 light / 0.8 dark

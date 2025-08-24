@@ -2,36 +2,36 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { QuickLook } from '../../../../packages/react-native-quick-preview/dist';
-import { travelDestinations, ExampleItem } from '../../data/exampleData';
+import { QuickPreview } from 'react-native-quick-preview';
+import { destinations, Item } from '../../data/examples';
 
 export const TravelExample: React.FC = () => {
   const router = useRouter();
-  const [selectedDestination, setSelectedDestination] = useState<ExampleItem | null>(null);
+  const [selectedDestination, setSelectedDestination] = useState<Item | null>(null);
   const [visible, setVisible] = useState(false);
 
-  const openQuickLook = (destination: ExampleItem) => {
+  const openQuickPreview = (destination: Item) => {
     console.log('Long press detected for destination:', destination.id);
     setSelectedDestination(destination);
     setVisible(true);
   };
 
-  const closeQuickLook = () => {
+  const closeQuickPreview = () => {
     setVisible(false);
     setSelectedDestination(null);
   };
 
-  const handleBookTrip = (destination: ExampleItem) => {
+  const handleBookTrip = (destination: Item) => {
     console.log(`Booking trip to ${destination.id}`);
-    closeQuickLook();
+    closeQuickPreview();
     router.push(`/detail?id=${destination.id}`);
   };
 
-  const handleAddToWishlist = (destination: ExampleItem) => {
+  const handleAddToWishlist = (destination: Item) => {
     console.log(`Added ${destination.id} to wishlist`);
   };
 
-  const handleShareDestination = (destination: ExampleItem) => {
+  const handleShareDestination = (destination: Item) => {
     console.log(`Sharing destination ${destination.id}`);
   };
 
@@ -43,15 +43,15 @@ export const TravelExample: React.FC = () => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollView}>
-        {travelDestinations.map((destination) => (
+        {destinations.map((destination) => (
           <TouchableOpacity
             key={destination.id}
             style={styles.destinationCard}
-            onLongPress={() => openQuickLook(destination)}
+            onLongPress={() => openQuickPreview(destination)}
             delayLongPress={500}
           >
-            {destination.images?.[0] ? (
-              <Image source={{ uri: destination.images[0] }} style={styles.destinationImage} />
+            {destination.image ? (
+              <Image source={{ uri: destination.image }} style={styles.destinationImage} />
             ) : (
               <View style={[styles.destinationImage, styles.imageFallback]}>
                 <Ionicons name="image" size={18} color="#999" />
@@ -67,8 +67,8 @@ export const TravelExample: React.FC = () => {
               <View style={styles.destinationMeta}>
                 <View style={styles.ratingContainer}>
                   <Ionicons name="star" size={12} color="#ffbb33" />
-                  <Text style={styles.ratingText}>{formatRating(destination.rating)}</Text>
-                  <Text style={styles.reviewsText}>({destination.reviews ?? 0})</Text>
+                    <Text style={styles.ratingText}>{formatRating(destination.likes)}</Text>
+                  <Text style={styles.reviewsText}>({destination.views ?? 0})</Text>
                 </View>
                 {!!destination.price && (
                   <Text style={styles.priceText}>From {formatPrice(destination.price)}</Text>
@@ -85,83 +85,82 @@ export const TravelExample: React.FC = () => {
       </ScrollView>
 
       {selectedDestination && (
-        <QuickLook
+        <QuickPreview
           visible={visible}
-          onClose={closeQuickLook}
-          onPressCard={() => handleBookTrip(selectedDestination)}
+          onClose={closeQuickPreview}
           enableSwipeToClose
           closeOnBackdropPress
-          testID="ql-destination"
-          accessibilityLabel="Destination quick look"
+          testID="qp-destination"
+          accessibilityLabel="Destination quick preview"
         >
-          <View style={styles.quickLookContent}>
-            {selectedDestination.images?.[0] && (
-              <Image source={{ uri: selectedDestination.images[0] }} style={styles.quickLookImage} />
+          <View style={styles.quickPreviewContent}>
+            {selectedDestination.image && (
+              <Image source={{ uri: selectedDestination.image }} style={styles.quickPreviewImage} />
             )}
 
-            <View style={styles.quickLookInfo}>
-              <Text style={styles.quickLookTitle}>{selectedDestination.title}</Text>
+            <View style={styles.quickPreviewInfo}>
+              <Text style={styles.quickPreviewTitle}>{selectedDestination.title}</Text>
               {!!selectedDestination.subtitle && (
-                <Text style={styles.quickLookSubtitle} numberOfLines={2}>
+                <Text style={styles.quickPreviewSubtitle} numberOfLines={2}>
                   {selectedDestination.subtitle}
                 </Text>
               )}
               {!!selectedDestination.description && (
-                <Text style={styles.quickLookDescription} numberOfLines={4}>
+                <Text style={styles.quickPreviewDescription} numberOfLines={4}>
                   {selectedDestination.description}
                 </Text>
               )}
 
-              <View style={styles.quickLookMeta}>
-                <View style={styles.quickLookRating}>
+              <View style={styles.quickPreviewMeta}>
+                <View style={styles.quickPreviewRating}>
                   <Ionicons name="star" size={16} color="#ffbb33" />
-                  <Text style={styles.quickLookRatingText}>
-                    {formatRating(selectedDestination.rating)} ({selectedDestination.reviews ?? 0} reviews)
+                  <Text style={styles.quickPreviewRatingText}>
+                    {formatRating(selectedDestination.likes)} ({selectedDestination.views ?? 0} views)
                   </Text>
                 </View>
                 {!!selectedDestination.price && (
-                  <Text style={styles.quickLookPrice}>From {formatPrice(selectedDestination.price)}</Text>
+                  <Text style={styles.quickPreviewPrice}>From {formatPrice(selectedDestination.price)}</Text>
                 )}
               </View>
 
               {!!selectedDestination.tags?.length && (
-                <View style={styles.quickLookTags}>
-                  {selectedDestination.tags.slice(0, 3).map((tag, idx) => (
-                    <View key={`${tag}-${idx}`} style={styles.quickLookTag}>
-                      <Text style={styles.quickLookTagText}>#{tag}</Text>
+                <View style={styles.quickPreviewTags}>
+                  {selectedDestination.tags?.slice(0, 3).map((tag: string, idx: number) => (
+                    <View key={`${tag}-${idx}`} style={styles.quickPreviewTag}>
+                      <Text style={styles.quickPreviewTagText}>#{tag}</Text>
                     </View>
                   ))}
                 </View>
               )}
             </View>
 
-            <View style={styles.quickLookActions}>
+            <View style={styles.quickPreviewActions}>
               <TouchableOpacity
-                style={styles.quickLookActionButton}
+                style={styles.quickPreviewActionButton}
                 onPress={() => handleBookTrip(selectedDestination)}
               >
                 <Ionicons name="airplane-outline" size={20} color="#0095f6" />
-                <Text style={styles.quickLookActionText}>Book Trip</Text>
+                <Text style={styles.quickPreviewActionText}>Book Trip</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.quickLookActionButton}
+                style={styles.quickPreviewActionButton}
                 onPress={() => handleAddToWishlist(selectedDestination)}
               >
                 <Ionicons name="heart-outline" size={20} color="#ff4444" />
-                <Text style={styles.quickLookActionText}>Wishlist</Text>
+                <Text style={styles.quickPreviewActionText}>Wishlist</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.quickLookActionButton}
+                style={styles.quickPreviewActionButton}
                 onPress={() => handleShareDestination(selectedDestination)}
               >
                 <Ionicons name="share-outline" size={20} color="#00c851" />
-                <Text style={styles.quickLookActionText}>Share</Text>
+                <Text style={styles.quickPreviewActionText}>Share</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </QuickLook>
+        </QuickPreview>
       )}
     </View>
   );
@@ -207,48 +206,48 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    flexDirection: 'row',
+    flexDirection: 'row', 
     alignItems: 'center',
     gap: 4,
   },
   hintText: { fontSize: 10, color: '#fff', fontWeight: '500' },
   
-  // QuickLook styles
-  quickLookContent: { backgroundColor: '#fff' },
-  quickLookImage: { width: '100%', aspectRatio: 16 / 9, resizeMode: 'cover' },
-  quickLookInfo: { padding: 16 },
-  quickLookTitle: { fontSize: 22, fontWeight: '700', marginBottom: 8 },
-  quickLookSubtitle: { fontSize: 16, color: '#666', marginBottom: 12 },
-  quickLookDescription: { fontSize: 14, color: '#666', marginBottom: 12 },
-  quickLookMeta: {
+  // QuickPreview styles
+  quickPreviewContent: { backgroundColor: '#fff' },
+  quickPreviewImage: { width: '100%', aspectRatio: 16 / 9, resizeMode: 'cover' },
+  quickPreviewInfo: { padding: 16 },
+  quickPreviewTitle: { fontSize: 22, fontWeight: '700', marginBottom: 8 },
+  quickPreviewSubtitle: { fontSize: 16, color: '#666', marginBottom: 12 },
+  quickPreviewDescription: { fontSize: 14, color: '#666', marginBottom: 12 },
+  quickPreviewMeta: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
   },
-  quickLookRating: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  quickLookRatingText: { fontSize: 14, color: '#212529' },
-  quickLookPrice: { fontSize: 18, fontWeight: '800', color: '#0095f6' },
+    quickPreviewRating: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  quickPreviewRatingText: { fontSize: 14, color: '#212529' },
+  quickPreviewPrice: { fontSize: 18, fontWeight: '800', color: '#0095f6' },
   
   // Tags
-  quickLookTags: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  quickLookTag: {
+  quickPreviewTags: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  quickPreviewTag: {
     backgroundColor: '#f8f9fa',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
   },
-  quickLookTagText: { fontSize: 12, color: '#6c757d' },
+  quickPreviewTagText: { fontSize: 12, color: '#6c757d' },
   
   // Actions
-  quickLookActions: {
+  quickPreviewActions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 16,
     borderTopWidth: 1,
     borderTopColor: '#eee',
   },
-  quickLookActionButton: {
+  quickPreviewActionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
@@ -256,5 +255,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#f8f9fa',
   },
-  quickLookActionText: { fontSize: 12, fontWeight: '600' },
+  quickPreviewActionText: { fontSize: 12, fontWeight: '600' },
 });
