@@ -27,21 +27,8 @@ A monorepo containing the **`react-native-quick-preview`** library and an **Expo
 
 
 <p align="center">
-  <!-- MP4 looks best on GitHub -->
-  <video src="./demo.mp4" width="420" autoplay loop muted playsinline></video>
-</p>
-
-<!-- Fallbacks (npm etc.) -->
-<p align="center">
-  <!-- Clickable poster that opens the MP4 -->
-  <a href="./demo.mp4">
-    <img src="./docs/demo-poster.jpg" alt="QuickLook demo" width="420" />
-  </a>
-</p>
-
-<p align="center">
   <!-- Or a plain GIF fallback -->
-  <p> Could not load mp4 video </p>
+  <img src="./demogif.gif" alt="QuickLook demo (GIF)" width="420" />
 </p>
 
 
