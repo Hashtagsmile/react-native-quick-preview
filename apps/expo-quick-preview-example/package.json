@@ -1,6 +1,6 @@
 {
   "name": "expo-quick-preview-example",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "main": "expo-router/entry",
 
