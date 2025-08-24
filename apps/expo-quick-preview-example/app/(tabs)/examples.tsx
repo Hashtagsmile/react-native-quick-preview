@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';
 
 import type { Item } from '../../data/examples';
 import {
@@ -46,7 +46,7 @@ export default function ExamplesScreen() {
   const openWithHaptics = async (x: Item) => {
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {}
+    } catch { }
     open(x);
   };
   const close = () => setVisible(false);
@@ -159,13 +159,13 @@ export default function ExamplesScreen() {
           </QuickLookContentWrapper>
         );
 
-        case 'track':
-          return (
-            <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
-              {/* Cover art */}
-              {!!x.image && <Image source={{ uri: x.image }} style={styles.spotifyArt} />}
-        
-        <View style={styles.spotifyContent}>  
+      case 'track':
+        return (
+          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
+            {/* Cover art */}
+            {!!x.image && <Image source={{ uri: x.image }} style={styles.spotifyArt} />}
+
+            <View style={styles.spotifyContent}>
               {/* Title / artist */}
               <View style={styles.spotifyMeta}>
                 <Text style={styles.spotifyTitle} numberOfLines={1}>{x.title}</Text>
@@ -175,7 +175,7 @@ export default function ExamplesScreen() {
                   </Text>
                 )}
               </View>
-        
+
               {/* Progress bar (static demo fill width) */}
               <View style={styles.spotifyProgressWrap}>
                 <View style={styles.spotifyProgressTrack}>
@@ -186,18 +186,18 @@ export default function ExamplesScreen() {
                   <Text style={styles.spotifyTime}>{x.duration ?? '3:30'}</Text>
                 </View>
               </View>
-        
+
               {/* Controls */}
               <View style={styles.spotifyControls}>
                 <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('Like')}>
                   <Ionicons name="heart-outline" size={20} color="#fff" />
                 </TouchableOpacity>
-        
+
                 <View style={styles.transport}>
                   <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('Prev')}>
                     <Ionicons name="play-skip-back" size={24} color="#fff" />
                   </TouchableOpacity>
-        
+
                   <TouchableOpacity
                     style={styles.playBtn}
                     onPress={() => console.log('Play preview')}
@@ -205,20 +205,20 @@ export default function ExamplesScreen() {
                   >
                     <Ionicons name="play" size={28} color="#000" />
                   </TouchableOpacity>
-        
+
                   <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('Next')}>
                     <Ionicons name="play-skip-forward" size={24} color="#fff" />
                   </TouchableOpacity>
                 </View>
-        
+
                 <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('More')}>
                   <Ionicons name="ellipsis-horizontal" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
-              </View>
-            </QuickLookContentWrapper>
-          );
-        
+            </View>
+          </QuickLookContentWrapper>
+        );
+
 
       case 'profile':
       default:
@@ -494,7 +494,7 @@ export default function ExamplesScreen() {
         {renderMusicRow()}
         {renderProfilesRow()}
 
-        <QuickLook
+        <QuickPreview
           visible={visible}
           onClose={close}
           enableSwipeToClose
@@ -503,7 +503,7 @@ export default function ExamplesScreen() {
           accessibilityLabel="Quick look preview"
         >
           {!!item && renderQuickLook(item)}
-        </QuickLook>
+        </QuickPreview>
       </ScrollView>
     </SafeAreaView>
   );
@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
   qlDesc: { fontSize: 14, color: '#555', marginTop: 10, lineHeight: 20 },
   qlViewChip: { position: 'absolute', right: 12, bottom: 12, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 12, paddingHorizontal: 8, paddingVertical: 4, flexDirection: 'row', alignItems: 'center' },
   qlViewChipText: { color: '#fff', fontSize: 11, marginLeft: 4 },
-  headerRow: { flexDirection: 'row', alignItems: 'center',  padding: 12 },
+  headerRow: { flexDirection: 'row', alignItems: 'center', padding: 12 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   rowCenter: { flexDirection: 'row', alignItems: 'center' },
   avatar: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#eee', marginRight: 8 },
@@ -631,75 +631,75 @@ const styles = StyleSheet.create({
   btnGhostText: { color: '#212529', fontWeight: '700' },
 
   // Spotify-like (dark) track preview
-spotifyArt: {
-  width: '100%',
-  aspectRatio: 1,
-  resizeMode: 'cover',
-  backgroundColor: '#222',
-  // small rounded corners to match Spotify feel
-  borderBottomLeftRadius: 8,
-  borderBottomRightRadius: 8,
-},
+  spotifyArt: {
+    width: '100%',
+    aspectRatio: 1,
+    resizeMode: 'cover',
+    backgroundColor: '#222',
+    // small rounded corners to match Spotify feel
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
 
-spotifyMeta: {
-  paddingHorizontal: 16,
-  paddingTop: 14,
-},
-spotifyTitle: { fontSize: 18, fontWeight: '800', color: '#fff' },
-spotifyArtist: { fontSize: 13, color: '#b3b3b3', marginTop: 4 },
+  spotifyMeta: {
+    paddingHorizontal: 16,
+    paddingTop: 14,
+  },
+  spotifyTitle: { fontSize: 18, fontWeight: '800', color: '#fff' },
+  spotifyArtist: { fontSize: 13, color: '#b3b3b3', marginTop: 4 },
 
-spotifyProgressWrap: {
-  paddingHorizontal: 16,
-  paddingTop: 10,
-},
-spotifyProgressTrack: {
-  height: 3,
-  borderRadius: 3,
-  backgroundColor: '#2a2a2a',
-  overflow: 'hidden',
-},
-spotifyProgressFill: {
-  height: '100%',
-  backgroundColor: '#1DB954', // Spotify green
-},
-spotifyTimes: {
-  marginTop: 6,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-},
-spotifyTime: { fontSize: 11, color: '#7a7a7a' },
+  spotifyProgressWrap: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
+  spotifyProgressTrack: {
+    height: 3,
+    borderRadius: 3,
+    backgroundColor: '#2a2a2a',
+    overflow: 'hidden',
+  },
+  spotifyProgressFill: {
+    height: '100%',
+    backgroundColor: '#1DB954', // Spotify green
+  },
+  spotifyTimes: {
+    marginTop: 6,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  spotifyTime: { fontSize: 11, color: '#7a7a7a' },
 
-spotifyControls: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingHorizontal: 10,
-  paddingVertical: 12,
-  borderTopWidth: StyleSheet.hairlineWidth,
-  borderTopColor: '#1f1f1f',
-},
-spotifyContent: {
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,0.60)',
+  spotifyControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#1f1f1f',
+  },
+  spotifyContent: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.60)',
 
-},
-transport: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 18,
-},
-ctrlBtn: {
-  padding: 8,
-},
-playBtn: {
-  width: 56,
-  height: 56,
-  borderRadius: 28,
-  backgroundColor: '#1DB954',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
+  },
+  transport: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 18,
+  },
+  ctrlBtn: {
+    padding: 8,
+  },
+  playBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#1DB954',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

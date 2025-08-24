@@ -11,7 +11,7 @@ export default function RootLayout() {
           name="(tabs)" 
           options={{ 
             headerShown: false,
-            title: 'QuickLook Showcase'
+            title: 'QuickPreview Showcase' 
           }} 
         />
         <Stack.Screen 

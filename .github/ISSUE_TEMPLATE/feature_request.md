@@ -38,19 +38,19 @@ If applicable, provide a code example of how you'd like to use this feature:
 
 ```tsx
 import React, { useState } from 'react';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <QuickLook
+    <QuickLQuickPreview>
       visible={visible}
       onClose={() => setVisible(false)}
       // New prop or feature here
     >
       {/* Your content */}
-    </QuickLook>
+    </QuickPreview>
   );
 }
 ```

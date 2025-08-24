@@ -1,4 +1,4 @@
-# react-native-quicklook
+# react-native-quick-preview
 
 A beautiful, customizable quick preview modal component for React Native.  
 Think **Gorhom Bottom Sheet**, but for quick previews.
@@ -27,9 +27,9 @@ Perfect for:
 ## 📦 Installation
 
 ```bash
-npm install react-native-quicklook
+npm install react-native-quick-preview
 # or
-yarn add react-native-quicklook
+yarn add react-native-quick-preview
 ```
 
 ---
@@ -39,7 +39,7 @@ yarn add react-native-quicklook
 ```tsx
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';   
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -50,12 +50,12 @@ export default function App() {
         <Text>Show Quick Look</Text>
       </TouchableOpacity>
 
-      <QuickLook visible={visible} onClose={() => setVisible(false)}>
+      <QuickPreview visible={visible} onClose={() => setVisible(false)}>
         <View style={{ backgroundColor: '#fff', padding: 20 }}>
           <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Quick Preview Content</Text>
           <Text style={{ marginTop: 10 }}>Any custom content goes here.</Text>
         </View>
-      </QuickLook>
+      </QuickPreview>
     </View>
   );
 }
@@ -67,33 +67,33 @@ export default function App() {
 
 ### 🛍️ E-commerce Product Quick View
 ```tsx
-<QuickLook visible={visible} onClose={onClose} onPressCard={onViewDetails}>
+<QuickPreview visible={visible} onClose={onClose} onPressCard={onViewDetails}>
   <View>
     <Image source={{ uri: product.image }} style={{ width: '100%', height: 200 }} />
     <Text>{product.name}</Text>
     <Text>{product.price}</Text>
   </View>
-</QuickLook>
+</QuickPreview>
 ```
 
 ### 📰 Article Preview
 ```tsx
-<QuickLook visible={visible} onClose={onClose} theme="dark">
+<QuickPreview visible={visible} onClose={onClose} theme="dark">
   <View style={{ backgroundColor: '#1a1a1a' }}>
     <Image source={{ uri: article.coverImage }} style={{ width: '100%', height: 200 }} />
     <Text style={{ color: '#fff' }}>{article.title}</Text>
     <Text style={{ color: '#ccc' }}>{article.excerpt}</Text>
   </View>
-</QuickLook>
+</QuickPreview>
 ```
 
 ### ✈️ Travel Destination Peek
 ```tsx
-<QuickLook visible={visible} onClose={onClose}>
+<QuickPreview visible={visible} onClose={onClose}>
   <Image source={{ uri: destination.image }} style={{ width: '100%', height: 200 }} />
   <Text>{destination.title}</Text>
   <Text>From ${destination.price}</Text>
-</QuickLook>
+</QuickPreview>
 ```
 
 ---
@@ -119,7 +119,7 @@ export default function App() {
 | `avoidKeyboard` | `boolean` | `false` | Avoid keyboard overlap |
 | `renderBackdrop` | `(opacity) => ReactNode` | `undefined` | Custom backdrop |
 | `onBackdropPress` | `() => void` | `undefined` | Backdrop press handler |
-| `testID` | `string` | `'quicklook'` | Test identifier |
+| `testID` | `string` | `'quickpreview'` | Test identifier |
 | `accessibilityLabel` | `string` | `'Quick look'` | A11y label |
 | `stylesOverride` | `object` | `{}` | Override default styles |
 
@@ -129,7 +129,7 @@ export default function App() {
 
 ### Custom Backdrop
 ```tsx
-<QuickLook
+<QuickPreview
   visible={visible}
   onClose={onClose}
   renderBackdrop={(opacity) => (
@@ -137,12 +137,12 @@ export default function App() {
   )}
 >
   {/* content */}
-</QuickLook>
+</QuickPreview>
 ```
 
 ### Custom Styles
 ```tsx
-<QuickLook
+<QuickPreview
   visible={visible}
   onClose={onClose}
   stylesOverride={{
@@ -151,7 +151,7 @@ export default function App() {
   }}
 >
   {/* content */}
-</QuickLook>
+</QuickPreview>
 ```
 
 ---
@@ -161,12 +161,12 @@ export default function App() {
 ```tsx
 import { render, fireEvent } from '@testing-library/react-native';
 
-test('QuickLook closes on backdrop press', () => {
+test('QuickPreview closes on backdrop press', () => {
   const onClose = jest.fn();
   const { getByTestId } = render(
-    <QuickLook visible={true} onClose={onClose} testID="quicklook">
+    <QuickPreview visible={true} onClose={onClose} testID="quickpreview">
       <Text>Test content</Text>
-    </QuickLook>
+    </QuickPreview>
   );
 
   fireEvent.press(getByTestId('ql-backdrop'));
@@ -185,4 +185,4 @@ test('QuickLook closes on backdrop press', () => {
 
 ## 📄 License
 
-MIT © Your Name
+MIT © Oliver Lindblad

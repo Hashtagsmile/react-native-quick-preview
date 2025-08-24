@@ -1,4 +1,4 @@
-// src/QuickLook.tsx
+// src/QuickPreview.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
@@ -12,7 +12,7 @@ import {
   Keyboard,
 } from 'react-native';
 import type { AccessibilityRole } from 'react-native';
-import type { CloseReason, QuickLookProps, ThemeMode } from './QuickLookProperties';
+import type { CloseReason, QuickPreviewProps, ThemeMode } from './QuickPreviewProperties';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -22,7 +22,7 @@ const dialogA11yRole = 'dialog' as unknown as AccessibilityRole;
 const overlayColor = (theme: ThemeMode, custom?: number) =>
   `rgba(0,0,0,${custom ?? (theme === 'dark' ? 0.8 : 0.5)})`;
 
-export const QuickLook: React.FC<QuickLookProps> = ({
+export const QuickPreview: React.FC<QuickPreviewProps> = ({
   visible,
   onClose,
   onOpen,
@@ -39,8 +39,8 @@ export const QuickLook: React.FC<QuickLookProps> = ({
   children,
   renderBackdrop,
   onBackdropPress,
-  testID = 'quicklook',
-  accessibilityLabel = 'Quick look',
+  testID = 'quickpreview',
+  accessibilityLabel = 'Quick preview',
   stylesOverride = {},
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -164,8 +164,8 @@ export const QuickLook: React.FC<QuickLookProps> = ({
             style={StyleSheet.absoluteFill}
             android_disableSound
             accessibilityRole="button"
-            accessibilityLabel="Close quick look"
-            testID="ql-backdrop"
+            accessibilityLabel="Close quick preview"
+            testID="qp-backdrop"
           />
         )}
 

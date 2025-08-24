@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';  
 // Optional: if you want haptics on long-press (requires expo-haptics installed)
 import * as Haptics from 'expo-haptics';
 
@@ -8,9 +8,9 @@ export default function HomeScreen() {
   const [visible, setVisible] = useState(false);
 
   const testItem = {
-    title: 'QuickLook Demo',
+    title: 'QuickPreview Demo',
     description:
-      'This is a minimal preview showing how to render any custom content inside the QuickLook card.',
+      'This is a minimal preview showing how to render any custom content inside the QuickPreview card.',
     image:
       'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=80&auto=format&fit=crop',
     price: 99.99,
@@ -38,10 +38,10 @@ export default function HomeScreen() {
         delayLongPress={450}
         activeOpacity={0.9}
       >
-        <Text style={styles.ctaText}>Long-press to QuickLook</Text>
+        <Text style={styles.ctaText}>Long-press to QuickPreview</Text>
       </TouchableOpacity>
 
-      <QuickLook
+      <QuickPreview
         visible={visible}
         onClose={() => setVisible(false)}
         enableSwipeToClose
@@ -76,7 +76,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </QuickLook>
+      </QuickPreview>
     </View>
   );
 }

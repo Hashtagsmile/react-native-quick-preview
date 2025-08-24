@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickLook } from '../../../../packages/react-native-quick-preview/dist';
 import { newsArticles, ExampleItem } from '../../data/exampleData';
 
 export const ArticleExample: React.FC = () => {

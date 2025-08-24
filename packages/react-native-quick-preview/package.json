@@ -1,6 +1,6 @@
 {
-  "name": "react-native-quicklook",
-  "version": "1.0.0",
+  "name": "react-native-quick-preview",
+  "version": "1.0.5",   
   "description": "A beautiful, customizable quick preview modal component for React Native",
   "author": "Oliver Lindblad",
   "license": "MIT",
@@ -13,9 +13,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "react-native": "./dist/index.js",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
-      "react-native": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -30,14 +30,31 @@
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "clean": "rimraf dist",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "rimraf dist && tsup"
   },
 
   "keywords": [
     "react-native",
     "modal",
     "preview",
-    "quicklook",
+    "quickpreview",  
+    "quick-preview",
+    "quick-view",
+    "quick-view-modal",
+    "quick-view-dialog",
+    "quick-view-sheet",
+    "quick-view-popover",
+    "quick-view-drawer",
+    "quick-view-modal",
+    "quick-view-dialog",
+    "quick-view-sheet",
+    "quick-view-popover",
+    "quick-view-drawer",
+    "quick-view-modal",
+    "quick-view-dialog",
+    "quick-view-sheet",
+    "quick-view-popover",
+    "quick-view-drawer",  
     "expo",
     "typescript",
     "ui",
@@ -70,12 +87,12 @@
 
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hashtagsmile/react-native-quicklook.git"
+    "url": "https://github.com/Hashtagsmile/react-native-quick-preview.git" 
   },
   "bugs": {
-    "url": "https://github.com/Hashtagsmile/react-native-quicklook/issues"
+    "url": "https://github.com/Hashtagsmile/react-native-quick-preview/issues"
   },
-  "homepage": "https://github.com/Hashtagsmile/react-native-quicklook#readme",
+  "homepage": "https://github.com/Hashtagsmile/react-native-quick-preview#readme",
   "publishConfig": { "access": "public" },
   "engines": { "node": ">=16" }
 }

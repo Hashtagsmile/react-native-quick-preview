@@ -1,5 +1,5 @@
 {
-  "name": "expo-quicklook-example",
+  "name": "expo-quick-preview-example",
   "private": true,
   "version": "1.0.0",
   "main": "expo-router/entry",
@@ -21,7 +21,7 @@
     "react-native": "0.79.5",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "react-native-quicklook": "file:../../packages/react-native-quicklook"
+    "react-native-quick-preview": "file:../../packages/react-native-quick-preview"
   },
 
   "devDependencies": {

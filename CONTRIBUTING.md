@@ -1,6 +1,6 @@
-# Contributing to React Native QuickLook
+# Contributing to React Native QuickPreview
 
-Thank you for your interest in contributing to React Native QuickLook! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to React Native QuickPreview! This document provides guidelines and information for contributors.
 
 ## 🎯 How to Contribute
 
@@ -41,7 +41,7 @@ We welcome feature requests! When suggesting features:
 
 #### Development Workflow
 
-1. **Make your changes** in the library (`packages/react-native-quicklook/src/`)
+1. **Make your changes** in the library (`packages/react-native-quick-preview/src/`)
 2. **Test thoroughly** with the example app
 3. **Update documentation** if needed
 4. **Add tests** for new features
@@ -72,8 +72,8 @@ Use conventional commit format:
 ```
 type(scope): description
 
-feat(quicklook): add swipe-to-close gesture
-fix(types): correct QuickLookProps interface
+feat(QuickPreview): add swipe-to-close gesture
+fix(types): correct QuickPreviewProps interface
 docs(readme): update installation instructions
 ```
 
@@ -95,10 +95,10 @@ Choose the appropriate version bump:
 ## 🏗️ Project Structure
 
 ```
-packages/react-native-quicklook/
+packages/react-native-quick-preview/
 ├── src/
-│   ├── QuickLook.tsx              # Main component
-│   ├── QuickLookProperties.ts     # TypeScript interfaces
+│   ├── QuickPreview.tsx              # Main component
+│   ├── QuickPreviewProperties.ts     # TypeScript interfaces
 │   └── index.ts                   # Public exports
 ├── dist/                          # Built files (generated)
 ├── package.json                   # Package configuration
@@ -106,7 +106,7 @@ packages/react-native-quicklook/
 ├── tsup.config.ts                 # Build configuration
 └── README.md                      # Package documentation
 
-apps/expo-quicklook-example/
+apps/expo-quick-preview-example/
 ├── app/                           # Expo Router pages
 ├── components/                    # Example components
 ├── data/                          # Example data
@@ -135,7 +135,7 @@ We're working on adding automated tests. For now, focus on:
 
 ### Updating Documentation
 
-- **Library README**: Update `packages/react-native-quicklook/README.md`
+- **Library README**: Update `packages/react-native-quick-preview/README.md`
 - **Example app**: Update example components and data
 - **API changes**: Update TypeScript interfaces and JSDoc comments
 - **Root README**: Update main README.md if needed
@@ -199,4 +199,4 @@ Contributors will be recognized in:
 - **Release notes** for significant contributions
 - **README acknowledgments** for major features
 
-Thank you for contributing to React Native QuickLook! 🎉
+Thank you for contributing to React Native QuickPreview! 🎉

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "QuickLook Example",
-    "slug": "expo-quicklook-example",
+    "name": "QuickPreview Example",  
+    "slug": "expo-quick-preview-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "scheme": "quicklookdemo",
+    "scheme": "quickpreviewdemo",
     "sdkVersion": "53.0.0",
     "experiments": {
       "typedRoutes": true
@@ -33,7 +33,7 @@
         {
           "action": "VIEW",
           "category": ["BROWSABLE", "DEFAULT"],
-          "data": [{ "scheme": "quicklookdemo" }]
+          "data": [{ "scheme": "quickpreviewdemo" }]
         }
       ]
     },

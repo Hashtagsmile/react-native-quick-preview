@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';
 
 type Item = {
   id: string;
@@ -61,7 +61,7 @@ export default function AdvancedScreen() {
   };
 
   const openWithHaptics = async (x: Item) => {
-    // If QuickLook already haptics on open, remove this to avoid double feedback.
+    // If Quick Preview already haptics on open, remove this to avoid double feedback.
     try { await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch {}
     open(x);
   };
@@ -91,7 +91,7 @@ export default function AdvancedScreen() {
               style={styles.card}
               activeOpacity={0.85}
               onPress={() => goToDetails(s.id)}     // tap → details
-              onLongPress={() => openWithHaptics(s)} // long-press → QuickLook (+ haptics)
+              onLongPress={() => openWithHaptics(s)} // long-press → QuickPreview (+ haptics)
               delayLongPress={450}
             >
               {s.image ? (
@@ -116,7 +116,7 @@ export default function AdvancedScreen() {
           ))}
         </View>
 
-        <QuickLook
+        <QuickPreview
           visible={visible}
           onClose={close}
           onOpen={() => {
@@ -133,7 +133,7 @@ export default function AdvancedScreen() {
           swipeThreshold={60}
           avoidKeyboard
           closeOnBackdropPress={false} // force explicit close (button) or swipe
-          enableSwipeToClose
+          enableSwipeToClose    
           stylesOverride={{
             container: {
               borderRadius: 24,
@@ -217,7 +217,7 @@ export default function AdvancedScreen() {
               </View>
             </View>
           )}
-        </QuickLook>
+        </QuickPreview>
       </ScrollView>
     </SafeAreaView>
   );

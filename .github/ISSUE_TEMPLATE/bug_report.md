@@ -31,7 +31,7 @@ A clear and concise description of what actually happened.
 **OS:** [e.g. iOS 17.0, Android 14]
 **React Native:** [e.g. 0.76.3]
 **Expo:** [e.g. ~53.0.0] (if applicable)
-**react-native-quicklook:** [e.g. 1.0.0]
+**react-native-quick-preview:** [e.g. 1.0.0]
 
 ## 📸 Screenshots/Videos
 
@@ -41,18 +41,18 @@ If applicable, add screenshots or videos to help explain your problem.
 
 ```tsx
 import React, { useState } from 'react';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <QuickLook
+    <QuickPreview>
       visible={visible}
       onClose={() => setVisible(false)}
     >
       {/* Your content */}
-    </QuickLook>
+    </QuickPreview>
   );
 }
 ```

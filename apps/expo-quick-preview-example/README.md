@@ -1,15 +1,15 @@
-# Expo QuickLook Example
+# Expo QuickPreview Example
 
-This is the **example app** for [`react-native-quicklook`](../../packages/react-native-quicklook), built with Expo.
+This is the **example app** for [`react-native-quick-preview`](../../packages/react-native-quick-preview), built with Expo.
 
-It demonstrates how to use the QuickLook component in real-world scenarios:
+It demonstrates how to use the QuickPreview component in real-world scenarios:
 
 - 🛍️ E-commerce product previews  
 - 📰 News article teasers  
 - ✈️ Travel destination quick views  
 - ⚡ Custom layouts & themes  
 
----
+--- 
 
 ## 🚀 Running the Example
 
@@ -20,7 +20,7 @@ It demonstrates how to use the QuickLook component in real-world scenarios:
 
 ### Start the App
 ```bash
-cd apps/expo-quicklook-example
+cd apps/expo-quick-preview-example  
 npm start
 ```
 
@@ -31,7 +31,7 @@ You can run the app in iOS Simulator, Android Emulator, or on a physical device 
 
 ## 📁 Structure
 ```
-apps/expo-quicklook-example/
+apps/expo-quick-preview-example/
 ├── app/             # Expo Router pages
 ├── components/      # Example components
 ├── data/            # Example data sets
@@ -41,7 +41,7 @@ apps/expo-quicklook-example/
 ---
 
 ## ✨ What You’ll See
-- Long-press cards to open **QuickLook**
+- Long-press cards to open **QuickPreview**
 - Swipe down to dismiss
 - Tap to navigate or trigger actions
 - Examples for multiple content types

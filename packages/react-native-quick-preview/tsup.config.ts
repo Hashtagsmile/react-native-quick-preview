@@ -12,5 +12,5 @@ export default defineConfig({
   minify: true,
   target: 'es2017',
   platform: 'neutral',
-  globalName: 'ReactNativeQuickLook',
+  globalName: 'ReactNativeQuickPreview', 
 });

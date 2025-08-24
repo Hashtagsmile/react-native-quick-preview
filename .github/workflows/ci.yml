@@ -34,9 +34,9 @@ jobs:
 
     - name: Verify build output
       run: |
-        ls -la packages/react-native-quicklook/dist/
-        test -f packages/react-native-quicklook/dist/index.js
-        test -f packages/react-native-quicklook/dist/index.d.ts
+        ls -la packages/react-native-quick-preview/dist/
+        test -f packages/react-native-quick-preview/dist/index.js
+        test -f packages/react-native-quick-preview/dist/index.d.ts
 
   lint:
     runs-on: ubuntu-latest

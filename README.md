@@ -1,10 +1,10 @@
-# React Native QuickLook Workspace
+# React Native QuickPreview Workspace
 
-[![npm](https://img.shields.io/npm/v/react-native-quicklook.svg)](https://www.npmjs.com/package/react-native-quicklook)
+[![npm](https://img.shields.io/npm/v/react-native-quick-preview.svg)](https://www.npmjs.com/package/react-native-quick-preview)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-A monorepo containing the **`react-native-quicklook`** library and an **Expo example app** showcasing its usage.
+A monorepo containing the **`react-native-quick-preview`** library and an **Expo example app** showcasing its usage.
 
 > ⚡ Gorhom Bottom Sheet–style experience, but for **quick previews**.  
 > A **headless**, customizable Quick Look modal for React Native.
@@ -29,17 +29,17 @@ A monorepo containing the **`react-native-quicklook`** library and an **Expo exa
 
 ```
 ├── packages/
-│   └── react-native-quicklook/     # The library package
+│   └── react-native-quick-preview/     # The library package
 │       ├── src/
-│       │   ├── QuickLook.tsx       # Main component
-│       │   ├── QuickLookProperties.ts # Public types
+│       │   ├── QuickPreview.tsx       # Main component
+│       │   ├── QuickPreviewProperties.ts # Public types
 │       │   └── index.ts            # Entry point
 │       ├── package.json
 │       ├── tsconfig.json
 │       ├── tsup.config.ts
 │       └── README.md
 ├── apps/
-│   └── expo-quicklook-example/     # Expo example app
+│   └── expo-quick-preview-example/     # Expo example app
 │       ├── app/                    # Expo Router pages
 │       ├── components/             # Example components
 │       ├── data/                   # Example data
@@ -67,7 +67,7 @@ A monorepo containing the **`react-native-quicklook`** library and an **Expo exa
 ```bash
 # 1) Clone
 git clone <repository-url>
-cd rn-quicklook-workspace
+cd rn-quick-preview-workspace
 
 # 2) Install
 npm install
@@ -83,22 +83,22 @@ Open **Expo Go** on your device (SDK 53) or run an iOS/Android emulator to view 
 
 ---
 
-## 📦 Library (packages/react-native-quicklook)
+## 📦 Library (packages/react-native-quick-preview)
 
 A **headless** quick preview modal component for React Native with smooth animations, swipe-to-close, and full accessibility.
 
 **Install (in your app):**
 ```bash
-npm install react-native-quicklook
+npm install react-native-quick-preview
 # or
-yarn add react-native-quicklook
+yarn add react-native-quick-preview
 ```
 
 **Basic usage:**
 ```tsx
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { QuickLook } from 'react-native-quicklook';
+import { QuickPreview } from 'react-native-quick-preview';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -109,12 +109,12 @@ export default function App() {
         <Text>Show Quick Look</Text>
       </TouchableOpacity>
 
-      <QuickLook visible={visible} onClose={() => setVisible(false)}>
+      <QuickPreview visible={visible} onClose={() => setVisible(false)}>
         <View style={{ backgroundColor: '#fff', padding: 20 }}>
           <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Quick Preview Content</Text>
           <Text style={{ marginTop: 10 }}>Render any custom content inside.</Text>
         </View>
-      </QuickLook>
+      </QuickPreview>
     </View>
   );
 }
@@ -123,17 +123,17 @@ export default function App() {
 **Advanced usage with long press:**
 ```tsx
 <TouchableOpacity
-  onLongPress={() => setQuickLookVisible(true)}
+  onLongPress={() => setVisible(true)}
   delayLongPress={500}
 >
   <Image source={{ uri: product.image }} />
   <Text>{product.name}</Text>
   
-  <QuickLook
-    visible={quickLookVisible}
-    onClose={() => setQuickLookVisible(false)}
+  <QuickPreview
+    visible={visible}
+    onClose={() => setVisible(false)}
     onPressCard={() => {
-      setQuickLookVisible(false);
+      setVisible(false);
       navigation.navigate('ProductDetail', { id: product.id });
     }}
     enableSwipeToClose
@@ -142,13 +142,13 @@ export default function App() {
     animationDuration={300}
   >
     {/* Your custom content */}
-  </QuickLook>
+  </QuickPreview>
 </TouchableOpacity>
 ```
 
 ---
 
-## 📱 Example App (apps/expo-quicklook-example)
+## 📱 Example App (apps/expo-quick-preview-example)
 
 Demonstrates multiple patterns:
 - 🛍️ E‑commerce product previews
@@ -158,11 +158,11 @@ Demonstrates multiple patterns:
 
 **Run directly:**
 ```bash
-cd apps/expo-quicklook-example
+cd apps/expo-quick-preview-example
 npm start
 ```
 
-The example consumes the package via workspace reference (`"react-native-quicklook": "workspace:*"`), so local library changes appear instantly after `npm run build`.
+The example consumes the package via workspace reference (`"react-native-quick-preview": "workspace:*"`), so local library changes appear instantly after `npm run build`.
 
 ---
 
@@ -230,7 +230,7 @@ We love contributions! Here's how you can help:
    ```bash
    npx changeset
    ```
-   - Select the package: `react-native-quicklook`  
+   - Select the package: `react-native-quick-preview`  
    - Choose bump type (patch/minor/major)  
    - Add a short summary  
 6. **Commit** using Conventional Commits (preferred):  
@@ -241,7 +241,7 @@ We love contributions! Here's how you can help:
 ### ✅ Local Testing Checklist
 - [ ] Package builds (`npm run build`)  
 - [ ] Example app runs (`npm run example`)  
-- [ ] QuickLook opens, closes, and swipes as expected  
+- [ ] QuickPreview opens, closes, and swipes as expected  
 - [ ] No red screens / warnings in Expo  
 - [ ] A11y: labels present, focus reasonable
 
@@ -249,10 +249,10 @@ We love contributions! Here's how you can help:
 
 ## 📚 Docs & Links
 
-- **Package (npm):** https://www.npmjs.com/package/react-native-quicklook  
-- **Library README:** `packages/react-native-quicklook/README.md`  
-- **Example App README:** `apps/expo-quicklook-example/README.md`  
-- **Issues / Features:** https://github.com/yourusername/react-native-quicklook/issues
+- **Package (npm):** https://www.npmjs.com/package/react-native-quick-preview  
+- **Library README:** `packages/react-native-quick-preview/README.md`  
+- **Example App README:** `apps/expo-quick-preview-example/README.md`  
+- **Issues / Features:** https://github.com/yourusername/react-native-quick-preview/issues
 
 ---
 
