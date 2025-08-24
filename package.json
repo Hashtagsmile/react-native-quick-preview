@@ -1,0 +1,23 @@
+{
+  "name": "rn-quicklook-workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm --workspace packages/react-native-quicklook run build",
+    "example": "npm --workspace apps/expo-quicklook-example start",
+    "dev": "npm --workspace packages/react-native-quicklook run dev",
+    "type-check": "npm --workspace packages/react-native-quicklook run type-check",
+    "lint": "npm --workspace packages/react-native-quicklook run lint",
+    "clean": "npm --workspace packages/react-native-quicklook run clean",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "typescript": "^5.0.0",
+    "tsup": "^8.0.0"
+  }
+}

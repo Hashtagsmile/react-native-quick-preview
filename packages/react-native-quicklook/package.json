@@ -1,0 +1,53 @@
+{
+  "name": "react-native-quicklook",
+  "version": "1.0.0",
+  "description": "A beautiful, customizable quick preview modal component for React Native",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "react-native",
+    "modal",
+    "preview",
+    "quicklook",
+    "expo",
+    "typescript",
+    "ui",
+    "component"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-native": "^0.72.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "react": "^18.0.0",
+    "react-native": "^0.76.3",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/react-native-quicklook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/react-native-quicklook/issues"
+  },
+  "homepage": "https://github.com/yourusername/react-native-quicklook#readme"
+}
