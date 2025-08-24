@@ -34,13 +34,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="examples"
         options={{
-          title: 'Examples',
+          title: 'Basic',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons 
               name={focused ? 'layers' : 'layers-outline'} 
               size={24} 
               color={color} 
             />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="advanced"
+        options={{
+          title: 'Advanced',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'settings' : 'settings-outline'} size={24} color={color} />
           ),
         }}
       />

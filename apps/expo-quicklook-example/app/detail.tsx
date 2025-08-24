@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';  
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { getItemById, ExampleItem } from '../data/exampleData';
+import { getItemById } from '../data/examples';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function DetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const [item, setItem] = useState<ExampleItem | null>(null);
+  const [item, setItem] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function DetailScreen() {
 
   const formatRating = (rating?: number) => `${rating ?? 0}/5`;
 
-  const getCategoryIcon = (item: ExampleItem) => {
+  const getCategoryIcon = (item: any) => {
     if (item.id.startsWith('prod_')) return 'bag-outline';
     if (item.id.startsWith('article_')) return 'newspaper-outline';
     if (item.id.startsWith('dest_')) return 'airplane-outline';
@@ -37,7 +37,7 @@ export default function DetailScreen() {
     return 'cube-outline';
   };
 
-  const getCategoryName = (item: ExampleItem) => {
+  const getCategoryName = (item: any) => {
     if (item.id.startsWith('prod_')) return 'Product';
     if (item.id.startsWith('article_')) return 'Article';
     if (item.id.startsWith('dest_')) return 'Destination';
@@ -71,6 +71,8 @@ export default function DetailScreen() {
     );
   }
 
+  console.log(item);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -88,10 +90,10 @@ export default function DetailScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Main Image */}
-        {item.images?.[0] && (
-          <Image source={{ uri: item.images[0] }} style={styles.mainImage} />
-        )}
+        {/* Main Image */}  
+        {item.image ? (
+          <Image source={{ uri: item.image }} style={styles.mainImage} />
+        ) : null}
 
         {/* Content */}
         <View style={styles.content}>
@@ -133,7 +135,7 @@ export default function DetailScreen() {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Tags</Text>
               <View style={styles.tagsContainer}>
-                {item.tags.map((tag, index) => (
+                {item.tags.map((tag: string, index: number) => (
                   <View key={index} style={styles.tag}>
                     <Text style={styles.tagText}>#{tag}</Text>
                   </View>
@@ -150,7 +152,7 @@ export default function DetailScreen() {
                 {Object.entries(item.metadata).map(([key, value]) => (
                   <View key={key} style={styles.metadataRow}>
                     <Text style={styles.metadataKey}>{key}:</Text>
-                    <Text style={styles.metadataValue}>{value}</Text>
+                    <Text style={styles.metadataValue}>{value as string}</Text>
                   </View>
                 ))}
               </View>

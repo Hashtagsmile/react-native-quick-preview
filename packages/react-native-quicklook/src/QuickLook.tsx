@@ -1,10 +1,18 @@
+// src/QuickLook.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  View, StyleSheet, Modal, Dimensions, Animated, Platform,
-  Pressable, PanResponder, Keyboard,
+  View,
+  StyleSheet,
+  Modal,
+  Dimensions,
+  Animated,
+  Platform,
+  Pressable,
+  PanResponder,
+  Keyboard,
 } from 'react-native';
 import type { AccessibilityRole } from 'react-native';
-import type { QuickLookProps, ThemeMode } from './QuickLookProperties';
+import type { CloseReason, QuickLookProps, ThemeMode } from './QuickLookProperties';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -15,9 +23,10 @@ const overlayColor = (theme: ThemeMode, custom?: number) =>
   `rgba(0,0,0,${custom ?? (theme === 'dark' ? 0.8 : 0.5)})`;
 
 export const QuickLook: React.FC<QuickLookProps> = ({
-  visible,  
+  visible,
   onClose,
-  onPressCard,
+  onOpen,
+  onClosed,
   theme = 'light',
   backdropOpacity,
   animationDuration = 220,
@@ -43,10 +52,15 @@ export const QuickLook: React.FC<QuickLookProps> = ({
 
   const baseOverlay = useMemo(() => overlayColor(theme, backdropOpacity), [theme, backdropOpacity]);
 
+  // Track why we closed so we can report it to onClosed
+  const closeReasonRef = useRef<CloseReason>('programmatic');
+
   // Mount/unmount with animation
   useEffect(() => {
     if (visible && !mounted) {
       setMounted(true);
+      onOpen?.(); // great place to trigger optional haptics in-app
+
       requestAnimationFrame(() => {
         Animated.parallel([
           Animated.timing(fade, { toValue: 1, duration: animationDuration, useNativeDriver: true }),
@@ -59,10 +73,12 @@ export const QuickLook: React.FC<QuickLookProps> = ({
         Animated.timing(scale, { toValue: 0.96, duration: animationDuration, useNativeDriver: true }),
       ]).start(() => {
         translateY.setValue(0);
+        onClosed?.(closeReasonRef.current);
+        closeReasonRef.current = 'programmatic';
         if (unmountOnExit) setMounted(false);
       });
     }
-  }, [visible, mounted, animationDuration, fade, scale, translateY, unmountOnExit]);
+  }, [visible, mounted, animationDuration, fade, scale, translateY, unmountOnExit, onOpen, onClosed]);
 
   // Keyboard avoidance (optional)
   useEffect(() => {
@@ -92,6 +108,7 @@ export const QuickLook: React.FC<QuickLookProps> = ({
       onPanResponderRelease: (_evt, g) => {
         if (!enableSwipeToClose) return;
         if (g.dy > swipeThreshold) {
+          closeReasonRef.current = 'swipe';
           Animated.parallel([
             Animated.timing(translateY, { toValue: screenHeight * 0.35, duration: 180, useNativeDriver: true }),
             Animated.timing(fade, { toValue: 0, duration: 180, useNativeDriver: true }),
@@ -110,11 +127,16 @@ export const QuickLook: React.FC<QuickLookProps> = ({
   if (!mounted && !visible) return null;
 
   return (
-    <Modal  
-      transparent   
+    <Modal
+      transparent
       visible={mounted || visible}
       animationType="none"
-      onRequestClose={() => (closeOnBackButton ? onClose?.() : undefined)}
+      onRequestClose={() => {
+        if (closeOnBackButton) {
+          closeReasonRef.current = 'backButton';
+          onClose?.();
+        }
+      }}
       presentationStyle="overFullScreen"
       statusBarTranslucent={Platform.OS === 'android'}
     >
@@ -127,21 +149,25 @@ export const QuickLook: React.FC<QuickLookProps> = ({
         ]}
         accessibilityViewIsModal
       >
-        {renderBackdrop
-          ? renderBackdrop(fade as unknown as Animated.AnimatedInterpolation<number>)
-          : (
-            <Pressable
-              onPress={() => {
-                onBackdropPress?.();
-                if (closeOnBackdropPress) onClose?.();
-              }}
-              style={StyleSheet.absoluteFill}
-              android_disableSound
-              accessibilityRole="button"
-              accessibilityLabel="Close quick look"
-              testID="ql-backdrop"
-            />
-          )}
+        {renderBackdrop ? (
+          // If you provide a custom backdrop, you control its hit area/closing
+          renderBackdrop(fade as unknown as Animated.AnimatedInterpolation<number>)
+        ) : (
+          <Pressable
+            onPress={() => {
+              onBackdropPress?.();
+              if (closeOnBackdropPress) {
+                closeReasonRef.current = 'backdrop';
+                onClose?.();
+              }
+            }}
+            style={StyleSheet.absoluteFill}
+            android_disableSound
+            accessibilityRole="button"
+            accessibilityLabel="Close quick look"
+            testID="ql-backdrop"
+          />
+        )}
 
         {/* Centered card */}
         <View
@@ -160,17 +186,11 @@ export const QuickLook: React.FC<QuickLookProps> = ({
               stylesOverride.container,
             ]}
             testID={testID}
-            accessibilityRole={dialogA11yRole}  // safe cast for older RN types
+            accessibilityRole={dialogA11yRole}
             accessibilityViewIsModal
             accessibilityLabel={accessibilityLabel}
           >
-            {onPressCard ? (
-              <Pressable onPress={onPressCard} android_disableSound style={{ flex: 1 }}>
-                {children}
-              </Pressable>
-            ) : (
-              children
-            )}
+            {children}
           </Animated.View>
         </View>
       </Animated.View>

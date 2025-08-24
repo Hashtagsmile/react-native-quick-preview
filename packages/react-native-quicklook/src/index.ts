@@ -1,2 +1,2 @@
 export { QuickLook } from './QuickLook';
-export type { QuickLookProps, ThemeMode } from './QuickLookProperties';
+export type { QuickLookProps, ThemeMode, CloseReason  } from './QuickLookProperties';

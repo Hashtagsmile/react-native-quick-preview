@@ -3,23 +3,27 @@
   "private": true,
   "version": "1.0.0",
   "main": "expo-router/entry",
+
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
+
   "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "expo-haptics": "~14.0.0",
     "expo": "~53.0.22",
     "expo-router": "~5.1.5",
-    "expo-status-bar": "~2.0.0",
-    "@expo/vector-icons": "^14.0.0",
+    "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-native": "0.79.5",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-quicklook": "file:../../packages/react-native-quicklook"
   },
+
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~19.0.10",

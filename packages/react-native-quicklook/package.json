@@ -2,19 +2,37 @@
   "name": "react-native-quicklook",
   "version": "1.0.0",
   "description": "A beautiful, customizable quick preview modal component for React Native",
+  "author": "Oliver Lindblad",
+  "license": "MIT",
+
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "react-native": "dist/index.js",
+
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "react-native": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+
+  "sideEffects": false,
+  "files": ["dist", "src", "README.md", "LICENSE"],
+
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
-    "clean": "rm -rf dist"
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
+
   "keywords": [
     "react-native",
     "modal",
@@ -25,23 +43,31 @@
     "ui",
     "component"
   ],
-  "author": "Your Name",
-  "license": "MIT",
+
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-native": ">=0.60.0"
+    "react": ">=18.2.0 <21",
+    "react-native": ">=0.64.0 <1"
   },
+
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-native": "^0.72.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "react": "^18.0.0",
-    "react-native": "^0.76.3",
+    "@types/react": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "rimraf": "^6.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+
+    "react": "19.0.0",
+    "react-native": "0.79.5"
   },
+
+  "overrides": {
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0"
+  },
+
   "repository": {
     "type": "git",
     "url": "https://github.com/yourusername/react-native-quicklook.git"
@@ -49,5 +75,7 @@
   "bugs": {
     "url": "https://github.com/yourusername/react-native-quicklook/issues"
   },
-  "homepage": "https://github.com/yourusername/react-native-quicklook#readme"
+  "homepage": "https://github.com/yourusername/react-native-quicklook#readme",
+  "publishConfig": { "access": "public" },
+  "engines": { "node": ">=16" }
 }

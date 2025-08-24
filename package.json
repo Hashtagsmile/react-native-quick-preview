@@ -1,10 +1,11 @@
 {
   "name": "rn-quicklook-workspace",
-  "private": true,
+  "private": true,  
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
+  "version": "1.0.0",
   "scripts": {
     "build": "npm --workspace packages/react-native-quicklook run build",
     "example": "npm --workspace apps/expo-quicklook-example start",
@@ -17,15 +18,11 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "typescript": "^5.0.0",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
   },
-  "dependencies": {
-    "expo": "~53.0.22",
-    "expo-router": "~5.1.5",
-    "react": "19.0.0",
-    "react-native": "0.79.5",
-    "react-native-screens": "~4.11.1",
-    "react-native-safe-area-context": "5.4.0"
-  }
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10"
 }
