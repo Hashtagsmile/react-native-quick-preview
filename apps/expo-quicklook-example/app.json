@@ -5,6 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "scheme": "quicklookdemo",
+    "sdkVersion": "53.0.0",
+    "experiments": {
+      "typedRoutes": true
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
