@@ -71,8 +71,6 @@ export default function DetailScreen() {
     );
   }
 
-  console.log(item);
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>

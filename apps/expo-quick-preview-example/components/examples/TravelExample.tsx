@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { QuickPreview } from 'react-native-quick-preview';
+import { QuickPreviewComponent } from 'react-native-quick-preview';
 import { destinations, Item } from '../../data/examples';
 
-export const TravelExample: React.FC = () => {
+export default function TravelExample() {
   const router = useRouter();
   const [selectedDestination, setSelectedDestination] = useState<Item | null>(null);
   const [visible, setVisible] = useState(false);
@@ -67,7 +67,7 @@ export const TravelExample: React.FC = () => {
               <View style={styles.destinationMeta}>
                 <View style={styles.ratingContainer}>
                   <Ionicons name="star" size={12} color="#ffbb33" />
-                    <Text style={styles.ratingText}>{formatRating(destination.likes)}</Text>
+                  <Text style={styles.ratingText}>{formatRating(destination.likes)}</Text>
                   <Text style={styles.reviewsText}>({destination.views ?? 0})</Text>
                 </View>
                 {!!destination.price && (
@@ -85,13 +85,11 @@ export const TravelExample: React.FC = () => {
       </ScrollView>
 
       {selectedDestination && (
-        <QuickPreview
+        <QuickPreviewComponent
           visible={visible}
           onClose={closeQuickPreview}
-          enableSwipeToClose
-          closeOnBackdropPress
-          testID="qp-destination"
-          accessibilityLabel="Destination quick preview"
+          portal={true}
+
         >
           <View style={styles.quickPreviewContent}>
             {selectedDestination.image && (
@@ -160,16 +158,16 @@ export const TravelExample: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </QuickPreview>
+        </QuickPreviewComponent>
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: { marginVertical: 10 },
   scrollView: { paddingHorizontal: 20 },
-  
+
   // Card styles
   destinationCard: {
     width: 240,
@@ -190,13 +188,13 @@ const styles = StyleSheet.create({
   destinationTitle: { fontSize: 16, fontWeight: '600', color: '#212529', marginBottom: 4 },
   destinationSubtitle: { fontSize: 14, color: '#6c757d', marginBottom: 8 },
   destinationMeta: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  
+
   // Meta info
   ratingContainer: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   ratingText: { fontSize: 12, fontWeight: '500', color: '#212529' },
   reviewsText: { fontSize: 11, color: '#6c757d' },
   priceText: { fontSize: 14, fontWeight: 'bold', color: '#0095f6' },
-  
+
   // Long press hint
   longPressHint: {
     position: 'absolute',
@@ -206,12 +204,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
   hintText: { fontSize: 10, color: '#fff', fontWeight: '500' },
-  
+
   // QuickPreview styles
   quickPreviewContent: { backgroundColor: '#fff' },
   quickPreviewImage: { width: '100%', aspectRatio: 16 / 9, resizeMode: 'cover' },
@@ -225,10 +223,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-    quickPreviewRating: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  quickPreviewRating: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   quickPreviewRatingText: { fontSize: 14, color: '#212529' },
   quickPreviewPrice: { fontSize: 18, fontWeight: '800', color: '#0095f6' },
-  
+
   // Tags
   quickPreviewTags: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   quickPreviewTag: {
@@ -238,7 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   quickPreviewTagText: { fontSize: 12, color: '#6c757d' },
-  
+
   // Actions
   quickPreviewActions: {
     flexDirection: 'row',

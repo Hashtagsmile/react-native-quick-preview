@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { QuickPreview } from 'react-native-quick-preview';
-import { products, Item } from '../../data/examples';  
+import { QuickPreviewComponent } from 'react-native-quick-preview';
+import { products, Item } from '../../data/examples';
 
-export const EcommerceExample: React.FC = () => {
+export default function EcommerceExample() {
   const router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
   const [visible, setVisible] = useState(false);
@@ -77,20 +77,17 @@ export const EcommerceExample: React.FC = () => {
       </ScrollView>
 
       {selectedProduct && (
-        <QuickPreview
+        <QuickPreviewComponent
           visible={visible}
           onClose={closeQuickPreview}
-          enableSwipeToClose
-          closeOnBackdropPress
-          testID="qp-product"
-          accessibilityLabel="Product quick preview"
+          portal={true}
         >
           <View style={styles.quickPreviewContent}>
             {selectedProduct.image && (
               <Image source={{ uri: selectedProduct.image }} style={styles.quickPreviewImage} />
             )}
 
-            <View style={styles.quickPreviewInfo}> 
+            <View style={styles.quickPreviewInfo}>
               <Text style={styles.quickPreviewTitle}>{selectedProduct.title}</Text>
               {!!selectedProduct.description && (
                 <Text style={styles.quickPreviewSubtitle} numberOfLines={3}>
@@ -135,17 +132,17 @@ export const EcommerceExample: React.FC = () => {
                 <Text style={styles.quickPreviewActionText}>View Details</Text>
               </TouchableOpacity>
             </View>
-            
+
             <View style={styles.quickPreviewHint}>
               <Ionicons name="hand-left" size={12} color="#999" />
               <Text style={styles.hintText}>Tap anywhere to view full details</Text>
             </View>
           </View>
-        </QuickPreview>
+        </QuickPreviewComponent>
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: { marginVertical: 10 },

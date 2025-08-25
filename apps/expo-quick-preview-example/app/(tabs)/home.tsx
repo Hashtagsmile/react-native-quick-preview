@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { QuickPreview } from 'react-native-quick-preview';  
+import { useQuickPreview } from 'react-native-quick-preview';
 // Optional: if you want haptics on long-press (requires expo-haptics installed)
 import * as Haptics from 'expo-haptics';
 
 export default function HomeScreen() {
-  const [visible, setVisible] = useState(false);
+  const { present } = useQuickPreview();
 
   const testItem = {
     title: 'QuickPreview Demo',
@@ -16,10 +16,49 @@ export default function HomeScreen() {
     price: 99.99,
   };
 
-  const openWithHaptics = () => {
+  const openWithHaptics = async () => {
     // Optional haptics
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
-    setVisible(true);
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    } catch {}
+    
+    // Show preview using the new API
+    present(
+      <View style={{ backgroundColor: '#fff' }}>
+        {testItem.image ? (
+          <Image source={{ uri: testItem.image }} style={{ width: '100%', aspectRatio: 16 / 9 }} />
+        ) : null}
+
+        <View style={{ padding: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700' }}>{testItem.title}</Text>
+          <Text style={{ color: '#666', marginVertical: 6 }} numberOfLines={3}>
+            {testItem.description}
+          </Text>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#0095f6' }}>
+            ${testItem.price.toFixed(2)}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            padding: 12,
+            borderTopWidth: 1,
+            borderTopColor: '#eee',
+          }}
+        >
+          <TouchableOpacity onPress={() => {}}>
+            <Text style={{ fontWeight: '600', color: '#0095f6' }}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>,
+      {
+        variant: 'popover',
+        dismissOnBackdropPress: true,
+        accessibilityLabel: 'QuickPreview demo content'
+      }
+    );
   };
 
   return (
@@ -40,43 +79,6 @@ export default function HomeScreen() {
       >
         <Text style={styles.ctaText}>Long-press to QuickPreview</Text>
       </TouchableOpacity>
-
-      <QuickPreview
-        visible={visible}
-        onClose={() => setVisible(false)}
-        enableSwipeToClose
-        closeOnBackdropPress
-      >
-        <View style={{ backgroundColor: '#fff' }}>
-          {testItem.image ? (
-            <Image source={{ uri: testItem.image }} style={{ width: '100%', aspectRatio: 16 / 9 }} />
-          ) : null}
-
-          <View style={{ padding: 16 }}>
-            <Text style={{ fontSize: 18, fontWeight: '700' }}>{testItem.title}</Text>
-            <Text style={{ color: '#666', marginVertical: 6 }} numberOfLines={3}>
-              {testItem.description}
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: '800', color: '#0095f6' }}>
-              ${testItem.price.toFixed(2)}
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              padding: 12,
-              borderTopWidth: 1,
-              borderTopColor: '#eee',
-            }}
-          >
-            <TouchableOpacity onPress={() => setVisible(false)}>
-              <Text style={{ fontWeight: '600', color: '#0095f6' }}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </QuickPreview>
     </View>
   );
 }

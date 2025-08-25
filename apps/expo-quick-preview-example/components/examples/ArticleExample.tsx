@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { QuickPreview } from 'react-native-quick-preview';
+import { QuickPreviewComponent } from 'react-native-quick-preview';
 import { articles, Item } from '../../data/examples';
 
 export const ArticleExample: React.FC = () => {
   const router = useRouter();
-  const [selectedArticle, setSelectedArticle] = useState<ExampleItem | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<Item | null>(null);
   const [visible, setVisible] = useState(false);
 
-  const openQuickPreview = (article: ExampleItem) => { 
+  const openQuickPreview = (article: Item) => { 
     setSelectedArticle(article);
     setVisible(true);
   };
@@ -20,14 +20,14 @@ export const ArticleExample: React.FC = () => {
     setSelectedArticle(null);
   };
 
-  const handleReadArticle = (article: ExampleItem) => {
+  const handleReadArticle = (article: Item) => {
     closeQuickPreview();
     router.push(`/detail?id=${article.id}`);
   };
 
-  const handleShareArticle = (article: ExampleItem) => {
+  const handleShareArticle = (article: Item) => {
     console.log(`Sharing article ${article.id}`);
-    Share.share({ message: article.title, url: article.url })
+    Share.share({ message: article.title })
   };
 
   const formatRating = (rating?: number) => `${rating ?? 0}/5`;
@@ -63,7 +63,7 @@ export const ArticleExample: React.FC = () => {
               <View style={styles.articleMeta}>
                 <View style={styles.ratingContainer}>
                   <Ionicons name="star" size={12} color="#ffbb33" />
-                  <Text style={styles.ratingText}>{formatRating(article.rating)}</Text>
+                  <Text style={styles.ratingText}>{formatRating(article.likes)}</Text>
                   <Text style={styles.reviewsText}>({article.views ?? 0})</Text>
                 </View>
                 {!!article.username && (
@@ -81,13 +81,9 @@ export const ArticleExample: React.FC = () => {
       </ScrollView>
 
       {selectedArticle && (
-        <QuickPreview
+        <QuickPreviewComponent
           visible={visible}
           onClose={closeQuickPreview}
-          enableSwipeToClose
-          closeOnBackdropPress
-          animationDuration={220}
-          testID="qp-article"
           accessibilityLabel="Article quick preview"    
         >
           <View style={styles.quickPreviewContent}>
@@ -114,7 +110,7 @@ export const ArticleExample: React.FC = () => {
                 <View style={styles.quickPreviewRating}>
                   <Ionicons name="star" size={16} color="#ffbb33" />
                   <Text style={styles.quickPreviewRatingText}>
-                    {formatRating(selectedArticle.rating)} ({selectedArticle.views ?? 0} views)
+                    {formatRating(selectedArticle.likes)} ({selectedArticle.views ?? 0} views)
                   </Text>
                 </View>
                 {!!selectedArticle.username && (
@@ -151,7 +147,7 @@ export const ArticleExample: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </QuickPreview> 
+        </QuickPreviewComponent> 
       )}
     </View>
   );

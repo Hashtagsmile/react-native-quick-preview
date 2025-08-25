@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// app/tabs/Examples.tsx (Expo Router) or adjust path for your setup
+import React from 'react'
 import {
   View,
   Text,
@@ -8,14 +9,17 @@ import {
   Image,
   Dimensions,
   Pressable,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
-import { QuickPreview } from 'react-native-quick-preview';
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
+import { useQuickPreview } from 'react-native-quick-preview'
 
-import type { Item } from '../../data/examples';
+import Addons from '../addons'
+
+// Import your shared demo data + types
+import type { Item } from '../../data/examples' // adjust path if needed
 import {
   posts,
   products,
@@ -23,60 +27,53 @@ import {
   destinations,
   tracks,
   profiles,
-} from '../../data/examples';
+} from '../../data/examples'
 
-const { width: screenW } = Dimensions.get('window');
+const { width: screenW } = Dimensions.get('window')
 
-const PAD_H = 16;
-const GRID_GAP = 4;
-const INST_COLS = 3;
-const POST_SIZE = Math.floor((screenW - PAD_H * 2 - GRID_GAP * (INST_COLS - 1)) / INST_COLS);
-const CARD_W = Math.min(260, Math.round(screenW * 0.7));
+const PAD_H = 16
+const GRID_GAP = 4
+const INST_COLS = 3
+const POST_SIZE = Math.floor((screenW - PAD_H * 2 - GRID_GAP * (INST_COLS - 1)) / INST_COLS)
+const CARD_W = Math.min(260, Math.round(screenW * 0.7))
 
 export default function ExamplesScreen() {
-  const router = useRouter();
-  const [visible, setVisible] = useState(false);
-  const [item, setItem] = useState<Item | null>(null);
+  const router = useRouter()
+  const qp = useQuickPreview()
 
-  // helpers
-  const open = (x: Item) => {
-    setItem(x);
-    setVisible(true);
-  };
-  const openWithHaptics = async (x: Item) => {
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch { }
-    open(x);
-  };
-  const close = () => setVisible(false);
+  const priceText = (p?: number | string) => (typeof p === 'number' ? `$${p.toFixed(2)}` : p)
+  const num = (n?: number) => (n ? n.toLocaleString() : '0')
+
+  // Close preview + navigate (kept as one place so all previews behave the same)
   const goToDetails = (id: string) => {
-    close();
-    router.push({ pathname: '/detail', params: { id } });
-  };
-  const priceText = (p?: number | string) =>
-    typeof p === 'number' ? `$${p.toFixed(2)}` : p;
-  const num = (n?: number) => (n ? n.toLocaleString() : '0');
+    // Close first for snappy feel, then navigate on next frame
+    qp.close()
+    requestAnimationFrame(() => {
+      router.push({ pathname: '/detail', params: { id } })
+    })
+  }
 
+  // Minimal wrapper for preview content — IMPORTANT: no flex:1 or tall min heights
+  const QuickPreviewContentWrapper = ({
+    children,
+    onPress,
+  }: {
+    children: React.ReactNode
+    onPress: () => void
+  }) => (
+    <View style={styles.qlCard}>
+      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel="Open details">
+        {children}
+      </Pressable>
+    </View>
+  )
 
-  const QuickLookContentWrapper = ({ children, onPress }: { children: React.ReactNode; onPress: () => void }) => {
-    return (
-      <View style={styles.qlCard} >
-        <Pressable onPress={onPress}>
-          {children}
-        </Pressable>
-      </View>
-    );
-  };
-
-  // different QuickLook content per use-case (no flex:1, no minHeight)
-  const renderQuickLook = (x: Item) => {
-    console.log("Rendering QuickLook for", x.kind);
-    console.log("Item has data: ", x);
+  // Different QuickPreview contents by item kind
+  const renderQuickPreview = (x: Item) => {
     switch (x.kind) {
       case 'post':
         return (
-          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
+          <QuickPreviewContentWrapper onPress={() => goToDetails(x.id)}>
             <View style={styles.headerRow}>
               {!!x.avatar && <Image source={{ uri: x.avatar }} style={styles.avatar} />}
               <Text style={styles.metaText}>@{x.username ?? 'user'}</Text>
@@ -84,89 +81,80 @@ export default function ExamplesScreen() {
             {!!x.image && <Image source={{ uri: x.image }} style={styles.qlInstagramHero} />}
             <View style={styles.qlViewChip}>
               <Ionicons name="eye" size={12} color="#fff" />
-              <Text style={styles.qlViewChipText}>{x.views} views</Text>
+              <Text style={styles.qlViewChipText}>{num(x.views)} views</Text>
             </View>
-          </QuickLookContentWrapper>
-        );
+          </QuickPreviewContentWrapper>
+        )
 
       case 'product':
         return (
-          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
+          <QuickPreviewContentWrapper onPress={() => goToDetails(x.id)}>
             {!!x.image && <Image source={{ uri: x.image }} style={styles.qlHeroSquare} />}
             <View style={styles.qlBody}>
               <Text style={styles.qlTitle}>{x.title}</Text>
               {!!x.subtitle && <Text style={styles.qlSubtitle}>{x.subtitle}</Text>}
               {x.price !== undefined && <Text style={styles.priceText}>{priceText(x.price)}</Text>}
-              {!!x.description && (
-                <Text style={styles.qlDesc} numberOfLines={4}>{x.description}</Text>
-              )}
+              {!!x.description && <Text style={styles.qlDesc} numberOfLines={4}>{x.description}</Text>}
             </View>
             <View style={styles.qlActions}>
               <TouchableOpacity style={styles.btnPrimary} onPress={() => goToDetails(x.id)}>
                 <Text style={styles.btnPrimaryText}>Add to Bag</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGhost} onPress={() => console.log('Wishlist')}>
+              <TouchableOpacity style={styles.btnGhost} onPress={() => {}}>
                 <Text style={styles.btnGhostText}>Wishlist</Text>
               </TouchableOpacity>
             </View>
-          </QuickLookContentWrapper>
-        );
+          </QuickPreviewContentWrapper>
+        )
 
       case 'article':
         return (
-          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
+          <QuickPreviewContentWrapper onPress={() => goToDetails(x.id)}>
             {!!x.image && (
               <Image source={{ uri: x.image }} style={[styles.qlHero, { aspectRatio: 16 / 10 }]} />
             )}
             <View style={styles.qlBody}>
               <Text style={styles.qlTitle}>{x.title}</Text>
               {!!x.subtitle && <Text style={styles.qlSubtitle}>{x.subtitle}</Text>}
-              {!!x.description && (
-                <Text style={styles.qlDesc} numberOfLines={6}>{x.description}</Text>
-              )}
+              {!!x.description && <Text style={styles.qlDesc} numberOfLines={6}>{x.description}</Text>}
             </View>
             <View style={styles.qlActions}>
               <TouchableOpacity style={styles.btnPrimary} onPress={() => goToDetails(x.id)}>
                 <Text style={styles.btnPrimaryText}>Read more</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGhost} onPress={() => console.log('Save')}>
+              <TouchableOpacity style={styles.btnGhost} onPress={() => {}}>
                 <Text style={styles.btnGhostText}>Save</Text>
               </TouchableOpacity>
             </View>
-          </QuickLookContentWrapper>
-        );
+          </QuickPreviewContentWrapper>
+        )
 
       case 'destination':
         return (
-          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
+          <QuickPreviewContentWrapper onPress={() => goToDetails(x.id)}>
             {!!x.image && <Image source={{ uri: x.image }} style={styles.qlHero} />}
             <View style={styles.qlBody}>
               <Text style={styles.qlTitle}>{x.title}</Text>
               {!!x.subtitle && <Text style={styles.qlSubtitle}>{x.subtitle}</Text>}
               {!!x.price && <Text style={[styles.priceText, { marginTop: 4 }]}>{x.price}</Text>}
-              {!!x.description && (
-                <Text style={styles.qlDesc} numberOfLines={5}>{x.description}</Text>
-              )}
+              {!!x.description && <Text style={styles.qlDesc} numberOfLines={5}>{x.description}</Text>}
             </View>
             <View style={styles.qlActions}>
               <TouchableOpacity style={styles.btnPrimary} onPress={() => goToDetails(x.id)}>
                 <Text style={styles.btnPrimaryText}>Book Trip</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGhost} onPress={close}>
+              <TouchableOpacity style={styles.btnGhost} onPress={() => {}}>
                 <Text style={styles.btnGhostText}>Close</Text>
               </TouchableOpacity>
             </View>
-          </QuickLookContentWrapper>
-        );
+          </QuickPreviewContentWrapper>
+        )
 
       case 'track':
         return (
-          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
-            {/* Cover art */}
+          <QuickPreviewContentWrapper onPress={() => goToDetails(x.id)}>
             {!!x.image && <Image source={{ uri: x.image }} style={styles.spotifyArt} />}
-
             <View style={styles.spotifyContent}>
-              {/* Title / artist */}
               <View style={styles.spotifyMeta}>
                 <Text style={styles.spotifyTitle} numberOfLines={1}>{x.title}</Text>
                 {!!x.artist && (
@@ -175,8 +163,6 @@ export default function ExamplesScreen() {
                   </Text>
                 )}
               </View>
-
-              {/* Progress bar (static demo fill width) */}
               <View style={styles.spotifyProgressWrap}>
                 <View style={styles.spotifyProgressTrack}>
                   <View style={[styles.spotifyProgressFill, { width: '28%' }]} />
@@ -186,44 +172,33 @@ export default function ExamplesScreen() {
                   <Text style={styles.spotifyTime}>{x.duration ?? '3:30'}</Text>
                 </View>
               </View>
-
-              {/* Controls */}
               <View style={styles.spotifyControls}>
-                <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('Like')}>
+                <TouchableOpacity style={styles.ctrlBtn} onPress={() => {}}>
                   <Ionicons name="heart-outline" size={20} color="#fff" />
                 </TouchableOpacity>
-
                 <View style={styles.transport}>
-                  <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('Prev')}>
+                  <TouchableOpacity style={styles.ctrlBtn} onPress={() => {}}>
                     <Ionicons name="play-skip-back" size={24} color="#fff" />
                   </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.playBtn}
-                    onPress={() => console.log('Play preview')}
-                    activeOpacity={0.85}
-                  >
+                  <TouchableOpacity style={styles.playBtn} onPress={() => {}} activeOpacity={0.85}>
                     <Ionicons name="play" size={28} color="#000" />
                   </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('Next')}>
+                  <TouchableOpacity style={styles.ctrlBtn} onPress={() => {}}>
                     <Ionicons name="play-skip-forward" size={24} color="#fff" />
                   </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity style={styles.ctrlBtn} onPress={() => console.log('More')}>
+                <TouchableOpacity style={styles.ctrlBtn} onPress={() => {}}>
                   <Ionicons name="ellipsis-horizontal" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
             </View>
-          </QuickLookContentWrapper>
-        );
-
+          </QuickPreviewContentWrapper>
+        )
 
       case 'profile':
       default:
         return (
-          <QuickLookContentWrapper onPress={() => goToDetails(x.id)}>
+          <QuickPreviewContentWrapper onPress={() => goToDetails(x.id)}>
             {!!x.image && (
               <View style={{ alignItems: 'center', paddingTop: 16 }}>
                 <Image
@@ -245,16 +220,30 @@ export default function ExamplesScreen() {
               <TouchableOpacity style={styles.btnPrimary} onPress={() => goToDetails(x.id)}>
                 <Text style={styles.btnPrimaryText}>View profile</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGhost} onPress={() => console.log('Follow')}>
+              <TouchableOpacity style={styles.btnGhost} onPress={() => {}}>
                 <Text style={styles.btnGhostText}>Follow</Text>
               </TouchableOpacity>
             </View>
-          </QuickLookContentWrapper>
-        );
+          </QuickPreviewContentWrapper>
+        )
     }
-  };
+  }
 
-  // rows
+  const open = (x: Item) => {
+    qp.present(renderQuickPreview(x), {
+      variant: 'popover',
+      dismissOnBackdropPress: true,
+      dismissOnPanDown: true, // relevant for sheet variant
+      accessibilityLabel: 'Quick look preview',
+    })
+  }
+
+  const openWithHaptics = async (x: Item) => {
+    try { await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium) } catch {}
+    open(x)
+  }
+
+  // === Rows ===
   const renderInstagramGrid = () => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Instagram-like grid (long-press to preview)</Text>
@@ -264,8 +253,8 @@ export default function ExamplesScreen() {
             key={p.id}
             activeOpacity={0.85}
             onPress={() => goToDetails(p.id)}           // tap → details
-            onLongPress={() => openWithHaptics(p)}      // long-press → QuickLook + haptic
-            delayLongPress={450}
+            onLongPress={() => openWithHaptics(p)}      // long-press → QuickPreview + haptic
+            delayLongPress={350}
           >
             <View style={styles.instaTile}>
               {p.image ? (
@@ -284,11 +273,11 @@ export default function ExamplesScreen() {
         ))}
       </View>
     </View>
-  );
+  )
 
   const renderEcommerceRow = () => (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>E-commerce (tap → details, long-press → QuickLook)</Text>
+      <Text style={styles.sectionTitle}>E-commerce (tap → details, long-press → preview)</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hScroller}>
         {products.map((s) => (
           <TouchableOpacity
@@ -297,7 +286,7 @@ export default function ExamplesScreen() {
             activeOpacity={0.9}
             onPress={() => goToDetails(s.id)}
             onLongPress={() => openWithHaptics(s)}
-            delayLongPress={450}
+            delayLongPress={350}
           >
             <View>
               {s.image ? (
@@ -314,20 +303,14 @@ export default function ExamplesScreen() {
               )}
             </View>
             <View style={styles.cardBody}>
-              <Text style={styles.cardTitle} numberOfLines={1}>
-                {s.title}
-              </Text>
-              {!!s.subtitle && (
-                <Text style={styles.cardSubtitle} numberOfLines={1}>
-                  {s.subtitle}
-                </Text>
-              )}
+              <Text style={styles.cardTitle} numberOfLines={1}>{s.title}</Text>
+              {!!s.subtitle && <Text style={styles.cardSubtitle} numberOfLines={1}>{s.subtitle}</Text>}
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
-  );
+  )
 
   const renderArticleRow = () => (
     <View style={styles.section}>
@@ -340,7 +323,7 @@ export default function ExamplesScreen() {
             activeOpacity={0.9}
             onPress={() => goToDetails(a.id)}
             onLongPress={() => openWithHaptics(a)}
-            delayLongPress={450}
+            delayLongPress={350}
           >
             {a.image ? (
               <Image source={{ uri: a.image }} style={[styles.cardImg, { height: 120 }]} />
@@ -350,20 +333,14 @@ export default function ExamplesScreen() {
               </View>
             )}
             <View style={styles.cardBody}>
-              <Text style={styles.cardTitle} numberOfLines={2}>
-                {a.title}
-              </Text>
-              {!!a.subtitle && (
-                <Text style={styles.cardSubtitle} numberOfLines={1}>
-                  {a.subtitle}
-                </Text>
-              )}
+              <Text style={styles.cardTitle} numberOfLines={2}>{a.title}</Text>
+              {!!a.subtitle && <Text style={styles.cardSubtitle} numberOfLines={1}>{a.subtitle}</Text>}
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
-  );
+  )
 
   const renderTravelRow = () => (
     <View style={styles.section}>
@@ -376,7 +353,7 @@ export default function ExamplesScreen() {
             activeOpacity={0.9}
             onPress={() => goToDetails(d.id)}
             onLongPress={() => openWithHaptics(d)}
-            delayLongPress={450}
+            delayLongPress={350}
           >
             <View>
               {d.image ? (
@@ -393,20 +370,14 @@ export default function ExamplesScreen() {
               )}
             </View>
             <View style={styles.cardBody}>
-              <Text style={styles.cardTitle} numberOfLines={1}>
-                {d.title}
-              </Text>
-              {!!d.subtitle && (
-                <Text style={styles.cardSubtitle} numberOfLines={1}>
-                  {d.subtitle}
-                </Text>
-              )}
+              <Text style={styles.cardTitle} numberOfLines={1}>{d.title}</Text>
+              {!!d.subtitle && <Text style={styles.cardSubtitle} numberOfLines={1}>{d.subtitle}</Text>}
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
-  );
+  )
 
   const renderMusicRow = () => (
     <View style={styles.section}>
@@ -419,7 +390,7 @@ export default function ExamplesScreen() {
             activeOpacity={0.9}
             onPress={() => goToDetails(t.id)}
             onLongPress={() => openWithHaptics(t)}
-            delayLongPress={450}
+            delayLongPress={350}
           >
             {t.image ? (
               <Image source={{ uri: t.image }} style={[styles.cardImg, { height: 120 }]} />
@@ -429,9 +400,7 @@ export default function ExamplesScreen() {
               </View>
             )}
             <View style={styles.musicCardBody}>
-              <Text style={styles.musicCardTitle} numberOfLines={1}>
-                {t.title}
-              </Text>
+              <Text style={styles.musicCardTitle} numberOfLines={1}>{t.title}</Text>
               {!!t.artist && (
                 <Text style={styles.musicCardSubtitle} numberOfLines={1}>
                   {t.artist} {!!t.duration && `• ${t.duration}`}
@@ -442,7 +411,7 @@ export default function ExamplesScreen() {
         ))}
       </ScrollView>
     </View>
-  );
+  )
 
   const renderProfilesRow = () => (
     <View style={styles.section}>
@@ -455,7 +424,7 @@ export default function ExamplesScreen() {
             activeOpacity={0.9}
             onPress={() => goToDetails(p.id)}
             onLongPress={() => openWithHaptics(p)}
-            delayLongPress={450}
+            delayLongPress={350}
           >
             <View style={{ paddingTop: 16 }}>
               <Image
@@ -464,28 +433,23 @@ export default function ExamplesScreen() {
               />
             </View>
             <View style={[styles.cardBody, { alignItems: 'center' }]}>
-              <Text style={styles.cardTitle} numberOfLines={1}>
-                {p.title}
-              </Text>
-              {!!p.subtitle && (
-                <Text style={styles.cardSubtitle} numberOfLines={1}>
-                  {p.subtitle}
-                </Text>
-              )}
+              <Text style={styles.cardTitle} numberOfLines={1}>{p.title}</Text>
+              {!!p.subtitle && <Text style={styles.cardSubtitle} numberOfLines={1}>{p.subtitle}</Text>}
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
-  );
+  )
 
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView contentContainerStyle={styles.screen}>
         <Text style={styles.pageTitle}>Examples</Text>
         <Text style={styles.pageSubtitle}>
-          Tap → details. Long-press → QuickLook (+ haptics). In QuickLook, tap anywhere to navigate.
+          Tap → details. Long-press → QuickPreview (+ haptics). Inside preview, tap anywhere to navigate.
         </Text>
+        <Addons />  
 
         {renderInstagramGrid()}
         {renderEcommerceRow()}
@@ -493,20 +457,9 @@ export default function ExamplesScreen() {
         {renderTravelRow()}
         {renderMusicRow()}
         {renderProfilesRow()}
-
-        <QuickPreview
-          visible={visible}
-          onClose={close}
-          enableSwipeToClose
-          closeOnBackdropPress
-          testID="ql-examples"
-          accessibilityLabel="Quick look preview"
-        >
-          {!!item && renderQuickLook(item)}
-        </QuickPreview>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -579,10 +532,8 @@ const styles = StyleSheet.create({
   },
   priceBadgeText: { fontSize: 12, fontWeight: '800', color: '#111' },
 
-  // QuickLook content (no flex:1, no minHeight)
-  qlCard: {
-    backgroundColor: '#fff',
-  },
+  // QuickPreview content (no flex:1, no minHeight)
+  qlCard: { backgroundColor: '#fff' },
   qlHero: { width: '100%', aspectRatio: 16 / 9, resizeMode: 'cover' },
   qlInstagramHero: { width: '100%', aspectRatio: 1, resizeMode: 'cover' },
   qlHeroSquare: { width: '100%', aspectRatio: 1, resizeMode: 'cover' },
@@ -590,11 +541,19 @@ const styles = StyleSheet.create({
   qlTitle: { fontSize: 20, fontWeight: '800', color: '#212529' },
   qlSubtitle: { fontSize: 14, color: '#6c757d', marginTop: 4 },
   qlDesc: { fontSize: 14, color: '#555', marginTop: 10, lineHeight: 20 },
-  qlViewChip: { position: 'absolute', right: 12, bottom: 12, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 12, paddingHorizontal: 8, paddingVertical: 4, flexDirection: 'row', alignItems: 'center' },
+  qlViewChip: {
+    position: 'absolute',
+    right: 12,
+    bottom: 12,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   qlViewChipText: { color: '#fff', fontSize: 11, marginLeft: 4 },
   headerRow: { flexDirection: 'row', alignItems: 'center', padding: 12 },
-  rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  rowCenter: { flexDirection: 'row', alignItems: 'center' },
   avatar: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#eee', marginRight: 8 },
   metaText: { fontSize: 12, color: '#6c757d' },
   priceText: { fontSize: 18, fontWeight: '800', color: '#0095f6', marginTop: 8 },
@@ -636,70 +595,23 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     resizeMode: 'cover',
     backgroundColor: '#222',
-    // small rounded corners to match Spotify feel
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
   },
-
-  spotifyMeta: {
-    paddingHorizontal: 16,
-    paddingTop: 14,
-  },
+  spotifyMeta: { paddingHorizontal: 16, paddingTop: 14 },
   spotifyTitle: { fontSize: 18, fontWeight: '800', color: '#fff' },
   spotifyArtist: { fontSize: 13, color: '#b3b3b3', marginTop: 4 },
-
-  spotifyProgressWrap: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
-  },
-  spotifyProgressTrack: {
-    height: 3,
-    borderRadius: 3,
-    backgroundColor: '#2a2a2a',
-    overflow: 'hidden',
-  },
-  spotifyProgressFill: {
-    height: '100%',
-    backgroundColor: '#1DB954', // Spotify green
-  },
-  spotifyTimes: {
-    marginTop: 6,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+  spotifyProgressWrap: { paddingHorizontal: 16, paddingTop: 10 },
+  spotifyProgressTrack: { height: 3, borderRadius: 3, backgroundColor: '#2a2a2a', overflow: 'hidden' },
+  spotifyProgressFill: { height: '100%', backgroundColor: '#1DB954' },
+  spotifyTimes: { marginTop: 6, flexDirection: 'row', justifyContent: 'space-between' },
   spotifyTime: { fontSize: 11, color: '#7a7a7a' },
-
   spotifyControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#1f1f1f',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 10, paddingVertical: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: '#1f1f1f',
   },
-  spotifyContent: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.60)',
-
-  },
-  transport: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 18,
-  },
-  ctrlBtn: {
-    padding: 8,
-  },
-  playBtn: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#1DB954',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  spotifyContent: { position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.60)' },
+  transport: { flexDirection: 'row', alignItems: 'center', gap: 18 },
+  ctrlBtn: { padding: 8 },
+  playBtn: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#1DB954', alignItems: 'center', justifyContent: 'center' },
+})

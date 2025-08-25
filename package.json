@@ -1,20 +1,29 @@
 {
   "name": "rn-quick-preview-workspace",
-  "private": true,  
+  "private": true,
+  "version": "2.0.0",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
-    "version": "1.0.0",
   "scripts": {
-    "build": "npm --workspace packages/react-native-quick-preview run build"  ,
-    "example": "npm --workspace apps/expo-quick-preview-example start",
+    "build": "npm --workspace packages/react-native-quick-preview run build",
+    "example": "npm --workspace apps/expo-quick-preview-example run start",
+
+    "example-clean": "npm run build && npm --workspace apps/expo-quick-preview-example run start -- -c",
+
+    "example:ios": "npm --workspace apps/expo-quick-preview-example run ios",
+    "example:android": "npm --workspace apps/expo-quick-preview-example run android",
+
     "dev": "npm --workspace packages/react-native-quick-preview run dev",
     "type-check": "npm --workspace packages/react-native-quick-preview run type-check",
     "lint": "npm --workspace packages/react-native-quick-preview run lint",
     "clean": "npm --workspace packages/react-native-quick-preview run clean",
+
     "version-packages": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+
+    "doctor:reanimated-plugin": "node -e \"const fs=require('fs');const path=require('path');function scan(dir){for(const f of fs.readdirSync(dir)){if(f==='node_modules')continue;const p=path.join(dir,f);const s=fs.statSync(p);if(s.isDirectory())scan(p);else if(/babel\\.(config|js|cjs|mjs)$/.test(f)){const t=fs.readFileSync(p,'utf8');if(t.includes('react-native-reanimated/plugin'))console.log(p)}}}scan(process.cwd())\""
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

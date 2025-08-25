@@ -1,32 +1,26 @@
 {
   "name": "expo-quick-preview-example",
-  "private": false,
-  "version": "1.0.0",
+  "private": true,
+  "version": "1.0.5",
   "main": "expo-router/entry",
-
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
     "ios": "expo start --ios",
+    "android": "expo start --android",
     "web": "expo start --web"
   },
-
   "dependencies": {
-    "@expo/vector-icons": "^14.0.0",
-    "expo-haptics": "~14.0.0",
-    "expo": "~53.0.22",
+    "expo": "53.0.22",
+    "expo-haptics": "~14.1.4",
     "expo-router": "~5.1.5",
-    "expo-status-bar": "~2.2.3",
+    "expo-status-bar": "*",
     "react": "19.0.0",
     "react-native": "0.79.5",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-portalize": "^1.0.7",
+    "react-native-quick-preview": "file:../../packages/react-native-quick-preview",
+    "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.11.1",
-    "react-native-quick-preview": "file:../../packages/react-native-quick-preview"
-  },
-
-  "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@types/react": "~19.0.10",
-    "typescript": "~5.8.3"
+    "react-native-worklets": "^0.4.1"
   }
 }

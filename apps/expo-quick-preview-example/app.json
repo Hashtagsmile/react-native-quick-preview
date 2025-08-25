@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "quickpreviewdemo",
-    "sdkVersion": "53.0.0",
     "experiments": {
       "typedRoutes": true
     },
