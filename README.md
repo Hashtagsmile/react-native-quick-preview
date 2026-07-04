@@ -5,9 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-A headless quick-preview modal for React Native. Long-press an item, peek at its content, swipe down to dismiss — Instagram-style previews with a Gorhom-Bottom-Sheet-style API: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
+Long-press an item to peek at its content, swipe down to dismiss. A headless quick-preview library for React Native: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
 
-This is the development monorepo. **If you just want to use the library, start with the [package README](packages/react-native-quick-preview/README.md)** — it has installation, quick start, and the full API reference. It's also what you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
+This is the development monorepo. **If you just want to use the library, read the [package README](packages/react-native-quick-preview/README.md)** for installation, quick start and the full API. It's the same document you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
 
 <p align="center">
   <img src="./demogif.gif" alt="Quick preview demo" width="420" />
@@ -49,33 +49,26 @@ npm run lint         # ESLint over the library source
 npm run example      # start the Expo example app
 ```
 
-The example app consumes the library through a `file:` reference to `packages/react-native-quick-preview`, so rebuild (`npm run build`) to see library changes in the example.
+The example app consumes the library through a `file:` reference, so rebuild with `npm run build` to see library changes in the example.
 
-### Example app
-
-`apps/expo-quick-preview-example` demonstrates the real-world patterns: e-commerce product previews, article previews, travel destination peeks, long-press to open, swipe down to close, tap to navigate. Run it with Expo Go or a simulator:
-
-```bash
-npm run example        # from the repo root
-npm run example:ios    # or target a platform directly
-npm run example:android
-```
+The example app in `apps/expo-quick-preview-example` shows the patterns the library is meant for: product previews in a grid, article teasers, travel cards. Long-press to open, swipe down to close, tap to navigate. Run it with Expo Go or a simulator (`npm run example:ios` / `npm run example:android`).
 
 ## CI and releases
 
-- **CI** ([ci.yml](.github/workflows/ci.yml)) runs on every push and PR to `main`: install, type check, lint, build, and a `npm pack --dry-run` to verify the publish contents.
-- **Release** ([release.yml](.github/workflows/release.yml)) is triggered manually from the Actions tab. It re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. It requires an `NPM_TOKEN` repository secret (npm automation token).
+CI ([ci.yml](.github/workflows/ci.yml)) runs on every push and PR to `main`: install, type check, lint, build, and a `npm pack --dry-run` to verify what would be published.
 
-Release steps:
+Releases are manual. The [release workflow](.github/workflows/release.yml) re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. It needs an `NPM_TOKEN` repository secret (npm automation token).
 
-1. Bump `version` in `packages/react-native-quick-preview/package.json` (semver).
-2. Add a section to [CHANGELOG.md](CHANGELOG.md).
-3. Commit, push, and wait for CI to go green.
-4. Run the **Release** workflow from the Actions tab.
+To cut a release:
+
+1. Bump `version` in `packages/react-native-quick-preview/package.json`
+2. Add a section to [CHANGELOG.md](CHANGELOG.md)
+3. Commit, push, wait for CI to go green
+4. Run the **Release** workflow from the Actions tab
 
 ## Contributing
 
-Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). In short: fork, create a `feat/` or `fix/` branch, make sure `npm run type-check`, `npm run lint` and `npm run build` pass, and open a PR. Use the [issue templates](.github/ISSUE_TEMPLATE) for bugs and feature requests.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: fork, branch from `main`, make sure `npm run type-check`, `npm run lint` and `npm run build` pass, and open a PR.
 
 ## License
 

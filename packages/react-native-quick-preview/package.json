@@ -1,7 +1,7 @@
 {
   "name": "react-native-quick-preview",
   "version": "2.0.0",
-  "description": "A beautiful, customizable quick preview modal component for React Native",
+  "description": "Headless long-press quick preview for React Native. Peek at any content in a popover or sheet, swipe down to dismiss.",
   "author": "Oliver Lindblad",
   "license": "MIT",
   "main": "dist/index.js",
