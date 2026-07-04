@@ -4,10 +4,10 @@
 export { PreviewProvider } from './context'
 export { useQuickPreview } from './useQuickPreview'
 
-// ✅ static API (Gorhom-style)
+// static API (Gorhom-style)
 export { QuickPreview } from './QuickPreviewAPI'
 
-// ✅ headless component exported with a different name
+// headless component exported under a different name
 export { QuickPreview as QuickPreviewComponent } from './headless/QuickPreview'
 
 // types / helpers

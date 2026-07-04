@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { useRouter } from 'expo-router'
-import { QuickPreviewPressable } from 'react-native-quick-preview'  // ✅   
+import { QuickPreviewPressable } from 'react-native-quick-preview'
 
 // Bring your demo data (adjust the path to your repo’s location)
 import { posts, type Item } from '../data/examples'

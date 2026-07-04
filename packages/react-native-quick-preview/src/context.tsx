@@ -3,7 +3,7 @@ import { BackHandler, AccessibilityInfo } from 'react-native'
 import { Host, Portal } from 'react-native-portalize'
 import { QuickPreviewOptions, QuickPreviewController } from './types'
 import { QuickPreviewRoot } from './internal/QuickPreviewRoot'
-import { QuickPreview as QuickPreviewStatic } from './QuickPreviewAPI' // ✅ only this
+import { QuickPreview as QuickPreviewStatic } from './QuickPreviewAPI'
 
 export const QuickPreviewContext = React.createContext<QuickPreviewController | null>(null)
 

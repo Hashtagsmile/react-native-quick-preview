@@ -1,79 +1,48 @@
 ---
-name: 💡 Feature Request
-about: Suggest an idea for this project
+name: Feature request
+about: Suggest an idea for react-native-quick-preview
 title: '[FEATURE] '
 labels: ['enhancement', 'needs-triage']
 assignees: ''
 ---
 
-## 💡 Feature Description
+## Feature description
 
-A clear and concise description of the feature you'd like to see.
+A clear and concise description of the feature.
 
-## 🎯 Use Case
+## Use case
 
-Describe the use case and why this feature would be valuable:
 - What problem does it solve?
 - Who would benefit from it?
-- How would it improve the developer experience?
 
-## 💭 Proposed Solution
+## Proposed API
 
-A clear and concise description of what you want to happen.
-
-## 🔄 Alternative Solutions
-
-A clear and concise description of any alternative solutions or features you've considered.
-
-## 📱 Platform Considerations
-
-- [ ] iOS
-- [ ] Android
-- [ ] Web (if applicable)
-- [ ] Other platforms
-
-## 💻 Code Example
-
-If applicable, provide a code example of how you'd like to use this feature:
+If applicable, sketch how you'd like to use it:
 
 ```tsx
-import React, { useState } from 'react';
-import { QuickPreview } from 'react-native-quick-preview';
+import { useQuickPreview } from 'react-native-quick-preview'
 
-export default function App() {
-  const [visible, setVisible] = useState(false);
+function Example() {
+  const { present } = useQuickPreview()
 
-  return (
-    <QuickLQuickPreview>
-      visible={visible}
-      onClose={() => setVisible(false)}
-      // New prop or feature here
-    >
-      {/* Your content */}
-    </QuickPreview>
-  );
+  present(<Content />, {
+    variant: 'popover',
+    // new option here
+  })
 }
 ```
 
-## 🎨 Design Considerations
+## Alternatives considered
 
-If this involves UI changes, describe:
-- How should it look?
-- Should it be customizable?
-- Any accessibility considerations?
+Other approaches you've thought about, including workarounds you're using today.
 
-## 📋 Checklist
+## Platform considerations
 
-- [ ] I have searched existing issues to avoid duplicates
-- [ ] This feature fits the library's scope and purpose
-- [ ] I have provided a clear use case
-- [ ] I have considered platform compatibility
-- [ ] I have provided a code example (if applicable)
+- [ ] iOS
+- [ ] Android
 
-## 🔗 Related Issues
+## Checklist
 
-Link any related issues here.
-
-## 📚 Additional Context
-
-Add any other context, screenshots, or mockups about the feature request here.
+- [ ] I searched existing issues for duplicates
+- [ ] This fits the library's scope (headless quick previews)
+- [ ] I provided a clear use case

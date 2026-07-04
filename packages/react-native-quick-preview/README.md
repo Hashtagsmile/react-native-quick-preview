@@ -1,391 +1,191 @@
-# React Native Quick Preview
+# react-native-quick-preview
 
-A beautiful, customizable quick preview modal component for React Native with navigation preview support.
+[![npm](https://img.shields.io/npm/v/react-native-quick-preview.svg)](https://www.npmjs.com/package/react-native-quick-preview)
+[![CI](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml/badge.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/LICENSE)
 
-## Features
+A headless quick-preview modal for React Native — long-press an item, peek at its content, swipe down to dismiss. Think Instagram's long-press preview, with an API in the style of Gorhom Bottom Sheet: mount one provider, then present any content from anywhere.
 
-- 🚀 **Navigation Previews**: Preview destinations before navigating
-- 🎨 **Multiple Variants**: Popover and sheet presentations
-- ⚡ **Smooth Animations**: Powered by React Native Reanimated
-- ♿ **Accessibility**: Full accessibility support
-- 📱 **Cross-Platform**: Works on iOS and Android
-- 🔧 **TypeScript**: Full TypeScript support
-- 🎯 **Flexible**: Works with any navigation system
+- Headless: you render the preview content, the library handles presentation
+- Two variants: centered `popover` and bottom `sheet`
+- Present from a hook (`useQuickPreview`) or a static API (`QuickPreview.present`) — works outside React components
+- Swipe-to-dismiss, backdrop press, Android back button
+- Screen-reader announcements and accessibility labels
+- Full TypeScript types, CJS + ESM builds
+
+![Demo](https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demogif.gif)
 
 ## Installation
 
-```bashs
+```bash
 npm install react-native-quick-preview
 ```
 
-### Required Dependencies
+Peer dependencies (skip any your app already has):
 
 ```bash
-npm install  react-native-safe-area-context
+npx expo install react-native-reanimated react-native-gesture-handler react-native-safe-area-context
+npm install react-native-portalize
 ```
 
-## Quick Start
+For bare React Native, install the same packages with npm and follow each library's setup guide. `react-native-reanimated` requires its Babel plugin — Expo includes this via `babel-preset-expo`.
 
-### 1. Wrap your app with PreviewProvider
+Optional: `expo-haptics` for haptic feedback in `QuickPreviewPressable`.
+
+## Quick start
+
+Mount the provider once, near the root of your app (inside `GestureHandlerRootView`):
 
 ```tsx
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { PreviewProvider } from 'react-native-quick-preview'
 
 export default function App() {
   return (
-    <PreviewProvider>
-      <YourApp />
-    </PreviewProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PreviewProvider>
+        <YourApp />
+      </PreviewProvider>
+    </GestureHandlerRootView>
   )
 }
 ```
 
-### 2. Use the hook in any component
+Then present any content from any screen:
 
 ```tsx
+import { View, Text, Pressable } from 'react-native'
 import { useQuickPreview } from 'react-native-quick-preview'
 
-function MyComponent() {
-  const { present, presentNavigation } = useQuickPreview()
-  
-  // Your component logic
-}
-```
-
-## Navigation Previews
-
-The navigation preview feature allows users to preview destinations before navigating, similar to Instagram's long-press preview.
-
-### Basic Usage
-
-```tsx
-import { useQuickPreview } from 'react-native-quick-preview'
-import { useRouter } from 'expo-router' // or your navigation system
-
-function MyComponent() {
-  const { presentNavigation } = useQuickPreview()
-  const router = useRouter()
-
-  const handleNavigate = (route: string, params?: Record<string, any>) => {
-    // Your navigation logic
-    router.push(route, params)
-  }
-
-  const navigationPreview = {
-    route: '/profile/johndoe',
-    title: 'John Doe Profile',
-    description: 'View John Doe\'s complete profile with posts, followers, and more.',
-    image: 'https://example.com/profile.jpg',
-    metadata: {
-      'Followers': '1.2K',
-      'Posts': '45',
-      'Following': '890'
-    }
-  }
-
-  return (
-    <Pressable 
-      onLongPress={() => presentNavigation(navigationPreview, {
-        onNavigate: handleNavigate,
-        variant: 'popover'
-      })}
-      onPress={() => router.push('/profile/johndoe')}
-    >
-      <Text>View Profile</Text>
-    </Pressable>
-  )
-}
-```
-
-### Navigation Preview Data Structure
-
-```tsx
-type NavigationPreview = {
-  route: string                    // The route to navigate to
-  params?: Record<string, any>     // Optional route parameters
-  title?: string                   // Preview title
-  description?: string             // Preview description
-  image?: string                   // Preview image URL
-  metadata?: Record<string, any>   // Additional metadata to display
-}
-```
-
-### Advanced Navigation Preview
-
-```tsx
-// E-commerce product preview
-const productPreview = {
-  route: '/product/123',
-  title: 'Premium Headphones',
-  description: 'High-quality wireless headphones with noise cancellation.',
-  image: 'https://example.com/headphones.jpg',
-  metadata: {
-    'Price': '$299',
-    'Rating': '4.8/5',
-    'Reviews': '1.2K',
-    'Availability': 'In Stock'
-  }
-}
-
-// Article preview
-const articlePreview = {
-  route: '/article/breaking-news',
-  title: 'Breaking News Article',
-  description: 'Read the full article about the latest developments.',
-  image: 'https://example.com/article.jpg',
-  metadata: {
-    'Author': 'Jane Smith',
-    'Read time': '5 min',
-    'Category': 'Technology',
-    'Published': '2 hours ago'
-  }
-}
-
-// User profile preview
-const profilePreview = {
-  route: '/profile/johndoe',
-  title: 'John Doe',
-  description: 'Software developer passionate about creating amazing user experiences.',
-  image: 'https://example.com/avatar.jpg',
-  metadata: {
-    'Followers': '1.2K',
-    'Posts': '45',
-    'Following': '890',
-    'Location': 'San Francisco'
-  }
-}
-```
-
-## Custom Content Previews
-
-You can also show custom content previews:
-
-```tsx
-import { useQuickPreview } from 'react-native-quick-preview'
-
-function MyComponent() {
+function ProductCard({ product }: { product: Product }) {
   const { present } = useQuickPreview()
 
-  const CustomPreview = () => (
-    <View style={{ padding: 20, backgroundColor: '#fff' }}>
-      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Custom Content</Text>
-      <Text>This is your custom preview content!</Text>
-    </View>
-  )
-
   return (
-    <Pressable onPress={() => present(<CustomPreview />, { variant: 'popover' })}>
-      <Text>Show Custom Preview</Text>
+    <Pressable
+      onLongPress={() =>
+        present(
+          <View style={{ backgroundColor: '#fff', padding: 16 }}>
+            <Text style={{ fontSize: 18, fontWeight: '700' }}>{product.name}</Text>
+            <Text>{product.description}</Text>
+          </View>,
+          { variant: 'popover', dismissOnBackdropPress: true }
+        )
+      }
+    >
+      <Text>{product.name}</Text>
     </Pressable>
   )
 }
 ```
 
-## API Reference
+## Presenting from outside components
 
-### useQuickPreview Hook
+`QuickPreview` is a static handle to the same controller — usable in event handlers, services, or anywhere React context isn't available. It warns (in dev) and no-ops if the provider isn't mounted.
 
 ```tsx
-const { present, presentNavigation, close, update, isOpen } = useQuickPreview()
+import { QuickPreview } from 'react-native-quick-preview'
+
+QuickPreview.present(<MyPreviewContent />, { variant: 'sheet' })
+QuickPreview.update({ size: { maxHeight: 480 } })
+QuickPreview.isOpen() // boolean
+QuickPreview.close()
 ```
 
-#### Methods
+## QuickPreviewPressable
 
-- `present(node, options?)` - Show custom content preview
-- `presentNavigation(navigation, options?)` - Show navigation preview
-- `close()` - Close the current preview
-- `update(options)` - Update preview options
-- `isOpen()` - Check if preview is currently open
-
-### QuickPreviewOptions
+A drop-in wrapper that wires up the long-press-to-preview / tap-to-navigate pattern, with a press-down scale animation and optional haptics:
 
 ```tsx
-type QuickPreviewOptions = {
-  variant?: 'popover' | 'sheet'           // Presentation variant
-  size?: 'auto' | number | { maxHeight?: number; maxWidth?: number }
-  dismissOnBackdropPress?: boolean        // Default: true
-  dismissOnPanDown?: boolean              // Default: true
-  accessibilityLabel?: string
-  onOpenStart?: () => void
-  onOpenEnd?: () => void
-  onCloseStart?: () => void
-  onCloseEnd?: () => void
-  onNavigate?: (route: string, params?: Record<string, any>) => void
-}
+import { QuickPreviewPressable } from 'react-native-quick-preview'
+
+<QuickPreviewPressable
+  onPress={() => router.push(`/product/${product.id}`)}
+  renderPreview={() => <ProductPreview product={product} />}
+  previewOptions={{ variant: 'popover' }}
+  delay={350}          // long-press delay in ms
+  haptics="medium"     // 'light' | 'medium' | 'heavy' | false (needs expo-haptics)
+>
+  <ProductCard product={product} />
+</QuickPreviewPressable>
 ```
 
-### NavigationPreview
+## Scrollable previews
+
+Use `QuickPreviewScrollView` instead of a plain `ScrollView` inside preview content so scrolling and the swipe-to-dismiss gesture don't fight each other:
 
 ```tsx
-type NavigationPreview = {
-  route: string
-  params?: Record<string, any>
-  title?: string
-  description?: string
-  image?: string
-  metadata?: Record<string, any>
-}
-```
+import { QuickPreviewScrollView } from 'react-native-quick-preview'
 
-## Examples
-
-### E-commerce App
-
-```tsx
-// Product grid with preview
-function ProductGrid() {
-  const { presentNavigation } = useQuickPreview()
-  const router = useRouter()
-
-  return (
-    <FlatList
-      data={products}
-      renderItem={({ item }) => (
-        <Pressable
-          onLongPress={() => presentNavigation({
-            route: `/product/${item.id}`,
-            title: item.name,
-            description: item.description,
-            image: item.image,
-            metadata: {
-              'Price': item.price,
-              'Rating': item.rating,
-              'Reviews': item.reviewCount
-            }
-          }, {
-            onNavigate: (route) => router.push(route)
-          })}
-          onPress={() => router.push(`/product/${item.id}`)}
-        >
-          <ProductCard product={item} />
-        </Pressable>
-      )}
-    />
-  )
-}
-```
-
-### Social Media App
-
-```tsx
-// User list with profile previews
-function UserList() {
-  const { presentNavigation } = useQuickPreview()
-  const router = useRouter()
-
-  return (
-    <FlatList
-      data={users}
-      renderItem={({ item }) => (
-        <Pressable
-          onLongPress={() => presentNavigation({
-            route: `/profile/${item.username}`,
-            title: item.displayName,
-            description: item.bio,
-            image: item.avatar,
-            metadata: {
-              'Followers': item.followerCount,
-              'Posts': item.postCount,
-              'Following': item.followingCount
-            }
-          }, {
-            onNavigate: (route) => router.push(route)
-          })}
-          onPress={() => router.push(`/profile/${item.username}`)}
-        >
-          <UserCard user={item} />
-        </Pressable>
-      )}
-    />
-  )
-}
-```
-
-### News App
-
-```tsx
-// Article list with previews
-function ArticleList() {
-  const { presentNavigation } = useQuickPreview()
-  const router = useRouter()
-
-  return (
-    <FlatList
-      data={articles}
-      renderItem={({ item }) => (
-        <Pressable
-          onLongPress={() => presentNavigation({
-            route: `/article/${item.slug}`,
-            title: item.title,
-            description: item.excerpt,
-            image: item.featuredImage,
-            metadata: {
-              'Author': item.author,
-              'Read time': item.readTime,
-              'Category': item.category,
-              'Published': item.publishedAt
-            }
-          }, {
-            onNavigate: (route) => router.push(route)
-          })}
-          onPress={() => router.push(`/article/${item.slug}`)}
-        >
-          <ArticleCard article={item} />
-        </Pressable>
-      )}
-    />
-  )
-}
-```
-
-## Customization
-
-### Custom Preview Component
-
-```tsx
-const CustomNavigationPreview = ({ navigation, onNavigate, onClose }) => (
-  <View style={styles.customPreview}>
-    <Image source={{ uri: navigation.image }} style={styles.image} />
-    <Text style={styles.title}>{navigation.title}</Text>
-    <Text style={styles.description}>{navigation.description}</Text>
-    <View style={styles.actions}>
-      <Button title="Cancel" onPress={onClose} />
-      <Button title="Navigate" onPress={() => onNavigate(navigation.route)} />
-    </View>
-  </View>
+present(
+  <QuickPreviewScrollView>
+    <LongArticleContent />
+  </QuickPreviewScrollView>,
+  { variant: 'sheet' }
 )
-
-// Use custom component
-presentNavigation(navigationData, {
-  onNavigate: handleNavigate,
-  renderContent: (props) => <CustomNavigationPreview {...props} />
-})
 ```
 
-### Custom Animations
+## API reference
 
-```tsx
-presentNavigation(navigationData, {
-  onNavigate: handleNavigate,
-  variant: 'sheet',
-  animationDuration: 300,
-  onOpenStart: () => console.log('Opening preview...'),
-  onOpenEnd: () => console.log('Preview opened!'),
-  onCloseStart: () => console.log('Closing preview...'),
-  onCloseEnd: () => console.log('Preview closed!')
-})
+### `present(node, options?)`
+
+Available from `useQuickPreview()` and `QuickPreview`. Presents `node` as the preview content. Calling it while a preview is open replaces the content.
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'popover' \| 'sheet'` | `'popover'` | Centered card or bottom sheet |
+| `size` | `'auto' \| number \| { maxHeight?, maxWidth? }` | `'auto'` | Constrains the preview container |
+| `dismissOnBackdropPress` | `boolean` | `true` | Close when the backdrop is tapped |
+| `dismissOnPanDown` | `boolean` | `true` | Close on swipe-down gesture |
+| `accessibilityLabel` | `string` | — | Label announced for the preview container |
+| `onOpenStart` / `onOpenEnd` | `() => void` | — | Open animation lifecycle |
+| `onCloseStart` / `onCloseEnd` | `() => void` | — | Close animation lifecycle |
+
+### Controller
+
+Both `useQuickPreview()` and the static `QuickPreview` expose:
+
+| Method | Description |
+| --- | --- |
+| `present(node, options?)` | Open a preview with the given content |
+| `close()` | Dismiss the current preview |
+| `update(options)` | Merge new options into the open preview |
+| `isOpen()` | Whether a preview is currently open |
+
+### Exports
+
+| Export | Kind | Purpose |
+| --- | --- | --- |
+| `PreviewProvider` | Component | Hosts the preview layer; mount once at the root |
+| `useQuickPreview` | Hook | Controller from React context (throws outside the provider) |
+| `QuickPreview` | Object | Static controller handle (safe no-op before mount) |
+| `QuickPreviewPressable` | Component | Long-press-to-preview wrapper with tap-through |
+| `QuickPreviewScrollView` | Component | Gesture-aware ScrollView for preview content |
+| `QuickPreviewComponent` | Component | Low-level headless component, for fully custom hosts |
+| `QuickPreviewOptions`, `QuickPreviewVariant`, `QuickPreviewSize`, `QuickPreviewController` | Types | Public TypeScript types |
+
+## Accessibility
+
+- Open/close is announced to screen readers (`AccessibilityInfo.announceForAccessibility`)
+- The Android hardware back button closes an open preview
+- `accessibilityLabel` on the container is forwarded to assistive tech
+- The backdrop is an accessible "close" target
+
+## Example app
+
+The [repository](https://github.com/Hashtagsmile/react-native-quick-preview) contains an Expo example app with e-commerce, article and travel preview patterns:
+
+```bash
+git clone https://github.com/Hashtagsmile/react-native-quick-preview.git
+cd react-native-quick-preview
+npm install
+npm run build
+npm run example
 ```
 
-## Platform Support
+## Versioning
 
-- ✅ iOS
-- ✅ Android
-- ✅ Expo (with required dependencies)
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+This package follows semver. See the [CHANGELOG](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/CHANGELOG.md) for release notes. Version 2.0.0 replaced the v1 `<QuickPreview visible onClose>` component API with the provider + controller architecture documented here — v1 code will not compile against v2.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT © Oliver Lindblad

@@ -1,74 +1,59 @@
 ---
-name: 🐛 Bug Report
-about: Create a report to help us improve
+name: Bug report
+about: Report a problem with react-native-quick-preview
 title: '[BUG] '
 labels: ['bug', 'needs-triage']
 assignees: ''
 ---
 
-## 🐛 Bug Description
+## Description
 
-A clear and concise description of what the bug is.
+A clear and concise description of the bug.
 
-## 🔄 Steps to Reproduce
+## Steps to reproduce
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+1. ...
+2. ...
+3. ...
 
-## ✅ Expected Behavior
+## Expected behavior
 
-A clear and concise description of what you expected to happen.
+What you expected to happen.
 
-## ❌ Actual Behavior
+## Actual behavior
 
-A clear and concise description of what actually happened.
+What actually happened.
 
-## 📱 Environment
+## Environment
 
-**Device:** [e.g. iPhone 14, Samsung Galaxy S23]
-**OS:** [e.g. iOS 17.0, Android 14]
-**React Native:** [e.g. 0.76.3]
-**Expo:** [e.g. ~53.0.0] (if applicable)
-**react-native-quick-preview:** [e.g. 1.0.0]
+- **Device:** [e.g. iPhone 14, Samsung Galaxy S23]
+- **OS:** [e.g. iOS 17.0, Android 14]
+- **React Native:** [e.g. 0.79.5]
+- **Expo:** [e.g. 53] (if applicable)
+- **react-native-quick-preview:** [e.g. 2.0.0]
+- **react-native-reanimated:** [e.g. 3.17.4]
 
-## 📸 Screenshots/Videos
-
-If applicable, add screenshots or videos to help explain your problem.
-
-## 💻 Code Example
+## Code example
 
 ```tsx
-import React, { useState } from 'react';
-import { QuickPreview } from 'react-native-quick-preview';
+import { useQuickPreview } from 'react-native-quick-preview'
 
-export default function App() {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <QuickPreview>
-      visible={visible}
-      onClose={() => setVisible(false)}
-    >
-      {/* Your content */}
-    </QuickPreview>
-  );
+function Example() {
+  const { present } = useQuickPreview()
+  // Minimal reproduction here
 }
 ```
 
-## 🔍 Additional Context
+## Additional context
 
-Add any other context about the problem here, such as:
 - When did this start happening?
 - Does it happen on both iOS and Android?
-- Are there any console errors?
-- Does it happen in the example app?
+- Any console errors or warnings?
+- Does it reproduce in the example app?
 
-## 📋 Checklist
+## Checklist
 
-- [ ] I have searched existing issues to avoid duplicates
-- [ ] I have provided all required information
-- [ ] I have tested on both iOS and Android (if applicable)
-- [ ] I have included a code example
-- [ ] I have checked the documentation
+- [ ] I searched existing issues for duplicates
+- [ ] I included a minimal code example
+- [ ] `PreviewProvider` is mounted (inside `GestureHandlerRootView`)
+- [ ] All peer dependencies are installed

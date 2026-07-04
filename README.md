@@ -1,278 +1,82 @@
-# React Native QuickPreview Workspace
+# react-native-quick-preview
 
 [![npm](https://img.shields.io/npm/v/react-native-quick-preview.svg)](https://www.npmjs.com/package/react-native-quick-preview)
+[![CI](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml/badge.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-A monorepo containing the **`react-native-quick-preview`** library and an **Expo example app** showcasing its usage.
+A headless quick-preview modal for React Native. Long-press an item, peek at its content, swipe down to dismiss — Instagram-style previews with a Gorhom-Bottom-Sheet-style API: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
 
-> ⚡ Gorhom Bottom Sheet–style experience, but for **quick previews**.  
-> A **headless**, customizable Quick Look modal for React Native.
-
----
-
-## ✨ Features
-
-- 🎨 **Beautiful Animations**: Smooth fade, scale, and swipe-to-close animations
-- 🎯 **Universal Content**: Works with any content type (products, articles, profiles, etc.)
-- 🎛️ **Highly Customizable**: Themes, animations, behavior, and styling
-- ♿ **Accessibility First**: Full screen reader support and keyboard navigation
-- 📱 **Cross-Platform**: Works seamlessly on iOS and Android
-- 🔧 **TypeScript Ready**: Full type safety and IntelliSense support
-- ⚡ **Performance Optimized**: Uses native drivers for smooth 60fps animations
-- 🎪 **Headless Design**: No opinionated UI, you control the content
-- 🔄 **Gesture Support**: Swipe to close, tap to navigate, long press to open
-
----
-
+This is the development monorepo. **If you just want to use the library, start with the [package README](packages/react-native-quick-preview/README.md)** — it has installation, quick start, and the full API reference. It's also what you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
 
 <p align="center">
-  <!-- Or a plain GIF fallback -->
-  <img src="./demogif.gif" alt="QuickLook demo (GIF)" width="420" />
+  <img src="./demogif.gif" alt="Quick preview demo" width="420" />
 </p>
 
-
-## 📁 Structure
+## Repository layout
 
 ```
 ├── packages/
-│   └── react-native-quick-preview/     # The library package
+│   └── react-native-quick-preview/    # The published library
 │       ├── src/
-│       │   ├── QuickPreview.tsx       # Main component
-│       │   ├── QuickPreviewProperties.ts # Public types
-│       │   └── index.ts            # Entry point
-│       ├── package.json
-│       ├── tsconfig.json
-│       ├── tsup.config.ts
-│       └── README.md
+│       │   ├── index.ts               # Public exports
+│       │   ├── context.tsx            # PreviewProvider + controller context
+│       │   ├── QuickPreviewAPI.ts     # Static QuickPreview handle
+│       │   ├── useQuickPreview.ts     # Hook
+│       │   ├── types.ts               # Public types
+│       │   ├── headless/              # Low-level headless component
+│       │   ├── internal/              # Containers, backdrop, scroll view
+│       │   └── addons/                # QuickPreviewPressable
+│       └── tsup.config.ts             # CJS + ESM + d.ts build
 ├── apps/
-│   └── expo-quick-preview-example/     # Expo example app
-│       ├── app/                    # Expo Router pages
-│       ├── components/             # Example components
-│       ├── data/                   # Example data
-│       ├── package.json
-│       └── app.json
-├── .changeset/                     # Versioning (Changesets)
-├── .github/workflows/release.yml   # CI release workflow
-├── package.json                    # Root workspace config
-├── CONTRIBUTING.md
-└── README.md                       # This file
+│   └── expo-quick-preview-example/    # Expo example app (Expo Router)
+├── .github/workflows/                 # CI + release automation
+└── CHANGELOG.md                       # Release history
 ```
 
----
+## Development
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Expo CLI (`npx expo --version`)
-- Expo Go app (SDK 53) or iOS Simulator/Android Emulator
-
-### Install & Run
+Requires Node 18+ and npm 10 (npm workspaces).
 
 ```bash
-# 1) Clone
-git clone <repository-url>
-cd rn-quick-preview-workspace
-
-# 2) Install
+git clone https://github.com/Hashtagsmile/react-native-quick-preview.git
+cd react-native-quick-preview
 npm install
 
-# 3) Build the library
-npm run build
-
-# 4) Start the example app
-npm run example
+npm run build        # build the library (tsup: CJS + ESM + types)
+npm run type-check   # TypeScript, no emit
+npm run lint         # ESLint over the library source
+npm run example      # start the Expo example app
 ```
 
-Open **Expo Go** on your device (SDK 53) or run an iOS/Android emulator to view the demo.
+The example app consumes the library through a `file:` reference to `packages/react-native-quick-preview`, so rebuild (`npm run build`) to see library changes in the example.
 
----
+### Example app
 
-## 📦 Library (packages/react-native-quick-preview)
-
-A **headless** quick preview modal component for React Native with smooth animations, swipe-to-close, and full accessibility.
-
-**Install (in your app):**
-```bash
-npm install react-native-quick-preview
-# or
-yarn add react-native-quick-preview
-
-# peer dependencies (if not already in your app)
-npx expo install react-native-reanimated react-native-gesture-handler react-native-safe-area-context
-npm install react-native-portalize
-```
-
-**Basic usage:**
-```tsx
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { QuickPreview } from 'react-native-quick-preview';
-
-export default function App() {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <TouchableOpacity onPress={() => setVisible(true)}>
-        <Text>Show Quick Look</Text>
-      </TouchableOpacity>
-
-      <QuickPreview visible={visible} onClose={() => setVisible(false)}>
-        <View style={{ backgroundColor: '#fff', padding: 20 }}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Quick Preview Content</Text>
-          <Text style={{ marginTop: 10 }}>Render any custom content inside.</Text>
-        </View>
-      </QuickPreview>
-    </View>
-  );
-}
-```
-
-**Advanced usage with long press:**
-```tsx
-<TouchableOpacity
-  onLongPress={() => setVisible(true)}
-  delayLongPress={500}
->
-  <Image source={{ uri: product.image }} />
-  <Text>{product.name}</Text>
-  
-  <QuickPreview
-    visible={visible}
-    onClose={() => setVisible(false)}
-    onPressCard={() => {
-      setVisible(false);
-      navigation.navigate('ProductDetail', { id: product.id });
-    }}
-    enableSwipeToClose
-    closeOnBackdropPress
-    theme="dark"
-    animationDuration={300}
-  >
-    {/* Your custom content */}
-  </QuickPreview>
-</TouchableOpacity>
-```
-
----
-
-## 📱 Example App (apps/expo-quick-preview-example)
-
-Demonstrates multiple patterns:
-- 🛍️ E‑commerce product previews
-- 📰 Article previews
-- ✈️ Travel destination peeks
-- Long‑press to open, **swipe down** to close, **tap to navigate**
-
-**Run directly:**
-```bash
-cd apps/expo-quick-preview-example
-npm start
-```
-
-The example consumes the package via workspace reference (`"react-native-quick-preview": "workspace:*"`), so local library changes appear instantly after `npm run build`.
-
----
-
-## 🧭 Versioning & Releases (Changesets)
-
-We use **Changesets** for semantic versioning and npm releases.
+`apps/expo-quick-preview-example` demonstrates the real-world patterns: e-commerce product previews, article previews, travel destination peeks, long-press to open, swipe down to close, tap to navigate. Run it with Expo Go or a simulator:
 
 ```bash
-# Create a changeset (choose patch/minor/major)
-npx changeset
-
-# Apply versions & update changelogs
-npm run version-packages
-
-# Publish to npm
-npm run release
-
-# Push tags & commits
-git push --follow-tags
+npm run example        # from the repo root
+npm run example:ios    # or target a platform directly
+npm run example:android
 ```
 
-CI can publish automatically via **.github/workflows/release.yml** (set `NPM_TOKEN` in repo secrets).
+## CI and releases
 
----
+- **CI** ([ci.yml](.github/workflows/ci.yml)) runs on every push and PR to `main`: install, type check, lint, build, and a `npm pack --dry-run` to verify the publish contents.
+- **Release** ([release.yml](.github/workflows/release.yml)) is triggered manually from the Actions tab. It re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. It requires an `NPM_TOKEN` repository secret (npm automation token).
 
-## 🛠 Development Scripts
+Release steps:
 
-From the repo root:
+1. Bump `version` in `packages/react-native-quick-preview/package.json` (semver).
+2. Add a section to [CHANGELOG.md](CHANGELOG.md).
+3. Commit, push, and wait for CI to go green.
+4. Run the **Release** workflow from the Actions tab.
 
-```bash
-npm run build        # builds the library
-npm run dev          # optional: watch mode if configured
-npm run example      # starts Expo example app
-npm run type-check   # TypeScript
-```
+## Contributing
 
----
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). In short: fork, create a `feat/` or `fix/` branch, make sure `npm run type-check`, `npm run lint` and `npm run build` pass, and open a PR. Use the [issue templates](.github/ISSUE_TEMPLATE) for bugs and feature requests.
 
-## 🤝 Contributing
+## License
 
-We love contributions! Here's how you can help:
-
-### 🐛 Reporting Issues
-- Use the [issue template](.github/ISSUE_TEMPLATE/bug_report.md)
-- Include reproduction steps and device info
-- Check existing issues first
-
-### 💡 Feature Requests
-- Use the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md)
-- Explain the use case and benefits
-- Consider if it fits the library's scope
-
-### 🔧 Pull Requests
-1. **Fork** the repository  
-2. **Create** a feature branch (`feat/your-feature` or `fix/your-bug`)  
-3. **Develop** against the monorepo:
-   ```bash
-   npm install
-   npm run build           # builds the package
-   npm run example         # runs the Expo demo app
-   npm run type-check
-   ```
-4. **Add tests/docs** where helpful  
-5. **Create a changeset**:
-   ```bash
-   npx changeset
-   ```
-   - Select the package: `react-native-quick-preview`  
-   - Choose bump type (patch/minor/major)  
-   - Add a short summary  
-6. **Commit** using Conventional Commits (preferred):  
-   - `feat: add swipeThreshold prop`  
-   - `fix: prevent backdrop tap when content animates`  
-7. **Open a PR** and ensure CI passes
-
-### ✅ Local Testing Checklist
-- [ ] Package builds (`npm run build`)  
-- [ ] Example app runs (`npm run example`)  
-- [ ] QuickPreview opens, closes, and swipes as expected  
-- [ ] No red screens / warnings in Expo  
-- [ ] A11y: labels present, focus reasonable
-
----
-
-## 📚 Docs & Links
-
-- **Package (npm):** https://www.npmjs.com/package/react-native-quick-preview  
-- **Library README:** `packages/react-native-quick-preview/README.md`  
-- **Example App README:** `apps/expo-quick-preview-example/README.md`  
-- **Issues / Features:** https://github.com/yourusername/react-native-quick-preview/issues
-
----
-
-## 🧑‍💻 Author
-
-**Oliver Lindblad** — Made with ❤️ for the React Native community.
-
----
-
-## 📄 License
-
-MIT © Oliver Lindblad
+MIT © [Oliver Lindblad](https://github.com/Hashtagsmile)
