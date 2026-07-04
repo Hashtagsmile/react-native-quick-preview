@@ -46,8 +46,7 @@ export function QuickPreviewRoot({
       cbs.current.onCloseStart?.()
       cbs.current.onCloseEnd?.()
     }
-    // run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // run once (mount-only effect)
   }, [])
 
   const containerStyle = useAnimatedStyle(() => ({ opacity: opacity.value }))

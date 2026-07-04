@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, AccessibilityRole } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import type { QuickPreviewOptions } from '../../types'
@@ -46,7 +46,7 @@ export function SheetContainer({
     <GestureDetector gesture={pan}>
       <Animated.View
         style={[styles.sheet, style, { paddingBottom: Math.max(insets.bottom, 12) }]}
-        accessibilityRole={options?.accessibilityRole ?? 'dialog' as AccessibilityRole}
+        accessibilityRole={options?.accessibilityRole}
         accessibilityLabel={options?.accessibilityLabel ?? 'Quick preview'}
       >
         <View style={styles.grabber} />

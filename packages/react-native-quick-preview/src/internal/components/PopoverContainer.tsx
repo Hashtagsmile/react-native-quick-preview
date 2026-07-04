@@ -6,8 +6,8 @@ import type { QuickPreviewOptions } from '../../types'
 export function PopoverContainer({
   children,
   options,
-  insets,
-  onRequestClose, // (kept for parity; not used here)
+  insets: _insets,
+  onRequestClose: _onRequestClose, // kept for API parity with SheetContainer
 }: {
   children: React.ReactNode
   options?: QuickPreviewOptions
@@ -31,7 +31,7 @@ export function PopoverContainer({
     <View style={[StyleSheet.absoluteFill, styles.center]} pointerEvents="box-none">
       <Animated.View
         style={[styles.card, container]}
-        accessibilityRole={options?.accessibilityRole ?? 'dialog'}
+        accessibilityRole={options?.accessibilityRole}
         accessibilityLabel={options?.accessibilityLabel ?? 'Quick preview'}
       >
         {children}

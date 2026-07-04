@@ -13,6 +13,7 @@ export function PreviewProvider({ children }: { children: React.ReactNode }) {
   const openRef = React.useRef(false)
 
   const announce = React.useCallback((msg: string) => {
+    // eslint-disable-next-line no-empty
     try { AccessibilityInfo.announceForAccessibility?.(msg) } catch {}
   }, [])
 

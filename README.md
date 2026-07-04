@@ -99,6 +99,10 @@ A **headless** quick preview modal component for React Native with smooth animat
 npm install react-native-quick-preview
 # or
 yarn add react-native-quick-preview
+
+# peer dependencies (if not already in your app)
+npx expo install react-native-reanimated react-native-gesture-handler react-native-safe-area-context
+npm install react-native-portalize
 ```
 
 **Basic usage:**
