@@ -7,6 +7,20 @@ import { QuickPreview as QuickPreviewStatic } from './QuickPreviewAPI'
 
 export const QuickPreviewContext = React.createContext<QuickPreviewController | null>(null)
 
+/**
+ * Hosts the preview layer and registers the controller. Mount this once, near the
+ * root of your app, inside a `<GestureHandlerRootView>`. After it's mounted you can
+ * present previews via {@link useQuickPreview} or the static `QuickPreview` handle.
+ *
+ * @example
+ * ```tsx
+ * <GestureHandlerRootView style={{ flex: 1 }}>
+ *   <PreviewProvider>
+ *     <YourApp />
+ *   </PreviewProvider>
+ * </GestureHandlerRootView>
+ * ```
+ */
 export function PreviewProvider({ children }: { children: React.ReactNode }) {
   const [content, setContent] = React.useState<React.ReactNode | null>(null)
   const [options, setOptions] = React.useState<QuickPreviewOptions | undefined>(undefined)

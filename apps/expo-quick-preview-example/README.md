@@ -36,8 +36,9 @@ apps/expo-quick-preview-example/
 │   │   ├── shop.tsx         # e-commerce grid       → bottom-sheet quick-view
 │   │   ├── music.tsx        # track list            → peek with Play
 │   │   ├── chat.tsx         # messages thread       → peek a shared link's destination
-│   │   ├── places.tsx       # map cards             → sheet place peek
-│   │   └── people.tsx       # team directory        → profile peek with quick actions
+│   │   ├── places.tsx       # map with pins         → sheet place peek
+│   │   ├── people.tsx       # team directory        → profile peek with quick actions
+│   │   └── files.tsx        # Quick Look browser    → image popover / doc scroll-sheet
 │   └── detail.tsx           # full page (shared navigation target)
 ├── components/              # one *Preview per context + shared ExampleHeader
 ├── theme.ts                 # colors / spacing / radius / type

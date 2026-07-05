@@ -16,6 +16,7 @@ const KIND: Record<ItemKind, { icon: keyof typeof Ionicons.glyphMap; label: stri
   destination: { icon: 'airplane-outline', label: 'Destination' },
   track: { icon: 'musical-notes-outline', label: 'Track' },
   profile: { icon: 'person-outline', label: 'Profile' },
+  file: { icon: 'document-outline', label: 'File' },
 }
 
 const money = (p?: number | string) =>
@@ -58,7 +59,13 @@ export default function DetailScreen() {
   const kind = KIND[item.kind]
   const isProduct = item.kind === 'product'
   const isPost = item.kind === 'post'
+  const isFile = item.kind === 'file'
   const price = money(item.price)
+  const fileMeta = isFile
+    ? [item.fileType === 'sheet' ? 'Spreadsheet' : item.fileType?.toUpperCase(), item.fileSize, item.modified]
+        .filter(Boolean)
+        .join(' · ')
+    : ''
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -106,6 +113,7 @@ export default function DetailScreen() {
             <>
               <Text style={styles.title}>{item.title}</Text>
               {!!item.subtitle && <Text style={styles.subtitle}>{item.subtitle}</Text>}
+              {!!fileMeta && <Text style={styles.subtitle}>{fileMeta}</Text>}
 
               {item.rating !== undefined && (
                 <View style={styles.ratingRow}>

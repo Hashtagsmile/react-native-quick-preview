@@ -6,7 +6,10 @@ export type ItemKind =
   | 'article'
   | 'destination'
   | 'track'
-  | 'profile';
+  | 'profile'
+  | 'file';
+
+export type FileType = 'pdf' | 'image' | 'doc' | 'sheet';
 
 export type Item = {
   id: string;
@@ -31,6 +34,11 @@ export type Item = {
   // music
   artist?: string;
   duration?: string;
+
+  // files
+  fileType?: FileType;
+  fileSize?: string;
+  modified?: string;
 };
 
 export const posts: Item[] = [
@@ -493,6 +501,69 @@ export const profiles: Item[] = [
 ];
 
 
+export const files: Item[] = [
+  {
+    id: 'file_1',
+    kind: 'file',
+    title: 'Q3 Report.pdf',
+    fileType: 'pdf',
+    fileSize: '2.4 MB',
+    modified: 'Yesterday',
+    description:
+      'Quarterly performance summary covering revenue, retention, and the roadmap for next quarter. Highlights strong growth in mobile and a plan to double down on activation.',
+  },
+  {
+    id: 'file_2',
+    kind: 'file',
+    title: 'moodboard.jpg',
+    fileType: 'image',
+    fileSize: '4.1 MB',
+    modified: 'Monday',
+    image:
+      'https://images.unsplash.com/photo-1503602642458-232111445657?w=1400&q=80&auto=format&fit=crop',
+  },
+  {
+    id: 'file_3',
+    kind: 'file',
+    title: 'Proposal.docx',
+    fileType: 'doc',
+    fileSize: '88 KB',
+    modified: 'Tuesday',
+    description:
+      'Draft proposal for the Q4 partnership. Scope, timeline, deliverables, and pricing, with an appendix on success metrics and support terms.',
+  },
+  {
+    id: 'file_4',
+    kind: 'file',
+    title: 'Budget.xlsx',
+    fileType: 'sheet',
+    fileSize: '120 KB',
+    modified: 'Wednesday',
+    description:
+      'FY budget broken down by team and quarter. Includes headcount planning, tooling spend, and a runway model with three scenarios.',
+  },
+  {
+    id: 'file_5',
+    kind: 'file',
+    title: 'brand-shot.jpg',
+    fileType: 'image',
+    fileSize: '3.3 MB',
+    modified: 'Thursday',
+    image:
+      'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1400&q=80&auto=format&fit=crop',
+  },
+  {
+    id: 'file_6',
+    kind: 'file',
+    title: 'README.md',
+    fileType: 'doc',
+    fileSize: '12 KB',
+    modified: 'Last week',
+    description:
+      'Setup and usage notes for the project: install steps, environment variables, common scripts, and a troubleshooting section for the usual gotchas.',
+  },
+]
+
 // Every item, flattened — used for id lookup on the detail screen.
 export const allItems: Item[] = [
   ...posts,
@@ -501,6 +572,7 @@ export const allItems: Item[] = [
   ...destinations,
   ...tracks,
   ...profiles,
+  ...files,
 ]
 
 export const getItemById = (id: string): Item | null =>

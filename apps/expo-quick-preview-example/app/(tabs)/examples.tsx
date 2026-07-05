@@ -23,6 +23,7 @@ const EXAMPLES: Example[] = [
   { route: '/examples/chat', icon: 'chatbubbles', title: 'Messages', desc: 'Long-press a shared link → peek its destination' },
   { route: '/examples/places', icon: 'map', title: 'Places', desc: 'Long-press a map pin → place peek' },
   { route: '/examples/people', icon: 'people', title: 'Team', desc: 'Directory → profile peek with quick actions' },
+  { route: '/examples/files', icon: 'folder', title: 'Files', desc: 'Quick Look → peek a file without opening it' },
 ]
 
 export default function Examples() {

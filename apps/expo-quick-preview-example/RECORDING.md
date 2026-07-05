@@ -16,6 +16,7 @@ context developers recognize:
 | **Messages** | Long-press a shared link → peek its destination (cross-platform link preview) |
 | **Places** | Map cards → sheet place peek (rating, Directions) |
 | **Team** | Directory → profile peek with Message / Call |
+| **Files** | Quick Look → images peek as a popover, documents as a scrollable sheet |
 
 The **API** tab is the code reference (hook / static / headless / scrollview).
 

@@ -43,6 +43,8 @@ Complete rewrite from a single controlled component to a headless provider + con
 
 - Unit test suite (Jest + Testing Library) covering the provider contract, the static handle, size resolution, and the headless component; tests run in CI on Node 18/20/22.
 - Removed a dead v1 types file; the library now lints with zero warnings.
+- Documented the entire public API with TSDoc — every `present()` option, the controller methods, the hook, the provider, the headless component props, and the scroll view — with `@example` blocks on the main entry points. The docs flow into the shipped `.d.ts` (verified), so consumers get full autocomplete and hover documentation in their editor.
+- Added a seventh example — **Files (Quick Look)** — a file browser where images peek as a popover and documents peek as a scrollable bottom sheet (`QuickPreviewScrollView`). Named after the interaction the library is built for.
 - Excluded `__tests__` from the published npm tarball.
 - README now documents when to use this library versus native context-menu libraries and Expo Router's `Link.Preview`.
 - Upgraded the example app to Expo SDK 54 (React Native 0.81, React 19.1, Reanimated 4, expo-router v6) so it runs in current Expo Go; `expo-doctor` passes 18/18. The library is now dev-tested against Reanimated 4 while keeping its peer range at `>=3.0.0` (both 3 and 4 supported).
