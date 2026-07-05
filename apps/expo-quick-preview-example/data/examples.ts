@@ -332,6 +332,8 @@ export const destinations: Item[] = [
     image:
       'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1400&q=80&auto=format&fit=crop',
     price: 'From $799',
+    rating: 4.8,
+    reviews: 2140,
     description: 'Whitewashed alleys, blue domes, and magnetic sunsets.',
     tags: ['islands', 'europe', 'romantic'],
   },
@@ -343,8 +345,36 @@ export const destinations: Item[] = [
     image:
       'https://images.unsplash.com/photo-1549692520-acc6669e2f0c?w=1400&q=80&auto=format&fit=crop',
     price: 'From $999',
+    rating: 4.9,
+    reviews: 1780,
     description: 'Serene gardens and timeless streets.',
     tags: ['asia', 'culture', 'nature'],
+  },
+  {
+    id: 'dest_3',
+    kind: 'destination',
+    title: 'Reykjavík, Iceland',
+    subtitle: 'Northern lights',
+    image:
+      'https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=1400&q=80&auto=format&fit=crop',
+    price: 'From $649',
+    rating: 4.7,
+    reviews: 980,
+    description: 'Waterfalls, black beaches, and the aurora overhead.',
+    tags: ['nordic', 'nature', 'aurora'],
+  },
+  {
+    id: 'dest_4',
+    kind: 'destination',
+    title: 'Lisbon, Portugal',
+    subtitle: 'Tiles & trams',
+    image:
+      'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=1400&q=80&auto=format&fit=crop',
+    price: 'From $499',
+    rating: 4.6,
+    reviews: 1320,
+    description: 'Sun-washed hills, pastel façades, and pastéis de nata.',
+    tags: ['europe', 'city', 'food'],
   },
 ];
 
@@ -430,10 +460,40 @@ export const profiles: Item[] = [
       'Token nerd. Accessibility advocate. Turning chaos into clarity.',
     tags: ['a11y', 'design-systems'],
   },
+  {
+    id: 'profile_3',
+    kind: 'profile',
+    title: 'Diego Alvarez',
+    subtitle: 'Backend Engineer',
+    image:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200&q=80&auto=format&fit=crop',
+    description: 'APIs, queues, and keeping the lights on. Coffee-driven.',
+    tags: ['node', 'infra'],
+  },
+  {
+    id: 'profile_4',
+    kind: 'profile',
+    title: 'Amira Hassan',
+    subtitle: 'Engineering Manager',
+    image:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200&q=80&auto=format&fit=crop',
+    description: 'Unblocking people and shipping outcomes. Ex-designer.',
+    tags: ['leadership', 'mobile'],
+  },
+  {
+    id: 'profile_5',
+    kind: 'profile',
+    title: 'Sam Okoye',
+    subtitle: 'Data Science',
+    image:
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1200&q=80&auto=format&fit=crop',
+    description: 'Turning logs into decisions. Occasionally a chart wizard.',
+    tags: ['ml', 'analytics'],
+  },
 ];
 
 
-// Every item, flattened — used for the gallery and for id lookup.
+// Every item, flattened — used for id lookup on the detail screen.
 export const allItems: Item[] = [
   ...posts,
   ...products,
@@ -441,16 +501,6 @@ export const allItems: Item[] = [
   ...destinations,
   ...tracks,
   ...profiles,
-]
-
-// One representative item per kind, for the "a preview can be any content" gallery.
-export const gallery: Item[] = [
-  posts[0],
-  products[0],
-  articles[0],
-  destinations[0],
-  tracks[0],
-  profiles[0],
 ]
 
 export const getItemById = (id: string): Item | null =>

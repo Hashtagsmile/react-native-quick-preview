@@ -1,18 +1,23 @@
 # Recording demo GIFs
 
-A step-by-step guide to capturing the GIFs used in the README. The app shows the library
-in two real contexts — record from **Feed** and **Shop**.
+A step-by-step guide to capturing the GIFs used in the README. Open the **Examples** tab
+(a gallery of use cases) and record from the individual example screens.
 
 ## What the demo covers
 
-| Tab | Shows |
-| --- | --- |
-| **Feed** | An Instagram-style feed: long-press a photo → **popover** peek of the post → tap to open the full post. |
-| **Shop** | An e-commerce store: long-press a product → **sheet** quick-view (price, rating, CTA) → tap to open the product page. |
-| **API** | The code entry points — hook, static `QuickPreview`, headless `QuickPreviewComponent`, and `QuickPreviewScrollView`. |
+The **Examples** gallery opens six real-world screens, each demonstrating quick preview in a
+context developers recognize:
 
-Feed and Shop show the two variants (popover / sheet) in genuinely different real-world
-contexts — that contrast is the whole pitch.
+| Example | Shows |
+| --- | --- |
+| **Social Feed** | Explore grid → **popover** peek of a post → tap to open |
+| **Shopping** | Product grid → **sheet** quick-view (price, rating) → tap to buy |
+| **Music** | Track list → peek with artwork + Play |
+| **Messages** | Long-press a shared link → peek its destination (cross-platform link preview) |
+| **Places** | Map cards → sheet place peek (rating, Directions) |
+| **Team** | Directory → profile peek with Message / Call |
+
+The **API** tab is the code reference (hook / static / headless / scrollview).
 
 ## Prerequisites
 
@@ -45,24 +50,27 @@ Keep each clip **2–4 seconds**. Record a little extra and trim in conversion.
 
 ### Hero — side by side (record this first)
 Open the iOS Simulator **and** the Android emulator, place them side by side, and do the
-**same long-press on a Feed photo** on both. This is the one asset no competitor can show.
-Record the screen region covering both. Caption it: *"Same code. iOS + Android."*
+**same long-press on a Social Feed photo** on both. This is the one asset no competitor can
+show. Record the region covering both. Caption it: *"Same code. iOS + Android."*
 
-### Feed peek → post (the social use case)
-On **Feed**: long-press a photo → the post peek appears (popover) → tap the peek to open the
-full post. This is the "why you'd want it in your feed" shot.
+### Social Feed peek → post
+Open **Examples → Social Feed**: long-press a grid thumbnail → the post peek appears (popover)
+→ tap the peek to open the full post. The "why you'd want it in a grid" shot.
 
-### Shop quick-view → product (the commerce use case)
-On **Shop**: long-press a product → the bottom-sheet quick-view slides up (price, rating,
-"View details") → tap it to open the product page. Shows the sheet variant in context.
+### Shopping quick-view → product
+**Examples → Shopping**: long-press a product → the bottom-sheet quick-view slides up (price,
+rating, "View details") → tap it to open the product page. Shows the sheet variant in context.
 
-### Present from anywhere
-On **API → Static**: tap **Run this example**. Overlay the code caption
-`QuickPreview.present(<Card/>)` — the point is that it's a plain function call.
+### Messages link peek (the differentiator)
+**Examples → Messages**: long-press a shared link bubble → its destination peeks → tap to open.
+Caption it: *"Link preview — on iOS AND Android"* (Expo Router's `Link.Preview` is iOS-only).
+
+### Music / Places / Team
+Quick supporting clips: **Music** (long-press a track → Play peek), **Places** (long-press a
+card → sheet with Directions), **Team** (long-press a person → Message/Call peek).
 
 ### Scrollable preview
-On **API → Scrollable content**: tap **Run this example**, scroll the content, then drag from
-the top to dismiss.
+**API → Scrollable content**: tap **Run this example**, scroll, then drag from the top to dismiss.
 
 ## 4. Convert to GIF
 

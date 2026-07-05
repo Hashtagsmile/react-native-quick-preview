@@ -1,6 +1,5 @@
 // Shop — an e-commerce store grid. Long-press a product for a bottom-sheet
 // quick-view (price, rating, CTA), then tap through to the full product page.
-// Same library, a different variant (sheet) and a different real-world context.
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView, Image, Dimensions } from 'react-native'
 import { Pressable } from 'react-native-gesture-handler'
@@ -11,6 +10,7 @@ import * as Haptics from 'expo-haptics'
 import { QuickPreview, QuickPreviewPressable } from 'react-native-quick-preview'
 import { products, type Item } from '../../data/examples'
 import { ProductPreview } from '../../components/ProductPreview'
+import { ExampleHeader } from '../../components/ExampleHeader'
 import { colors, radius, spacing } from '../../theme'
 
 const { width } = Dimensions.get('window')
@@ -22,24 +22,16 @@ const money = (p?: number | string) =>
 
 export default function Shop() {
   const router = useRouter()
-  const goDetail = (id: string) => router.push({ pathname: '/detail', params: { id } })
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.topBar}>
-        <Text style={styles.brand}>Shop</Text>
-        <View style={styles.hintPill}>
-          <Ionicons name="finger-print-outline" size={13} color={colors.accent} />
-          <Text style={styles.hintPillText}>Long-press to quick view</Text>
-        </View>
-      </View>
-
+      <ExampleHeader title="Shop" hint="Long-press a product" />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         <View style={styles.grid}>
           {products.map((product) => (
             <QuickPreviewPressable
               key={product.id}
-              onPress={() => goDetail(product.id)}
+              onPress={() => router.push({ pathname: '/detail', params: { id: product.id } })}
               renderPreview={() => <PeekWrapper id={product.id} item={product} />}
               previewOptions={{ variant: 'sheet', accessibilityLabel: `Quick view ${product.title}` }}
               onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
@@ -86,25 +78,6 @@ function PeekWrapper({ id, item }: { id: string; item: Item }) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
-  },
-  brand: { fontSize: 24, fontWeight: '800', color: colors.text },
-  hintPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: colors.panel,
-    borderRadius: 999,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 6,
-  },
-  hintPillText: { fontSize: 12, fontWeight: '600', color: colors.accent },
-
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: COL_GAP },
   card: {
