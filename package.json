@@ -26,5 +26,10 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "npm@10"
+  "packageManager": "npm@10",
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-test-renderer": "19.1.0"
+  }
 }

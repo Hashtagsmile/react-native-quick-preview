@@ -42,6 +42,7 @@ Complete rewrite from a single controlled component to a headless provider + con
 - Removed a dead v1 types file; the library now lints with zero warnings.
 - Excluded `__tests__` from the published npm tarball.
 - README now documents when to use this library versus native context-menu libraries and Expo Router's `Link.Preview`.
+- Upgraded the example app to Expo SDK 54 (React Native 0.81, React 19.1, Reanimated 4, expo-router v6) so it runs in current Expo Go; `expo-doctor` passes 18/18. The library is now dev-tested against Reanimated 4 while keeping its peer range at `>=3.0.0` (both 3 and 4 supported).
 - Verified the example app bundles end-to-end on both iOS and Android (`expo export`).
 
 ### Migration from 1.x
