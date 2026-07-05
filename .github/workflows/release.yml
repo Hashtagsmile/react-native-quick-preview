@@ -92,15 +92,30 @@ jobs:
 
       - name: Publish to npm (with provenance)
         if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true' && !inputs.dry-run
-        run: npm publish --provenance --access public --workspace packages/react-native-quick-preview
+        run: |
+          VERSION="${{ steps.pkg.outputs.version }}"
+          if npm publish --provenance --access public --workspace packages/react-native-quick-preview; then
+            echo "Published $VERSION."
+          elif npm view "react-native-quick-preview@$VERSION" version >/dev/null 2>&1; then
+            # A concurrent run already published this version — treat as success, not a failure.
+            echo "::notice::Version $VERSION was already published (likely a concurrent run) — skipping."
+          else
+            echo "::error::Publish failed and $VERSION is not on npm."
+            exit 1
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create tag and GitHub Release
         if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true' && !inputs.dry-run
         run: |
-          gh release create "v${{ steps.pkg.outputs.version }}" \
-            --title "v${{ steps.pkg.outputs.version }}" \
-            --notes "See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details."
+          TAG="v${{ steps.pkg.outputs.version }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::notice::Release $TAG already exists — skipping."
+          else
+            gh release create "$TAG" \
+              --title "$TAG" \
+              --notes "See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details."
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
