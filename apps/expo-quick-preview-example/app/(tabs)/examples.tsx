@@ -21,7 +21,7 @@ const EXAMPLES: Example[] = [
   { route: '/examples/shop', icon: 'bag-handle', title: 'Shopping', desc: 'Product grid → bottom-sheet quick-view' },
   { route: '/examples/music', icon: 'musical-notes', title: 'Music', desc: 'Track list → peek with Play' },
   { route: '/examples/chat', icon: 'chatbubbles', title: 'Messages', desc: 'Long-press a shared link → peek its destination' },
-  { route: '/examples/places', icon: 'map', title: 'Places', desc: 'Map cards → sheet place peek' },
+  { route: '/examples/places', icon: 'map', title: 'Places', desc: 'Long-press a map pin → place peek' },
   { route: '/examples/people', icon: 'people', title: 'Team', desc: 'Directory → profile peek with quick actions' },
 ]
 
