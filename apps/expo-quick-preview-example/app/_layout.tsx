@@ -25,7 +25,6 @@ export default function RootLayout() {
                 title: 'Item Details'
               }}
             />
-            <Stack.Screen name="addons" options={{ headerShown: false, title: 'Addons Showcase' }} />
           </Stack>
         </PreviewProvider>
       </GestureHandlerRootView>

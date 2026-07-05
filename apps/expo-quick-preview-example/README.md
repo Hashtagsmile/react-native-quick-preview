@@ -27,14 +27,22 @@ Run the app in the iOS Simulator, an Android emulator, or on a device with Expo 
 
 ```
 apps/expo-quick-preview-example/
-├── app/             # Expo Router pages
-├── components/      # Example components
-└── data/            # Example data sets
+├── app/
+│   ├── (tabs)/
+│   │   ├── start.tsx        # pitch + imperative useQuickPreview hero + gallery
+│   │   ├── api.tsx          # the 3 code entry points (hook / static / headless)
+│   │   └── components.tsx   # QuickPreviewPressable, QuickPreviewScrollView, options playground
+│   └── detail.tsx           # shared navigation target
+├── components/              # PreviewCard + PreviewTile (shared)
+├── theme.ts                 # colors / spacing / radius / type
+└── data/                    # demo data
 ```
+
+Three tabs, one concept each: **Start** (what it does), **API** (how to call it from code),
+**Components** (the declarative wrappers + every option).
 
 ## What you'll see
 
 - Long-press cards to open a quick preview
-- Swipe down or tap the backdrop to dismiss
-- Tap to navigate to a detail screen
-- Popover and sheet variants across different content types
+- Tap the preview to navigate, or swipe / tap outside to dismiss
+- Popover and sheet variants, plus the full option surface (size, dismiss flags, lifecycle callbacks)

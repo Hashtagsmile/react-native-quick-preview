@@ -1,23 +1,24 @@
 import React from 'react'
 import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { colors } from '../../theme'
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#0095f6',
-        tabBarInactiveTintColor: '#666',
-        tabBarStyle: { backgroundColor: '#fff', borderTopWidth: 0.5, borderTopColor: '#dbdbdb', height: 60 },
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: { backgroundColor: colors.surface, borderTopWidth: 0.5, borderTopColor: colors.border, height: 60 },
         headerShown: false,
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="start"
         options={{
-          title: 'Overview',
+          title: 'Start',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={24} color={color} />
           ),
         }}
       />
@@ -26,26 +27,16 @@ export default function TabsLayout() {
         options={{
           title: 'API',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'code' : 'code-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'code-slash' : 'code-slash-outline'} size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="examples"
+        name="components"
         options={{
-          title: 'Basic',
+          title: 'Components',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'layers' : 'layers-outline'} size={24} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="showcase"
-        options={{
-          title: 'Showcase',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={24} color={color} />
           ),
         }}
       />

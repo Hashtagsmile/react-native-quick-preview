@@ -3,11 +3,8 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 // gesture-handler Pressable so buttons inside the preview overlay receive taps.
 import { Pressable } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
-import {
-  useQuickPreview,
-   QuickPreviewComponent,
-   QuickPreview
-} from 'react-native-quick-preview'
+import { useQuickPreview, QuickPreviewComponent, QuickPreview } from 'react-native-quick-preview'
+import { colors } from '../../theme'
 
 function SampleCard({ onGo, onClose, onToggleVariant }: {
   onGo?: () => void
@@ -93,7 +90,7 @@ export default function API() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>QuickPreview Usage Tutorial</Text>
+      <Text style={styles.header}>API</Text>
 
       {/* Imperative API (Hook) */}
       <View style={styles.section}>
@@ -111,7 +108,7 @@ qp.present(<Card />, { variant: 'sheet', dismissOnBackdropPress: true })`}
         </View>
 
         <Pressable style={styles.demoButton} onPress={openHookPreview}>
-          <Text style={styles.demoButtonText}>Try Imperative API</Text>
+          <Text style={styles.demoButtonText}>Run this example</Text>
         </Pressable>
       </View>
 
@@ -132,12 +129,8 @@ QuickPreview.close()`}
           </Text>
         </View>
 
-        <Pressable
-          style={styles.demoButton}
-          onLongPress={openStaticPreview}
-          delayLongPress={250}
-        >
-          <Text style={styles.demoButtonText}>Long-press for Static API</Text>
+        <Pressable style={styles.demoButton} onPress={openStaticPreview}>
+          <Text style={styles.demoButtonText}>Run this example</Text>
         </Pressable>
       </View>
 
@@ -159,7 +152,7 @@ const [visible, setVisible] = useState(false)
         </View>
 
         <Pressable style={styles.demoButton} onPress={() => setHeadlessVisible(true)}>
-          <Text style={styles.demoButtonText}>Try Headless Component</Text>
+          <Text style={styles.demoButtonText}>Run this example</Text>
         </Pressable>
       </View>
 
@@ -174,17 +167,16 @@ const [visible, setVisible] = useState(false)
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5', padding: 16 },
-  header: { fontSize: 28, fontWeight: 'bold', color: '#1a1a1a', marginBottom: 24, textAlign: 'center' },
+  container: { flex: 1, backgroundColor: colors.background, padding: 16 },
+  header: { fontSize: 28, fontWeight: '800', color: colors.text, marginBottom: 20 },
   section: {
-    marginBottom: 32, backgroundColor: '#fff', padding: 20, borderRadius: 12,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
+    marginBottom: 20, backgroundColor: colors.panel, padding: 16, borderRadius: 14,
   },
-  sectionTitle: { fontSize: 20, fontWeight: '600', color: '#1a1a1a', marginBottom: 8 },
-  sectionDescription: { fontSize: 14, color: '#666', marginBottom: 16, lineHeight: 20 },
-  codeBlock: { backgroundColor: '#1a1a1a', padding: 16, borderRadius: 8, marginBottom: 16 },
-  codeText: { color: '#fff', fontSize: 12, fontFamily: 'monospace', lineHeight: 18 },
-  demoButton: { backgroundColor: '#0095f6', paddingVertical: 12, paddingHorizontal: 20, borderRadius: 8, alignItems: 'center' },
+  sectionTitle: { fontSize: 18, fontWeight: '700', color: colors.text, marginBottom: 6 },
+  sectionDescription: { fontSize: 14, color: colors.textMuted, marginBottom: 14, lineHeight: 20 },
+  codeBlock: { backgroundColor: colors.code, padding: 14, borderRadius: 8, marginBottom: 14 },
+  codeText: { color: colors.codeText, fontSize: 12, fontFamily: 'monospace', lineHeight: 18 },
+  demoButton: { backgroundColor: colors.accent, paddingVertical: 12, paddingHorizontal: 20, borderRadius: 10, alignItems: 'center' },
   demoButtonText: { color: '#fff', fontWeight: '600', fontSize: 16 },
 
   card: { backgroundColor: '#fff', borderRadius: 12, overflow: 'hidden', maxWidth: 520, width: '92%' },

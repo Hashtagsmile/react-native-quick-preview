@@ -284,32 +284,25 @@ export const profiles: Item[] = [
 ];
 
 
-export const AdvancedExamples: Item[] = 
-        
-    [
-      {
-        id: 'article_42',
-        kind: 'article',
-        title: 'Crafting delightful previews',
-        subtitle: 'UX motion & microinteractions',
-        image:
-          'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1400&q=80&auto=format&fit=crop',
-        description:
-          'Best practices for quick previews: gestures, motion, and progressive disclosure.',
-      },
-      {
-        id: 'dest_9',
-        kind: 'destination',
-        title: 'Kyoto, Japan',
-        subtitle: 'Temples, tea and tranquility',
-        image:
-          'https://images.unsplash.com/photo-1549692520-acc6669e2f0c?w=1400&q=80&auto=format&fit=crop',
-        price: 'From $999',
-        description:
-          'Historic districts, serene gardens, and stunning seasonal colors.',
-      },
-    ]
+// Every item, flattened — used for the gallery and for id lookup.
+export const allItems: Item[] = [
+  ...posts,
+  ...products,
+  ...articles,
+  ...destinations,
+  ...tracks,
+  ...profiles,
+]
 
-export const getItemById = (id: string) => {
-  return posts.find(post => post.id === id) || products.find(product => product.id === id) || articles.find(article => article.id === id) || destinations.find(destination => destination.id === id) || tracks.find(track => track.id === id) || profiles.find(profile => profile.id === id) || AdvancedExamples.find(example => example.id === id) || null;
-};
+// One representative item per kind, for the "a preview can be any content" gallery.
+export const gallery: Item[] = [
+  posts[0],
+  products[0],
+  articles[0],
+  destinations[0],
+  tracks[0],
+  profiles[0],
+]
+
+export const getItemById = (id: string): Item | null =>
+  allItems.find((item) => item.id === id) ?? null

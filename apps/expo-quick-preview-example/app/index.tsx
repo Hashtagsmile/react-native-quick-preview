@@ -1,7 +1,6 @@
+import { Redirect } from 'expo-router'
 
-import { Redirect } from 'expo-router';
-
+// The only entry into the app.
 export default function Index() {
-  // Redirect to the tabs layout
-  return <Redirect href="/(tabs)/home" />;
+  return <Redirect href="/(tabs)/start" />
 }
