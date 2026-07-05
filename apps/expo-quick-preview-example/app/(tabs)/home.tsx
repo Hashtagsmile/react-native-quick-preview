@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+// gesture-handler touchable so taps fire both on-screen and inside the preview overlay.
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuickPreview } from 'react-native-quick-preview';
 // Optional: if you want haptics on long-press (requires expo-haptics installed)
 import * as Haptics from 'expo-haptics';

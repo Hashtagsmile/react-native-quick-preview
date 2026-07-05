@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react'
-import { View, Text, StyleSheet, ScrollView, Pressable, Image } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
+// gesture-handler Pressable so buttons inside the preview overlay receive taps.
+import { Pressable } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
 import {
   useQuickPreview,
