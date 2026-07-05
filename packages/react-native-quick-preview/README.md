@@ -19,6 +19,27 @@ What you get:
 - Screen reader announcements and accessibility labels
 - TypeScript types, CJS + ESM builds, zero dependencies of its own
 
+## Why use this
+
+The long-press peek is a common interaction, but the existing options each stop short in a specific way:
+
+- **Expo Router's `Link.Preview`** is the native peek-and-pop — but it's **iOS-only**, it previews the **route a link points to** (it navigates on tap), and it requires Expo Router with a native stack.
+- **Native context-menu libraries** (`react-native-ios-context-menu`, `zeego`) render a real custom peek — but only on **iOS**, because the "preview floating above a menu" is an iOS-only OS affordance (`UITargetedPreview`) with no Android equivalent. They also ship native modules, so they don't run in Expo Go.
+- **`@gorhom/bottom-sheet`** is the go-to sheet, but it's sheet-only (no peek), and its imperative API still needs a mounted component plus a ref — there's no static handle you can call from outside React.
+
+This library fills the intersection none of them cover:
+
+> **A long-press peek that renders any React node identically on iOS *and* Android, with no native module — presentable from anywhere, no router required.**
+
+Concretely, reach for it when you want:
+
+- **The same peek on both platforms.** Pure JS + Reanimated renders your content the same way on iOS and Android.
+- **To preview arbitrary content, not a route or a menu.** A product card, an image, a profile — anything, without navigating.
+- **No native build.** Works in Expo Go and bare React Native; no config plugin, no prebuild.
+- **To present from anywhere.** `QuickPreview.present(node)` is importable and callable from a service, a store action, or any non-React code (after `PreviewProvider` is mounted once at the root).
+
+**When *not* to use it:** if you're iOS-only and want pixel-perfect native peek fidelity and system haptics, use `react-native-ios-context-menu` or Expo Router's `Link.Preview` — a Reanimated re-creation approximates the native feel, it doesn't reproduce it. And if you just need a bottom sheet, use `@gorhom/bottom-sheet`. This library is for the cross-platform, arbitrary-content peek specifically.
+
 ## Installation
 
 ```bash

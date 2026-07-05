@@ -40,6 +40,9 @@ Complete rewrite from a single controlled component to a headless provider + con
 
 - Unit test suite (Jest + Testing Library) covering the provider contract, the static handle, size resolution, and the headless component; tests run in CI on Node 18/20/22.
 - Removed a dead v1 types file; the library now lints with zero warnings.
+- Excluded `__tests__` from the published npm tarball.
+- README now documents when to use this library versus native context-menu libraries and Expo Router's `Link.Preview`.
+- Verified the example app bundles end-to-end on both iOS and Android (`expo export`).
 
 ### Migration from 1.x
 
