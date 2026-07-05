@@ -96,6 +96,7 @@ export default function Components() {
                 onPress={() => router.push({ pathname: '/detail', params: { id: p.id } })}
                 renderPreview={() => (
                   <Pressable
+                    style={{ alignSelf: 'stretch' }}
                     onPress={() => {
                       QuickPreview.close()
                       router.push({ pathname: '/detail', params: { id: p.id } })

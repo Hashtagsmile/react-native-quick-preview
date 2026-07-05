@@ -23,6 +23,7 @@ export default function Start() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     present(
       <Pressable
+        style={{ alignSelf: 'stretch' }}
         onPress={() => {
           close()
           router.push({ pathname: '/detail', params: { id: item.id } })

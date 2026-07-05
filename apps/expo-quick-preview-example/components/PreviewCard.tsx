@@ -24,7 +24,9 @@ export function PreviewCard({ item }: { item: Item }) {
 }
 
 const styles = StyleSheet.create({
-  card: { width: 300, backgroundColor: colors.surface },
+  // Fill the preview container (popover ~92% width / full-width sheet) so the
+  // image spans the whole card instead of leaving a gap on the right.
+  card: { alignSelf: 'stretch', backgroundColor: colors.surface },
   image: { width: '100%', aspectRatio: 16 / 10, backgroundColor: colors.tileBg },
   body: { padding: spacing.lg },
   title: { fontSize: 18, fontWeight: '800', color: colors.text },
