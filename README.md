@@ -12,7 +12,7 @@ Long-press an item to peek at its content, swipe down to dismiss. A headless qui
 This is the development monorepo. **If you just want to use the library, read the [package README](packages/react-native-quick-preview/README.md)** for installation, quick start and the full API. It's the same document you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
 
 <p align="center">
-  <img src="./demogif.gif" alt="Social feed — long-press a photo to peek the post, tap to open" width="46%" />
+  <img src="./demo-feed.gif" alt="Social feed — long-press a photo to peek the post, tap to open" width="46%" />
   &nbsp;
   <img src="./demo-shop.gif" alt="Shop — long-press a product for a bottom-sheet quick-view" width="46%" />
 </p>

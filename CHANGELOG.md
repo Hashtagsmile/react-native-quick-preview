@@ -4,6 +4,16 @@ All notable changes to `react-native-quick-preview` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] - 2026-07-05
+
+Documentation and CI only — no library code changes.
+
+### Changed
+
+- README now leads with two real on-device demo GIFs — the social feed and the shop — shown side by side.
+- Marked `2.0.0` as released and tidied stale doc counts/versions (the example gallery is seven use cases, not six).
+- CI runs on Node 20/22/24 with `actions/checkout@v5` + `actions/setup-node@v5` (the `@v4` actions targeted the now-deprecated Node 20 runtime).
+
 ## [2.0.0] - 2026-07-05
 
 Complete rewrite from a single controlled component to a headless provider + controller architecture.
@@ -74,6 +84,7 @@ Initial public release.
 
 - `<QuickPreview>` controlled modal component with fade/scale animations, swipe-to-close, backdrop press handling, light/dark theme, and long-press-to-open examples.
 
+[2.0.1]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v1.0.5...v2.0.0
 [1.0.5]: https://www.npmjs.com/package/react-native-quick-preview/v/1.0.5
 [1.0.4]: https://www.npmjs.com/package/react-native-quick-preview/v/1.0.4
