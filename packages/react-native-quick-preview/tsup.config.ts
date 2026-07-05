@@ -12,7 +12,6 @@ const external = [
   'react-native-worklets',
   'react-native-safe-area-context',
   'react-native-portalize',
-  'expo-haptics', // optional
 ]
 
 export default defineConfig({

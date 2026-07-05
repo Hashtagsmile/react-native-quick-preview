@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import type { QuickPreviewOptions } from '../../types'
+import { resolveSizeStyle } from '../resolveSize'
 
 export function PopoverContainer({
   children,
@@ -27,10 +28,12 @@ export function PopoverContainer({
     transform: [{ scale: scale.value }],
   }))
 
+  const sizeStyle = resolveSizeStyle(options?.size)
+
   return (
     <View style={[StyleSheet.absoluteFill, styles.center]} pointerEvents="box-none">
       <Animated.View
-        style={[styles.card, container]}
+        style={[styles.card, sizeStyle, container]}
         accessibilityRole={options?.accessibilityRole}
         accessibilityLabel={options?.accessibilityLabel ?? 'Quick preview'}
       >

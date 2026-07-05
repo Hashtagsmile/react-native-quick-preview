@@ -1,10 +1,18 @@
 name: Release
 
-# Manual release: run this workflow from the Actions tab once NPM_TOKEN is set
-# in the repository secrets (npm automation token). It verifies the package,
-# publishes to npm with provenance, then tags and creates a GitHub Release.
+# Publishes automatically when the package version changes on main:
+# bump `version` in packages/react-native-quick-preview/package.json,
+# update CHANGELOG.md, push — this workflow verifies, publishes to npm
+# with provenance, then tags v<version> and creates a GitHub Release.
+#
+# Requires the NPM_TOKEN repository secret (npm automation token).
+# Can also be run manually from the Actions tab (with an optional dry run).
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/react-native-quick-preview/package.json'
   workflow_dispatch:
     inputs:
       dry-run:
@@ -26,7 +34,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Read package version
+        id: pkg
+        run: echo "version=$(node -p "require('./packages/react-native-quick-preview/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Check if this version is already published
+        id: check
+        run: |
+          PUBLISHED=$(npm view react-native-quick-preview@${{ steps.pkg.outputs.version }} version 2>/dev/null || echo "none")
+          if [ "$PUBLISHED" = "${{ steps.pkg.outputs.version }}" ]; then
+            echo "Version ${{ steps.pkg.outputs.version }} is already on npm — nothing to release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup Node.js
+        if: steps.check.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
@@ -34,37 +58,33 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
+        if: steps.check.outputs.skip != 'true'
         run: npm ci
 
       - name: Type check
+        if: steps.check.outputs.skip != 'true'
         run: npm run type-check
 
       - name: Lint
+        if: steps.check.outputs.skip != 'true'
         run: npm run lint
 
+      - name: Test
+        if: steps.check.outputs.skip != 'true'
+        run: npm test
+
       - name: Build library
+        if: steps.check.outputs.skip != 'true'
         run: npm run build
 
-      - name: Read package version
-        id: pkg
-        run: echo "version=$(node -p "require('./packages/react-native-quick-preview/package.json').version")" >> "$GITHUB_OUTPUT"
-
-      - name: Fail if tag already exists
-        run: |
-          git fetch --tags
-          if git rev-parse "v${{ steps.pkg.outputs.version }}" >/dev/null 2>&1; then
-            echo "Tag v${{ steps.pkg.outputs.version }} already exists — bump the package version first."
-            exit 1
-          fi
-
       - name: Publish to npm (with provenance)
-        if: ${{ !inputs.dry-run }}
+        if: steps.check.outputs.skip != 'true' && !inputs.dry-run
         run: npm publish --provenance --access public --workspace packages/react-native-quick-preview
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create tag and GitHub Release
-        if: ${{ !inputs.dry-run }}
+        if: steps.check.outputs.skip != 'true' && !inputs.dry-run
         run: |
           gh release create "v${{ steps.pkg.outputs.version }}" \
             --title "v${{ steps.pkg.outputs.version }}" \

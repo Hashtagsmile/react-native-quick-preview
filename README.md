@@ -55,16 +55,15 @@ The example app in `apps/expo-quick-preview-example` shows the patterns the libr
 
 ## CI and releases
 
-CI ([ci.yml](.github/workflows/ci.yml)) runs on every push and PR to `main`: install, type check, lint, build, and a `npm pack --dry-run` to verify what would be published.
+CI ([ci.yml](.github/workflows/ci.yml)) runs on every push and PR to `main`: install, type check, lint, unit tests, build, and a `npm pack --dry-run` to verify what would be published.
 
-Releases are manual. The [release workflow](.github/workflows/release.yml) re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. It needs an `NPM_TOKEN` repository secret (npm automation token).
+Releases are automatic. When the package version changes on `main`, the [release workflow](.github/workflows/release.yml) re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. If the version is already on npm it does nothing, so ordinary pushes are safe. It needs an `NPM_TOKEN` repository secret (npm automation token). It can also be run manually from the Actions tab, including as a dry run.
 
 To cut a release:
 
 1. Bump `version` in `packages/react-native-quick-preview/package.json`
 2. Add a section to [CHANGELOG.md](CHANGELOG.md)
-3. Commit, push, wait for CI to go green
-4. Run the **Release** workflow from the Actions tab
+3. Push (or merge) to `main` — the rest happens on its own
 
 ## Contributing
 

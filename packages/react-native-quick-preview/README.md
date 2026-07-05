@@ -34,7 +34,7 @@ npm install react-native-portalize
 
 Bare React Native works too: install the same packages with npm and follow each library's setup guide. Note that `react-native-reanimated` needs its Babel plugin; Expo sets this up for you via `babel-preset-expo`.
 
-If you want haptic feedback in `QuickPreviewPressable`, also install `expo-haptics`. It's optional and detected at runtime.
+If you want haptic feedback on long-press, install `expo-haptics` in your app and pass it to `QuickPreviewPressable` via `onLongPressStart` (shown below).
 
 ## Quick start
 
@@ -99,21 +99,24 @@ QuickPreview.close()
 
 ## QuickPreviewPressable
 
-Most of the time you want the same thing: long-press opens a preview, a normal tap navigates. `QuickPreviewPressable` wires that up, including a press-down scale animation and optional haptics:
+Most of the time you want the same thing: long-press opens a preview, a normal tap navigates. `QuickPreviewPressable` wires that up, including a press-down scale animation:
 
 ```tsx
+import * as Haptics from 'expo-haptics' // optional
 import { QuickPreviewPressable } from 'react-native-quick-preview'
 
 <QuickPreviewPressable
   onPress={() => router.push(`/product/${product.id}`)}
   renderPreview={() => <ProductPreview product={product} />}
   previewOptions={{ variant: 'popover' }}
-  delay={350}          // long-press delay in ms
-  haptics="medium"     // 'light' | 'medium' | 'heavy' | false
+  delay={350}   // long-press delay in ms
+  onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
 >
   <ProductCard product={product} />
 </QuickPreviewPressable>
 ```
+
+`onLongPressStart` fires on the JS thread right before the preview opens. Use it for haptics or analytics. The library doesn't import `expo-haptics` itself, so you stay in control of the dependency (and Metro never has to resolve a package you don't use).
 
 ## Scrollable previews
 

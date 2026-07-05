@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { useRouter } from 'expo-router'
+import * as Haptics from 'expo-haptics'
 import { QuickPreviewPressable } from 'react-native-quick-preview'
 
 // Bring your demo data (adjust the path to your repo’s location)
@@ -58,7 +59,7 @@ export default function Addons() {
             previewOptions={{ variant: 'popover', accessibilityLabel: 'Quick look preview' }}
             delay={350}
             scale={0.98}
-            haptics="medium"                                      // uses expo-haptics if present
+            onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
             style={{ borderRadius: 8, overflow: 'hidden' }}       // keeps rounded corners while scaling
             accessibilityLabel={`Preview ${p.title}`}
             accessible={true}

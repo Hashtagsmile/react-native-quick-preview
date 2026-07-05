@@ -16,7 +16,8 @@
     "type-check": "npm --workspace packages/react-native-quick-preview run type-check",
     "lint": "npm --workspace packages/react-native-quick-preview run lint",
     "clean": "npm --workspace packages/react-native-quick-preview run clean",
-    "doctor:reanimated-plugin": "node -e \"const fs=require('fs');const path=require('path');function scan(dir){for(const f of fs.readdirSync(dir)){if(f==='node_modules')continue;const p=path.join(dir,f);const s=fs.statSync(p);if(s.isDirectory())scan(p);else if(/babel\\.(config|js|cjs|mjs)$/.test(f)){const t=fs.readFileSync(p,'utf8');if(t.includes('react-native-reanimated/plugin'))console.log(p)}}}scan(process.cwd())\""
+    "doctor:reanimated-plugin": "node -e \"const fs=require('fs');const path=require('path');function scan(dir){for(const f of fs.readdirSync(dir)){if(f==='node_modules')continue;const p=path.join(dir,f);const s=fs.statSync(p);if(s.isDirectory())scan(p);else if(/babel\\.(config|js|cjs|mjs)$/.test(f)){const t=fs.readFileSync(p,'utf8');if(t.includes('react-native-reanimated/plugin'))console.log(p)}}}scan(process.cwd())\"",
+    "test": "npm --workspace packages/react-native-quick-preview run test"
   },
   "devDependencies": {
     "tsup": "^8.0.0",

@@ -31,6 +31,15 @@ Complete rewrite from a single controlled component to a headless provider + con
 
 - `react-native-reanimated` was imported by the library but never declared as a peer dependency, crashing consumers that didn't already have it installed.
 - Removed invalid `accessibilityRole="dialog"` (not a valid React Native accessibility role) from the popover and sheet containers; modality is handled on the root view.
+- `present()` no longer merges options from the previous presentation into the next one — each `present` starts from a clean slate. Merging remains the job of `update()`.
+- The `size` option is now actually applied: a number caps the preview's height, an object caps `maxHeight`/`maxWidth`, on both the popover and the sheet.
+- `QuickPreviewPressable` no longer `require`s `expo-haptics` at module load. The optional require broke Metro bundling for every app that didn't have expo-haptics installed. Haptics are now injected via the new `onLongPressStart` callback (the `haptics` prop is gone).
+- `QuickPreviewPressable` gesture callbacks are now worklet-safe: preview content is created on the JS thread via `runOnJS`, and the press-scale animation mutates the shared value directly inside the worklet instead of calling back into JS.
+
+### Internal
+
+- Unit test suite (Jest + Testing Library) covering the provider contract, the static handle, size resolution, and the headless component; tests run in CI on Node 18/20/22.
+- Removed a dead v1 types file; the library now lints with zero warnings.
 
 ### Migration from 1.x
 

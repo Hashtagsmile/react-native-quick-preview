@@ -10,25 +10,6 @@ import Animated, {
 import { QuickPreview } from '../QuickPreviewAPI'
 import type { QuickPreviewOptions } from '../types'
 
-type HapticStyle = boolean | 'light' | 'medium' | 'heavy'
-
-function triggerHaptics(style: HapticStyle) {
-  try {
-    // Optional peer dep: expo-haptics
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const Haptics = require('expo-haptics')
-    const Map = {
-      light: Haptics.ImpactFeedbackStyle.Light,
-      medium: Haptics.ImpactFeedbackStyle.Medium,
-      heavy: Haptics.ImpactFeedbackStyle.Heavy,
-    } as const
-    const kind = typeof style === 'string' ? Map[style] : Map.medium
-    Haptics.impactAsync?.(kind)
-  } catch {
-    // silently ignore if not installed
-  }
-}
-
 export type QuickPreviewPressableProps = {
   children: React.ReactNode
   /** Called for a normal tap (e.g., navigate) */
@@ -41,8 +22,14 @@ export type QuickPreviewPressableProps = {
   delay?: number
   /** Press-down scale. Default 0.98 */
   scale?: number
-  /** Haptics on long-press start. Default 'medium'. Set false to disable */
-  haptics?: HapticStyle
+  /**
+   * Called on the JS thread when the long press activates, right before the
+   * preview opens. Wire up haptics here, e.g.:
+   *   onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+   * The library deliberately does not import expo-haptics itself: an optional
+   * require would break Metro bundling for apps that don't have it installed.
+   */
+  onLongPressStart?: () => void
   /** Disable all interactions */
   disabled?: boolean
   /** Style applied to the animated wrapper (the thing that scales) */
@@ -60,7 +47,7 @@ export function QuickPreviewPressable({
   previewOptions,
   delay = 350,
   scale = 0.98,
-  haptics = 'medium',
+  onLongPressStart,
   disabled = false,
   style,
   accessible,
@@ -69,28 +56,42 @@ export function QuickPreviewPressable({
 }: QuickPreviewPressableProps) {
   const s = useSharedValue(1)
 
-  const pressDown = () => { s.value = withTiming(scale, { duration: 90 }) }
-  const pressUp = () => { s.value = withTiming(1, { duration: 120 }) }
+  // Runs on the JS thread: renderPreview() creates React elements, which must
+  // never happen on the UI thread inside a worklet.
+  const openPreview = () => {
+    onLongPressStart?.()
+    QuickPreview.present(renderPreview(), {
+      variant: 'popover',
+      dismissOnBackdropPress: true,
+      ...previewOptions,
+    })
+  }
 
   const longPress = Gesture.LongPress()
     .enabled(!disabled)
     .minDuration(delay)
-    .onTouchesDown(() => { pressDown() })
-    .onFinalize(() => { pressUp() })
+    .onTouchesDown(() => {
+      s.value = withTiming(scale, { duration: 90 })
+    })
+    .onFinalize(() => {
+      s.value = withTiming(1, { duration: 120 })
+    })
     .onStart(() => {
-      if (haptics) runOnJS(triggerHaptics)(haptics)
-      runOnJS(QuickPreview.present)(
-        renderPreview(),
-        { variant: 'popover', dismissOnBackdropPress: true, ...previewOptions }
-      )
+      runOnJS(openPreview)()
     })
 
   const tap = Gesture.Tap()
     .enabled(!disabled)
     .maxDuration(220)
-    .onTouchesDown(() => { pressDown() })
-    .onFinalize(() => { pressUp() })
-    .onEnd(() => { onPress && runOnJS(onPress)() })
+    .onTouchesDown(() => {
+      s.value = withTiming(scale, { duration: 90 })
+    })
+    .onFinalize(() => {
+      s.value = withTiming(1, { duration: 120 })
+    })
+    .onEnd(() => {
+      if (onPress) runOnJS(onPress)()
+    })
 
   const gesture = Gesture.Exclusive(longPress, tap)
 

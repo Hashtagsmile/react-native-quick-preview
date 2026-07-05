@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import type { QuickPreviewOptions } from '../../types'
+import { resolveSizeStyle } from '../resolveSize'
 
 export function SheetContainer({
   children,
@@ -42,10 +43,12 @@ export function SheetContainer({
     transform: [{ translateY: translateY.value }],
   }))
 
+  const sizeStyle = resolveSizeStyle(options?.size)
+
   return (
     <GestureDetector gesture={pan}>
       <Animated.View
-        style={[styles.sheet, style, { paddingBottom: Math.max(insets.bottom, 12) }]}
+        style={[styles.sheet, sizeStyle, style, { paddingBottom: Math.max(insets.bottom, 12) }]}
         accessibilityRole={options?.accessibilityRole}
         accessibilityLabel={options?.accessibilityLabel ?? 'Quick preview'}
       >

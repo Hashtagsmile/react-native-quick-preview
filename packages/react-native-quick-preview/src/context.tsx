@@ -27,7 +27,9 @@ export function PreviewProvider({ children }: { children: React.ReactNode }) {
 
   const present = React.useCallback(
     (node: React.ReactNode, opts?: Partial<QuickPreviewOptions>) => {
-      setOptions(prev => ({ ...prev, ...opts }))
+      // Replace, don't merge: options from a previous presentation must not
+      // leak into the next one. Merging is what update() is for.
+      setOptions(opts)
       openRef.current = true
       setContent(() => node)
       announce('Quick preview opened')
