@@ -49,8 +49,21 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Setup Node.js
+      - name: Check NPM_TOKEN is configured
+        id: token
         if: steps.check.outputs.skip != 'true'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "::warning::NPM_TOKEN secret is not set — skipping publish. Add an npm automation token as the NPM_TOKEN repository secret to enable releases."
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
@@ -58,33 +71,33 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        if: steps.check.outputs.skip != 'true'
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true'
         run: npm ci
 
       - name: Type check
-        if: steps.check.outputs.skip != 'true'
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true'
         run: npm run type-check
 
       - name: Lint
-        if: steps.check.outputs.skip != 'true'
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true'
         run: npm run lint
 
       - name: Test
-        if: steps.check.outputs.skip != 'true'
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true'
         run: npm test
 
       - name: Build library
-        if: steps.check.outputs.skip != 'true'
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true'
         run: npm run build
 
       - name: Publish to npm (with provenance)
-        if: steps.check.outputs.skip != 'true' && !inputs.dry-run
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true' && !inputs.dry-run
         run: npm publish --provenance --access public --workspace packages/react-native-quick-preview
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create tag and GitHub Release
-        if: steps.check.outputs.skip != 'true' && !inputs.dry-run
+        if: steps.check.outputs.skip != 'true' && steps.token.outputs.missing != 'true' && !inputs.dry-run
         run: |
           gh release create "v${{ steps.pkg.outputs.version }}" \
             --title "v${{ steps.pkg.outputs.version }}" \
