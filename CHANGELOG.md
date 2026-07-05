@@ -46,6 +46,7 @@ Complete rewrite from a single controlled component to a headless provider + con
 - Replaced the example app's placeholder "New Version" screen (which faked the API with a local `Modal` instead of using the library) with a real **Showcase** screen that demonstrates every flow — popover, sheet, present-from-anywhere, scrollable preview, and long-press-to-peek — using the actual API. Added a [recording guide](apps/expo-quick-preview-example/RECORDING.md) for producing demo GIFs.
 - README: added **Requirements**, **Compatibility**, and **Limitations** sections so it's clear when to use the library and when to reach for a native option instead.
 - Pinned `semver` to `^7.7.2` via a root override. Reanimated 4's worklets-version check does `require('semver/functions/satisfies')`, which fails when npm hoists `semver@6` (no `functions/` dir) to the workspace root — a nondeterministic monorepo install would break the dev bundle with "Unable to resolve semver/functions/satisfies".
+- Removed the manual `react-native-worklets/plugin` from the example app's `babel.config.js`. On SDK 54, `babel-preset-expo` adds the Reanimated 4 / Worklets plugin automatically; the manual entry double-transformed worklets and broke Reanimated's native binding at runtime in Expo Go ("native module doesn't exist").
 - Verified the example app bundles end-to-end on both iOS and Android, in both dev and production modes (`expo export`).
 
 ### Migration from 1.x
