@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS } from 'react-native-reanimated'
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming, runOnJS } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import type { QuickPreviewOptions } from '../../types'
 import { resolveSizeStyle } from '../resolveSize'
@@ -20,7 +20,8 @@ export function SheetContainer({
   const dismissOnPanDown = options?.dismissOnPanDown ?? true
 
   React.useEffect(() => {
-    translateY.value = withSpring(0, { damping: 18, stiffness: 180 })
+    // Smooth slide up, no spring bounce.
+    translateY.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.cubic) })
   }, [translateY])
 
   const pan = Gesture.Pan()
@@ -35,7 +36,7 @@ export function SheetContainer({
           if (finished) runOnJS(onRequestClose)()
         })
       } else {
-        translateY.value = withSpring(0, { damping: 18, stiffness: 180 })
+        translateY.value = withTiming(0, { duration: 240, easing: Easing.out(Easing.cubic) })
       }
     })
 

@@ -2,7 +2,10 @@
 // Each row triggers ONE flow of react-native-quick-preview using the real API,
 // so you can record a clean, labeled clip per feature.
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, Pressable, Image } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
+// Use gesture-handler touchables: rows on-screen work either way, but content
+// inside an open preview must use gesture-handler's Pressable to receive taps.
+import { Pressable } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
@@ -113,14 +116,24 @@ export default function Showcase() {
 
         <Text style={styles.sectionLabel}>Long-press to peek · tap to open</Text>
         <Text style={styles.sectionHint}>
-          The real-world pattern: hold a tile to peek, release to dismiss, tap to navigate.
+          The real-world pattern: long-press a tile to peek, tap the preview to open the
+          detail screen, or tap outside to dismiss.
         </Text>
         <View style={styles.grid}>
           {posts.slice(0, 6).map((p) => (
             <QuickPreviewPressable
               key={p.id}
               onPress={() => router.push({ pathname: '/detail', params: { id: p.id } })}
-              renderPreview={() => <PreviewCard item={p} />}
+              renderPreview={() => (
+                <Pressable
+                  onPress={() => {
+                    QuickPreview.close()
+                    router.push({ pathname: '/detail', params: { id: p.id } })
+                  }}
+                >
+                  <PreviewCard item={p} />
+                </Pressable>
+              )}
               previewOptions={{ variant: 'popover', accessibilityLabel: `Preview ${p.title}` }}
               onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
               style={styles.tile}

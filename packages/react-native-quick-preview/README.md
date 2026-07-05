@@ -148,6 +148,25 @@ import { QuickPreviewPressable } from 'react-native-quick-preview'
 
 `onLongPressStart` fires on the JS thread right before the preview opens. Use it for haptics or analytics. The library doesn't import `expo-haptics` itself, so you stay in control of the dependency (and Metro never has to resolve a package you don't use).
 
+## Tappable preview content
+
+The preview renders inside a gesture-handler overlay. Buttons and tappable areas **inside your preview content** should use touchables from `react-native-gesture-handler` (not `react-native`) — React Native's own `Pressable` / `TouchableOpacity` don't reliably receive taps inside that overlay.
+
+```tsx
+// ✗ tap may not fire inside the preview
+import { Pressable } from 'react-native'
+
+// ✓ works inside the preview
+import { Pressable } from 'react-native-gesture-handler'
+
+present(
+  <Pressable onPress={() => { QuickPreview.close(); router.push('/detail') }}>
+    <ProductPreview product={product} />
+  </Pressable>,
+  { variant: 'popover' }
+)
+```
+
 ## Scrollable previews
 
 If the preview content scrolls, use `QuickPreviewScrollView` instead of a plain `ScrollView`. Otherwise the scroll gesture and the swipe-to-dismiss gesture fight each other.

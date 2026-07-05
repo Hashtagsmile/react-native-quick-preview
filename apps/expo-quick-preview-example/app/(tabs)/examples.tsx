@@ -1,15 +1,10 @@
 // app/tabs/Examples.tsx (Expo Router) or adjust path for your setup
 import React from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  Pressable,
-} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions } from 'react-native'
+// Touchables inside the preview must come from gesture-handler: the preview renders
+// in a gesture-handler overlay, where React Native's own Pressable/TouchableOpacity
+// don't reliably receive taps. gesture-handler's versions do.
+import { TouchableOpacity, Pressable } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
