@@ -57,6 +57,15 @@ Bare React Native works too: install the same packages with npm and follow each 
 
 If you want haptic feedback on long-press, install `expo-haptics` in your app and pass it to `QuickPreviewPressable` via `onLongPressStart` (shown below).
 
+## Requirements
+
+- **React Native** ≥ 0.64 (peer). Tested on RN 0.81.
+- **React** ≥ 18.2.
+- **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2), `react-native-safe-area-context` (≥ 4), `react-native-portalize`.
+- **Reanimated's Babel plugin** must be configured. Expo does this for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3).
+- Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (see Quick start).
+- `expo-haptics` is **optional** — only needed if you want haptics on `QuickPreviewPressable`.
+
 ## Quick start
 
 Mount the provider once near the root of your app, inside `GestureHandlerRootView`:
@@ -208,6 +217,31 @@ npm install
 npm run build
 npm run example
 ```
+
+The example app is on **Expo SDK 54** (React Native 0.81, Reanimated 4) and runs in Expo Go on iOS and Android. See its [recording guide](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/apps/expo-quick-preview-example/RECORDING.md) if you want to reproduce the demo GIFs.
+
+## Compatibility
+
+| | Status |
+| --- | --- |
+| **Platforms** | iOS and Android (identical rendering — it's pure JS/Reanimated) |
+| **Expo** | Works in Expo Go and dev clients. No config plugin, no prebuild, no native module. |
+| **Bare React Native** | Supported (configure the Reanimated Babel plugin yourself). |
+| **New Architecture** | Supported. Verified on RN 0.81 + Reanimated 4 (New-Arch-only). |
+| **Old Architecture** | Supported via Reanimated 3. |
+| **Web (react-native-web)** | Not a target. It may partially work, but gestures/portals aren't tested there. |
+
+## Limitations
+
+Be clear-eyed about what this is and isn't:
+
+- **It's a re-creation, not the native OS peek.** On iOS, `react-native-ios-context-menu` and Expo Router's `Link.Preview` use the system `UIContextMenuInteraction` (system blur, morph, tuned haptics). This library approximates that feel with Reanimated — it does not reproduce it pixel-for-pixel. If you're iOS-only and want native fidelity, use one of those instead (see [Why use this](#why-use-this)).
+- **No built-in action menu.** This presents a *preview*, not a context menu with actions. Render your own buttons inside the preview if you need them.
+- **Haptics aren't automatic.** Native context menus fire system haptics for free; here you wire them via `onLongPressStart` (one line — see `QuickPreviewPressable`).
+- **One preview at a time.** Calling `present()` while a preview is open replaces the content; previews don't stack.
+- **Light theme by default.** The popover/sheet containers use a white background. Style your own content freely; a dark container background isn't a built-in option yet.
+- **Screen-reader announcements are English** ("Quick preview opened/closed"). Labels you pass are used verbatim, but the built-in announcement strings aren't localized yet.
+- **Requires the peer setup.** No `GestureHandlerRootView` + `PreviewProvider`, or a missing Reanimated Babel plugin, and it won't work — this is not a drop-in with zero configuration.
 
 ## Versioning
 

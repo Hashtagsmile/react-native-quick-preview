@@ -41,11 +41,11 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="new-version"
+        name="showcase"
         options={{
-          title: 'New Version',
+          title: 'Showcase',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'newspaper' : 'newspaper-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={24} color={color} />
           ),
         }}
       />
