@@ -40,35 +40,42 @@ Concretely, reach for it when you want:
 
 **When *not* to use it:** if you're iOS-only and want pixel-perfect native peek fidelity and system haptics, use `react-native-ios-context-menu` or Expo Router's `Link.Preview` — a Reanimated re-creation approximates the native feel, it doesn't reproduce it. And if you just need a bottom sheet, use `@gorhom/bottom-sheet`. This library is for the cross-platform, arbitrary-content peek specifically.
 
-## Installation
+## Add it to your app
+
+**How it works.** Wrap each list or grid item in `QuickPreviewPressable`. A **tap** runs `onPress` (go straight to your full screen); a **long-press** opens the peek returned by `renderPreview`. Make that peek tappable and tapping it opens the full screen too — otherwise it just displays until dismissed (swipe down, tap outside, or Android back).
+
+```text
+        ┌─ tap ─────────────────────────────► your detail screen
+ item ──┤
+        └─ long-press ─► peek ─┬─ tap peek ─► your detail screen
+                               └─ swipe / tap outside ─► back to the list
+```
+
+You build **one new thing per item: the preview content** — usually a compact version of a card you already have. The "full screen" is just the route you already navigate to, so it isn't extra work.
+
+### 1 · Install
 
 ```bash
 npm install react-native-quick-preview
 ```
 
-Peer dependencies (skip any your app already has):
+It has four peer dependencies. **Most apps already have the first three** — React Navigation and Expo Router both pull them in — so install whatever's missing:
 
 ```bash
 npx expo install react-native-reanimated react-native-gesture-handler react-native-safe-area-context
 npm install react-native-portalize
 ```
 
-Bare React Native works too: install the same packages with npm and follow each library's setup guide. Note that `react-native-reanimated` needs its Babel plugin; Expo sets this up for you via `babel-preset-expo`.
+| Peer dependency | What it's for | Native? |
+| --- | --- | --- |
+| `react-native-reanimated` | The peek animation (worklets) | yes |
+| `react-native-gesture-handler` | Long-press & swipe gestures | yes |
+| `react-native-safe-area-context` | Sheet insets | yes |
+| `react-native-portalize` | Renders the peek above your app | no — pure JS |
 
-If you want haptic feedback on long-press, install `expo-haptics` in your app and pass it to `QuickPreviewPressable` via `onLongPressStart` (shown below).
+If Reanimated and Gesture Handler are already installed, adding this library is **JS-only — no native rebuild**. (Reanimated needs its Babel plugin; Expo sets this up via `babel-preset-expo`. Versions and bare-RN notes are under [Requirements](#requirements).)
 
-## Requirements
-
-- **React Native** ≥ 0.64 (peer). Tested on RN 0.81.
-- **React** ≥ 18.2.
-- **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2), `react-native-safe-area-context` (≥ 4), `react-native-portalize`.
-- **Reanimated's Babel plugin** must be configured — this is required, not optional. React Native consumes this library's TypeScript source (the standard distribution model for Reanimated libraries), so the plugin transforms its worklets as part of your app's build. Expo configures it for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3). On Expo SDK 54, do **not** also add the plugin by hand — `babel-preset-expo` already includes it, and a duplicate breaks worklets.
-- Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (see Quick start).
-- `expo-haptics` is **optional** — only needed if you want haptics on `QuickPreviewPressable`.
-
-## Quick start
-
-Mount the provider once near the root of your app, inside `GestureHandlerRootView`:
+### 2 · Wrap your app once
 
 ```tsx
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -85,34 +92,42 @@ export default function App() {
 }
 ```
 
-Then present content from any screen:
+### 3 · Drop it onto a list item
 
 ```tsx
-import { View, Text, Pressable } from 'react-native'
-import { useQuickPreview } from 'react-native-quick-preview'
+// note: touchables used *inside* a preview must come from gesture-handler, not react-native
+import { Pressable } from 'react-native-gesture-handler'
+import { QuickPreview, QuickPreviewPressable } from 'react-native-quick-preview'
 
-function ProductCard({ product }: { product: Product }) {
-  const { present } = useQuickPreview()
-
-  return (
+<QuickPreviewPressable
+  onPress={() => navigation.navigate('Product', { id: product.id })}   // tap → full screen
+  renderPreview={() => (                                               // long-press → peek
     <Pressable
-      onLongPress={() =>
-        present(
-          <View style={{ backgroundColor: '#fff', padding: 16 }}>
-            <Text style={{ fontSize: 18, fontWeight: '700' }}>{product.name}</Text>
-            <Text>{product.description}</Text>
-          </View>,
-          { variant: 'popover' }
-        )
-      }
+      onPress={() => {
+        QuickPreview.close()
+        navigation.navigate('Product', { id: product.id })            // tap the peek → full screen
+      }}
     >
-      <Text>{product.name}</Text>
+      <ProductCard product={product} />   {/* reuse a card you already have */}
     </Pressable>
-  )
-}
+  )}
+>
+  <Thumbnail source={product.image} />
+</QuickPreviewPressable>
 ```
 
-That's the whole integration. The preview renders in a portal above your app, so it doesn't matter where in the tree you call `present` from.
+That's the whole integration — three files touched, reusing your existing detail route as the destination.
+
+> Prefer to trigger it yourself? Grab the hook — `const { present } = useQuickPreview()` — and call `present(node, options)` from any handler, or use the static `QuickPreview.present(node, options)` from outside React (below).
+
+## Requirements
+
+- **React Native** ≥ 0.64 (peer). Tested on RN 0.81.
+- **React** ≥ 18.2.
+- **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2), `react-native-safe-area-context` (≥ 4), `react-native-portalize`.
+- **Reanimated's Babel plugin** must be configured — this is required, not optional. React Native consumes this library's TypeScript source (the standard distribution model for Reanimated libraries), so the plugin transforms its worklets as part of your app's build. Expo configures it for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3). On Expo SDK 54, do **not** also add the plugin by hand — `babel-preset-expo` already includes it, and a duplicate breaks worklets.
+- Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (step 2 above).
+- `expo-haptics` is **optional** — only needed if you want haptics; pass it to `QuickPreviewPressable` via `onLongPressStart`.
 
 ## Presenting from outside components
 
