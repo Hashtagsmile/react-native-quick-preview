@@ -1,18 +1,18 @@
 # Recording demo GIFs
 
-A step-by-step guide to capturing the GIFs used in the README. The app has three tabs,
-each owning one concept — record from **Start** and **Components**.
+A step-by-step guide to capturing the GIFs used in the README. The app shows the library
+in two real contexts — record from **Feed** and **Shop**.
 
 ## What the demo covers
 
 | Tab | Shows |
 | --- | --- |
-| **Start** | The pitch + a live hero and gallery: long-press to peek (imperative `useQuickPreview`). |
-| **API** | The 3 code entry points — hook, static `QuickPreview`, headless `QuickPreviewComponent` — with copy-paste snippets. |
-| **Components** | `QuickPreviewPressable` grid, `QuickPreviewScrollView`, and an options/lifecycle playground (variant, size, dismiss flags). |
+| **Feed** | An Instagram-style feed: long-press a photo → **popover** peek of the post → tap to open the full post. |
+| **Shop** | An e-commerce store: long-press a product → **sheet** quick-view (price, rating, CTA) → tap to open the product page. |
+| **API** | The code entry points — hook, static `QuickPreview`, headless `QuickPreviewComponent`, and `QuickPreviewScrollView`. |
 
-Every flow the library ships is demoed with the real API: popover, sheet, present-from-anywhere,
-scrollable preview, and long-press-to-peek / tap-to-navigate (`QuickPreviewPressable`).
+Feed and Shop show the two variants (popover / sheet) in genuinely different real-world
+contexts — that contrast is the whole pitch.
 
 ## Prerequisites
 
@@ -45,24 +45,24 @@ Keep each clip **2–4 seconds**. Record a little extra and trim in conversion.
 
 ### Hero — side by side (record this first)
 Open the iOS Simulator **and** the Android emulator, place them side by side, and do the
-**same long-press on the Start hero (or gallery tile)** on both. This is the one asset no
-competitor can show. Record the screen region covering both. Caption it: *"Same code. iOS + Android."*
+**same long-press on a Feed photo** on both. This is the one asset no competitor can show.
+Record the screen region covering both. Caption it: *"Same code. iOS + Android."*
 
-### Interaction anatomy
-On **Start** (or the **Components → QuickPreviewPressable** grid): long-press a tile (peek
-appears), then **tap the preview** to open the detail screen, or tap outside to dismiss.
+### Feed peek → post (the social use case)
+On **Feed**: long-press a photo → the post peek appears (popover) → tap the peek to open the
+full post. This is the "why you'd want it in your feed" shot.
 
-### Popover vs sheet
-On **Components → Options playground**: toggle **variant** between `popover` and `sheet`, tapping
-"Present with these options" for each. One clean loop each, or a quick cut between them.
+### Shop quick-view → product (the commerce use case)
+On **Shop**: long-press a product → the bottom-sheet quick-view slides up (price, rating,
+"View details") → tap it to open the product page. Shows the sheet variant in context.
 
 ### Present from anywhere
 On **API → Static**: tap **Run this example**. Overlay the code caption
 `QuickPreview.present(<Card/>)` — the point is that it's a plain function call.
 
 ### Scrollable preview
-On **Components → QuickPreviewScrollView**: tap **Present a scrollable sheet**, scroll the
-content, then drag from the top to dismiss.
+On **API → Scrollable content**: tap **Run this example**, scroll the content, then drag from
+the top to dismiss.
 
 ## 4. Convert to GIF
 

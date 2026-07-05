@@ -24,6 +24,10 @@ export type Item = {
   likes?: number;
   views?: number;
 
+  // commerce
+  rating?: number;
+  reviews?: number;
+
   // music
   artist?: string;
   duration?: string;
@@ -72,6 +76,8 @@ export const posts: Item[] = [
     username: 'kai',
     likes: 207,
     views: 826,
+    description: 'Dawn patrol was worth it 🌊',
+    tags: ['surf', 'bali', 'ocean'],
   },
   {
     id: 'post_4',
@@ -85,6 +91,8 @@ export const posts: Item[] = [
     username: 'leo',
     likes: 610,
     views: 2194,
+    description: 'The city under a blanket of fog.',
+    tags: ['sanfrancisco', 'fog', 'morning'],
   },
   {
     id: 'post_5',
@@ -98,6 +106,8 @@ export const posts: Item[] = [
     username: 'nora',
     likes: 451,
     views: 1832,
+    description: 'Above the clouds, below the peaks.',
+    tags: ['hiking', 'alps', 'zermatt'],
   },
   {
     id: 'post_6',
@@ -111,6 +121,8 @@ export const posts: Item[] = [
     username: 'sara',
     likes: 742,
     views: 2981,
+    description: 'Every wall a different shade of blue.',
+    tags: ['morocco', 'chefchaouen', 'blue'],
   },
 ];
 
@@ -122,8 +134,11 @@ export const products: Item[] = [
     subtitle: 'Noise cancelling • 30h battery',
     image:
       'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1400&q=80&auto=format&fit=crop',
-    price: 129.0,
-    description: 'Crisp sound, deep bass, and all-day comfort.',
+    price: 129,
+    rating: 4.8,
+    reviews: 1240,
+    description:
+      'Studio-grade drivers with adaptive noise cancelling, 30 hours of battery, and plush memory-foam ear cups. Crisp highs, deep bass, and all-day comfort for work or travel.',
     tags: ['audio', 'wireless', 'best-seller'],
   },
   {
@@ -134,7 +149,9 @@ export const products: Item[] = [
     image:
       'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1400&q=80&auto=format&fit=crop',
     price: 299,
-    description: 'Sit better, focus longer.',
+    rating: 4.6,
+    reviews: 512,
+    description: 'Breathable mesh back with adjustable lumbar support. Sit better, focus longer.',
     tags: ['work', 'comfort'],
   },
   {
@@ -143,9 +160,51 @@ export const products: Item[] = [
     title: 'Smart Lamp',
     subtitle: 'Dimmable • App control',
     image:
-      'https://images.unsplash.com/photo-1524758631624-31254f33f9b1?w=1400&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=1400&q=80&auto=format&fit=crop',
     price: 59,
-    description: 'Warm-to-cool light with scenes.',
+    rating: 4.4,
+    reviews: 208,
+    description: 'Warm-to-cool white with app-controlled scenes and schedules.',
+    tags: ['home', 'lighting'],
+  },
+  {
+    id: 'prod_4',
+    kind: 'product',
+    title: 'Everyday Sneakers',
+    subtitle: 'Knit upper • Cushioned sole',
+    image:
+      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1400&q=80&auto=format&fit=crop',
+    price: 89,
+    rating: 4.7,
+    reviews: 934,
+    description: 'Lightweight knit upper and a responsive cushioned sole for all-day wear.',
+    tags: ['shoes', 'everyday'],
+  },
+  {
+    id: 'prod_5',
+    kind: 'product',
+    title: 'Analog Watch',
+    subtitle: 'Sapphire glass • 5ATM',
+    image:
+      'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1400&q=80&auto=format&fit=crop',
+    price: 199,
+    rating: 4.9,
+    reviews: 356,
+    description: 'Minimal dial, sapphire crystal, and a stainless case rated to 5ATM.',
+    tags: ['accessories', 'watch'],
+  },
+  {
+    id: 'prod_6',
+    kind: 'product',
+    title: 'Instant Camera',
+    subtitle: 'Prints in 15s • Retro body',
+    image:
+      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1400&q=80&auto=format&fit=crop',
+    price: 109,
+    rating: 4.5,
+    reviews: 421,
+    description: 'Point, shoot, and print in seconds. Retro body, modern optics.',
+    tags: ['camera', 'retro'],
   },
 ];
 

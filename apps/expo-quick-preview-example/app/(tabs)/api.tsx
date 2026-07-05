@@ -3,7 +3,12 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 // gesture-handler Pressable so buttons inside the preview overlay receive taps.
 import { Pressable } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
-import { useQuickPreview, QuickPreviewComponent, QuickPreview } from 'react-native-quick-preview'
+import {
+  useQuickPreview,
+  QuickPreviewComponent,
+  QuickPreview,
+  QuickPreviewScrollView,
+} from 'react-native-quick-preview'
 import { colors } from '../../theme'
 
 function SampleCard({ onGo, onClose, onToggleVariant }: {
@@ -88,6 +93,24 @@ export default function API() {
     )
   }, [])
 
+  // Scrollable content demo
+  const openScrollable = useCallback(() => {
+    qp.present(
+      <QuickPreviewScrollView style={{ maxHeight: 460 }}>
+        <Image source={{ uri: 'https://picsum.photos/600/400' }} style={styles.cardImage} />
+        <View style={{ padding: 16 }}>
+          <Text style={styles.cardTitle}>Scrollable preview</Text>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Text key={i} style={[styles.cardDescription, { marginTop: 10 }]}>
+              Long content scrolls inside the preview; drag from the top to dismiss.
+            </Text>
+          ))}
+        </View>
+      </QuickPreviewScrollView>,
+      { variant: 'sheet', size: { maxHeight: 520 }, accessibilityLabel: 'Scrollable preview' }
+    )
+  }, [qp])
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>API</Text>
@@ -152,6 +175,29 @@ const [visible, setVisible] = useState(false)
         </View>
 
         <Pressable style={styles.demoButton} onPress={() => setHeadlessVisible(true)}>
+          <Text style={styles.demoButtonText}>Run this example</Text>
+        </Pressable>
+      </View>
+
+      {/* Scrollable content */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>4. Scrollable content</Text>
+        <Text style={styles.sectionDescription}>
+          Wrap long preview content in QuickPreviewScrollView so scrolling and swipe-to-dismiss
+          don't fight each other.
+        </Text>
+
+        <View style={styles.codeBlock}>
+          <Text style={styles.codeText}>
+{`import { QuickPreviewScrollView } from 'react-native-quick-preview'
+present(
+  <QuickPreviewScrollView>{longContent}</QuickPreviewScrollView>,
+  { variant: 'sheet', size: { maxHeight: 520 } }
+)`}
+          </Text>
+        </View>
+
+        <Pressable style={styles.demoButton} onPress={openScrollable}>
           <Text style={styles.demoButtonText}>Run this example</Text>
         </Pressable>
       </View>

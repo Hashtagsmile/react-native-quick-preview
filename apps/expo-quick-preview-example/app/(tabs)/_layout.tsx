@@ -14,11 +14,20 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="start"
+        name="feed"
         options={{
-          title: 'Start',
+          title: 'Feed',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="shop"
+        options={{
+          title: 'Shop',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'bag-handle' : 'bag-handle-outline'} size={24} color={color} />
           ),
         }}
       />
@@ -28,15 +37,6 @@ export default function TabsLayout() {
           title: 'API',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'code-slash' : 'code-slash-outline'} size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="components"
-        options={{
-          title: 'Components',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'layers' : 'layers-outline'} size={24} color={color} />
           ),
         }}
       />

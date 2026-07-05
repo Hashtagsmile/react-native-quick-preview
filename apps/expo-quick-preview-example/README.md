@@ -29,20 +29,20 @@ Run the app in the iOS Simulator, an Android emulator, or on a device with Expo 
 apps/expo-quick-preview-example/
 ├── app/
 │   ├── (tabs)/
-│   │   ├── start.tsx        # pitch + imperative useQuickPreview hero + gallery
-│   │   ├── api.tsx          # the 3 code entry points (hook / static / headless)
-│   │   └── components.tsx   # QuickPreviewPressable, QuickPreviewScrollView, options playground
-│   └── detail.tsx           # shared navigation target
-├── components/              # PreviewCard + PreviewTile (shared)
+│   │   ├── feed.tsx         # Instagram-style feed: long-press a photo → popover peek → post
+│   │   ├── shop.tsx         # e-commerce store: long-press a product → sheet quick-view → product
+│   │   └── api.tsx          # code entry points (hook / static / headless / scrollview)
+│   └── detail.tsx           # full post / product page (shared navigation target)
+├── components/              # PostPreview + ProductPreview (the peek content)
 ├── theme.ts                 # colors / spacing / radius / type
 └── data/                    # demo data
 ```
 
-Three tabs, one concept each: **Start** (what it does), **API** (how to call it from code),
-**Components** (the declarative wrappers + every option).
+The app leads with two real use cases — a social **Feed** and an e-commerce **Shop** — so you
+can see *why* you'd want quick preview, then an **API** tab for *how* to call it.
 
 ## What you'll see
 
-- Long-press cards to open a quick preview
-- Tap the preview to navigate, or swipe / tap outside to dismiss
-- Popover and sheet variants, plus the full option surface (size, dismiss flags, lifecycle callbacks)
+- **Feed:** long-press a photo to peek the post, tap the peek to open it (popover variant)
+- **Shop:** long-press a product for a bottom-sheet quick-view with price + rating, tap to buy (sheet variant)
+- **API:** the hook, the static handle, the headless component, and scrollable previews — with copy-paste code
