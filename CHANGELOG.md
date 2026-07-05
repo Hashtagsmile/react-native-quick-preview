@@ -45,7 +45,8 @@ Complete rewrite from a single controlled component to a headless provider + con
 - Upgraded the example app to Expo SDK 54 (React Native 0.81, React 19.1, Reanimated 4, expo-router v6) so it runs in current Expo Go; `expo-doctor` passes 18/18. The library is now dev-tested against Reanimated 4 while keeping its peer range at `>=3.0.0` (both 3 and 4 supported).
 - Replaced the example app's placeholder "New Version" screen (which faked the API with a local `Modal` instead of using the library) with a real **Showcase** screen that demonstrates every flow — popover, sheet, present-from-anywhere, scrollable preview, and long-press-to-peek — using the actual API. Added a [recording guide](apps/expo-quick-preview-example/RECORDING.md) for producing demo GIFs.
 - README: added **Requirements**, **Compatibility**, and **Limitations** sections so it's clear when to use the library and when to reach for a native option instead.
-- Verified the example app bundles end-to-end on both iOS and Android (`expo export`).
+- Pinned `semver` to `^7.7.2` via a root override. Reanimated 4's worklets-version check does `require('semver/functions/satisfies')`, which fails when npm hoists `semver@6` (no `functions/` dir) to the workspace root — a nondeterministic monorepo install would break the dev bundle with "Unable to resolve semver/functions/satisfies".
+- Verified the example app bundles end-to-end on both iOS and Android, in both dev and production modes (`expo export`).
 
 ### Migration from 1.x
 
