@@ -1,243 +1,353 @@
+// API — a documentation-style reference: setup, every way to present a preview,
+// each with copy-pasteable code and a live "Run it" demo.
 import React, { useState, useCallback } from 'react'
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
-// gesture-handler Pressable so buttons inside the preview overlay receive taps.
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { Pressable } from 'react-native-gesture-handler'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import {
   useQuickPreview,
-  QuickPreviewComponent,
   QuickPreview,
+  QuickPreviewComponent,
+  QuickPreviewPressable,
   QuickPreviewScrollView,
 } from 'react-native-quick-preview'
-import { colors } from '../../theme'
+import { products, articles, type Item } from '../../data/examples'
+import { ProductPreview } from '../../components/ProductPreview'
+import { CodeBlock } from '../../components/CodeBlock'
+import { colors, radius, spacing, type as t } from '../../theme'
 
-function SampleCard({ onGo, onClose, onToggleVariant }: {
-  onGo?: () => void
-  onClose?: () => void
-  onToggleVariant?: () => void
+const SETUP = `import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { PreviewProvider } from 'react-native-quick-preview'
+
+export default function App() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PreviewProvider>
+        <YourApp />
+      </PreviewProvider>
+    </GestureHandlerRootView>
+  )
+}`
+
+const PRESSABLE = `import { QuickPreviewPressable } from 'react-native-quick-preview'
+
+<QuickPreviewPressable
+  onPress={() => router.push(\`/product/\${id}\`)}
+  renderPreview={() => <ProductPreview product={product} />}
+  previewOptions={{ variant: 'sheet' }}
+>
+  <Thumbnail source={product.image} />
+</QuickPreviewPressable>`
+
+const HOOK = `import { useQuickPreview } from 'react-native-quick-preview'
+
+function Card({ product }) {
+  const { present } = useQuickPreview()
+
+  return (
+    <Pressable
+      onLongPress={() =>
+        present(<ProductPreview product={product} />, { variant: 'sheet' })
+      }
+    >
+      <Thumbnail source={product.image} />
+    </Pressable>
+  )
+}`
+
+const STATIC = `import { QuickPreview } from 'react-native-quick-preview'
+
+// Call from anywhere — even outside React.
+QuickPreview.present(<Card />, { variant: 'popover' })
+QuickPreview.update({ size: { maxHeight: 480 } })
+QuickPreview.close()`
+
+const COMPONENT = `import { QuickPreviewComponent } from 'react-native-quick-preview'
+
+const [visible, setVisible] = useState(false)
+
+<QuickPreviewComponent
+  visible={visible}
+  onClose={() => setVisible(false)}
+  variant="sheet"
+>
+  <Card />
+</QuickPreviewComponent>`
+
+const SCROLL = `import { QuickPreviewScrollView } from 'react-native-quick-preview'
+
+present(
+  <QuickPreviewScrollView>
+    <LongArticle />
+  </QuickPreviewScrollView>,
+  { variant: 'sheet', size: { maxHeight: 520 } }
+)`
+
+function RunButton({ onPress }: { onPress: () => void }) {
+  return (
+    <Pressable style={styles.run} onPress={onPress}>
+      <Ionicons name="play" size={15} color={colors.codeText} />
+      <Text style={styles.runText}>Run this example</Text>
+    </Pressable>
+  )
+}
+
+function Section({
+  step,
+  title,
+  description,
+  code,
+  footer,
+}: {
+  step: string
+  title: string
+  description?: React.ReactNode
+  code: string
+  footer?: React.ReactNode
 }) {
   return (
-    <View style={styles.card}>
-      <Image source={{ uri: 'https://picsum.photos/600/400' }} style={styles.cardImage} />
-      <View style={styles.cardContent}>
-        <Text style={styles.cardTitle}>Sample Card</Text>
-        <Text style={styles.cardDescription}>
-          This card is rendered inside QuickPreview. Try toggling variant or closing.
-        </Text>
-        <View style={styles.row}>
-          <View style={styles.rowLeft}>
-            <Ionicons name="heart" size={16} color="#ff6b6b" />
-            <Text style={styles.cardMetaText}>1.2K likes</Text>
-          </View>
-          <View style={styles.rowRight}>
-            {onToggleVariant ? (
-              <Pressable
-                onPress={onToggleVariant}
-                style={[styles.chip, { marginRight: 8 }]}
-                accessibilityRole="button"
-                accessibilityLabel="Toggle variant"
-              >
-                <Text style={styles.chipText}>Toggle variant</Text>
-              </Pressable>
-            ) : null}
-            {onGo ? (
-              <Pressable
-                onPress={onGo}
-                style={styles.primary}
-                accessibilityRole="button"
-                accessibilityLabel="Go"
-              >
-                <Text style={styles.primaryText}>Go</Text>
-              </Pressable>
-            ) : null}
-          </View>
+    <View style={styles.section}>
+      <View style={styles.stepRow}>
+        <View style={styles.stepBadge}>
+          <Text style={styles.stepBadgeText}>{step}</Text>
         </View>
-        {onClose ? (
-          <Pressable
-            onPress={onClose}
-            style={[styles.secondary, { marginTop: 10 }]}
-            accessibilityRole="button"
-            accessibilityLabel="Close preview"
-          >
-            <Text style={styles.secondaryText}>Close</Text>
-          </Pressable>
-        ) : null}
+        <Text style={styles.sectionTitle}>{title}</Text>
       </View>
+      {description}
+      <CodeBlock code={code} />
+      {footer}
     </View>
   )
 }
 
 export default function API() {
-  const qp = useQuickPreview()
-  const [headlessVisible, setHeadlessVisible] = useState(false)
+  const { present, close } = useQuickPreview()
+  const [visible, setVisible] = useState(false)
 
-  // Hook demo
-  const openHookPreview = useCallback(() => {
-    qp.present(
-      <SampleCard
-        onClose={qp.close}
-        onToggleVariant={() => qp.update({ variant: 'sheet' })}
-      />,
-      { variant: 'sheet', dismissOnBackdropPress: true, dismissOnPanDown: true, accessibilityLabel: 'Quick preview' }
-    )
-  }, [qp])
+  const demo = useCallback(
+    (item: Item, onClose: () => void) => (
+      <Pressable style={{ alignSelf: 'stretch' }} onPress={onClose}>
+        <ProductPreview item={item} />
+      </Pressable>
+    ),
+    []
+  )
 
-  // Static demo
-  const openStaticPreview = useCallback(() => {
-    QuickPreview.present(
-      <SampleCard
-        onClose={QuickPreview.close}
-        onToggleVariant={() => QuickPreview.update({ variant: 'sheet' })}
-      />,
-      { variant: 'popover', accessibilityLabel: 'Quick preview' }
-    )
-  }, [])
-
-  // Scrollable content demo
-  const openScrollable = useCallback(() => {
-    qp.present(
+  const runHook = useCallback(() => present(demo(products[0], close), { variant: 'sheet' }), [present, close, demo])
+  const runStatic = useCallback(
+    () => QuickPreview.present(demo(products[1], QuickPreview.close), { variant: 'popover' }),
+    [demo]
+  )
+  const runScroll = useCallback(() => {
+    const article = articles[0]
+    present(
       <QuickPreviewScrollView style={{ maxHeight: 460 }}>
-        <Image source={{ uri: 'https://picsum.photos/600/400' }} style={styles.cardImage} />
-        <View style={{ padding: 16 }}>
-          <Text style={styles.cardTitle}>Scrollable preview</Text>
+        <View style={{ padding: spacing.lg, gap: spacing.md }}>
+          <Text style={styles.scrollTitle}>{article.title}</Text>
           {Array.from({ length: 8 }).map((_, i) => (
-            <Text key={i} style={[styles.cardDescription, { marginTop: 10 }]}>
-              Long content scrolls inside the preview; drag from the top to dismiss.
+            <Text key={i} style={styles.scrollBody}>
+              {article.description} Scroll this content; drag from the top edge to dismiss.
             </Text>
           ))}
         </View>
       </QuickPreviewScrollView>,
-      { variant: 'sheet', size: { maxHeight: 520 }, accessibilityLabel: 'Scrollable preview' }
+      { variant: 'sheet', size: { maxHeight: 520 } }
     )
-  }, [qp])
+  }, [present])
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>API</Text>
-
-      {/* Imperative API (Hook) */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>1. Imperative API (Hook)</Text>
-        <Text style={styles.sectionDescription}>
-          Use the hook inside React components. Great when you're already in React context.
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={t.h1}>API</Text>
+        <Text style={styles.intro}>
+          Mount the provider once, then present a preview any way you like. Long-press or tap the
+          demos to dismiss them.
         </Text>
 
-        <View style={styles.codeBlock}>
-          <Text style={styles.codeText}>
-{`import { useQuickPreview } from 'react-native-quick-preview'
-const qp = useQuickPreview()
-qp.present(<Card />, { variant: 'sheet', dismissOnBackdropPress: true })`}
-          </Text>
+        <Section
+          step="1"
+          title="Set up once"
+          description={
+            <Text style={styles.body}>
+              Wrap your app in <Text style={styles.mono}>GestureHandlerRootView</Text> and{' '}
+              <Text style={styles.mono}>PreviewProvider</Text>. That's the only global setup.
+            </Text>
+          }
+          code={SETUP}
+        />
+
+        <Text style={styles.groupLabel}>Ways to present</Text>
+
+        <Section
+          step="2"
+          title="QuickPreviewPressable"
+          description={
+            <Text style={styles.body}>
+              The drop-in wrapper used across every Examples screen: long-press to peek, tap to open.
+            </Text>
+          }
+          code={PRESSABLE}
+          footer={
+            <View style={styles.inlineDemo}>
+              <QuickPreviewPressable
+                onPress={() => undefined}
+                renderPreview={() => demo(products[2], QuickPreview.close)}
+                previewOptions={{ variant: 'popover' }}
+                style={styles.demoTile}
+              >
+                <Ionicons name="finger-print" size={18} color={colors.accent} />
+                <Text style={styles.demoTileText}>Long-press me</Text>
+              </QuickPreviewPressable>
+            </View>
+          }
+        />
+
+        <Section
+          step="3"
+          title="useQuickPreview()"
+          description={<Text style={styles.body}>The hook, for when you're already inside a component.</Text>}
+          code={HOOK}
+          footer={<RunButton onPress={runHook} />}
+        />
+
+        <Section
+          step="4"
+          title="QuickPreview (static)"
+          description={
+            <Text style={styles.body}>
+              A static handle with the same methods — callable from services or anywhere outside React.
+            </Text>
+          }
+          code={STATIC}
+          footer={<RunButton onPress={runStatic} />}
+        />
+
+        <Section
+          step="5"
+          title="QuickPreviewComponent"
+          description={<Text style={styles.body}>The controlled, headless component when you own the state.</Text>}
+          code={COMPONENT}
+          footer={<RunButton onPress={() => setVisible(true)} />}
+        />
+
+        <Section
+          step="6"
+          title="QuickPreviewScrollView"
+          description={
+            <Text style={styles.body}>
+              Wrap long content so scrolling and swipe-to-dismiss don't fight each other.
+            </Text>
+          }
+          code={SCROLL}
+          footer={<RunButton onPress={runScroll} />}
+        />
+
+        <Text style={styles.groupLabel}>present(node, options)</Text>
+        <View style={styles.optionsCard}>
+          {OPTIONS.map((o) => (
+            <View key={o.name} style={styles.optionRow}>
+              <Text style={styles.optionName}>{o.name}</Text>
+              <Text style={styles.optionDesc}>{o.desc}</Text>
+            </View>
+          ))}
         </View>
 
-        <Pressable style={styles.demoButton} onPress={openHookPreview}>
-          <Text style={styles.demoButtonText}>Run this example</Text>
-        </Pressable>
-      </View>
+        <View style={{ height: spacing.xl }} />
+      </ScrollView>
 
-      {/* Static API */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>2. Static API (Gorhom-style)</Text>
-        <Text style={styles.sectionDescription}>
-          Call from anywhere (event handlers, utilities, outside React). The Provider registers a global controller.
-        </Text>
-
-        <View style={styles.codeBlock}>
-          <Text style={styles.codeText}>
-{`import { QuickPreview } from 'react-native-quick-preview'
-QuickPreview.present(<Card />, { variant: 'popover' })
-// Later:
-QuickPreview.update({ variant: 'sheet' })
-QuickPreview.close()`}
-          </Text>
-        </View>
-
-        <Pressable style={styles.demoButton} onPress={openStaticPreview}>
-          <Text style={styles.demoButtonText}>Run this example</Text>
-        </Pressable>
-      </View>
-
-      {/* Headless Component */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>3. Headless Component</Text>
-        <Text style={styles.sectionDescription}>
-          Controlled component for simple cases or maximum control. You manage the state.
-        </Text>
-
-        <View style={styles.codeBlock}>
-          <Text style={styles.codeText}>
-{`import { QuickPreviewComponent } from 'react-native-quick-preview'
-const [visible, setVisible] = useState(false)
-<QuickPreviewComponent visible={visible} onClose={() => setVisible(false)} variant="sheet">
-  <Card />
-</QuickPreviewComponent>`}
-          </Text>
-        </View>
-
-        <Pressable style={styles.demoButton} onPress={() => setHeadlessVisible(true)}>
-          <Text style={styles.demoButtonText}>Run this example</Text>
-        </Pressable>
-      </View>
-
-      {/* Scrollable content */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>4. Scrollable content</Text>
-        <Text style={styles.sectionDescription}>
-          Wrap long preview content in QuickPreviewScrollView so scrolling and swipe-to-dismiss
-          don't fight each other.
-        </Text>
-
-        <View style={styles.codeBlock}>
-          <Text style={styles.codeText}>
-{`import { QuickPreviewScrollView } from 'react-native-quick-preview'
-present(
-  <QuickPreviewScrollView>{longContent}</QuickPreviewScrollView>,
-  { variant: 'sheet', size: { maxHeight: 520 } }
-)`}
-          </Text>
-        </View>
-
-        <Pressable style={styles.demoButton} onPress={openScrollable}>
-          <Text style={styles.demoButtonText}>Run this example</Text>
-        </Pressable>
-      </View>
-
-      {/* Headless instance */}
-      {headlessVisible && (
-        <QuickPreviewComponent visible={headlessVisible} onClose={() => setHeadlessVisible(false)} variant="sheet">
-          <SampleCard onClose={() => setHeadlessVisible(false)} />
+      {visible && (
+        <QuickPreviewComponent visible={visible} onClose={() => setVisible(false)} variant="sheet">
+          <Pressable style={{ alignSelf: 'stretch' }} onPress={() => setVisible(false)}>
+            <ProductPreview item={products[3]} />
+          </Pressable>
         </QuickPreviewComponent>
       )}
-    </ScrollView>
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: 16 },
-  header: { fontSize: 28, fontWeight: '800', color: colors.text, marginBottom: 20 },
-  section: {
-    marginBottom: 20, backgroundColor: colors.panel, padding: 16, borderRadius: 14,
-  },
-  sectionTitle: { fontSize: 18, fontWeight: '700', color: colors.text, marginBottom: 6 },
-  sectionDescription: { fontSize: 14, color: colors.textMuted, marginBottom: 14, lineHeight: 20 },
-  codeBlock: { backgroundColor: colors.code, padding: 14, borderRadius: 8, marginBottom: 14 },
-  codeText: { color: colors.codeText, fontSize: 12, fontFamily: 'monospace', lineHeight: 18 },
-  demoButton: { backgroundColor: colors.accent, paddingVertical: 12, paddingHorizontal: 20, borderRadius: 10, alignItems: 'center' },
-  demoButtonText: { color: '#fff', fontWeight: '600', fontSize: 16 },
+const OPTIONS: { name: string; desc: string }[] = [
+  { name: 'variant', desc: "'popover' (centered) or 'sheet' (bottom). Default 'popover'." },
+  { name: 'size', desc: "'auto', a number (max height), or { maxHeight, maxWidth }." },
+  { name: 'dismissOnBackdropPress', desc: 'Tap outside to close. Default true.' },
+  { name: 'dismissOnPanDown', desc: 'Swipe the sheet down to close. Default true.' },
+  { name: 'onOpenStart / onOpenEnd', desc: 'Open animation lifecycle callbacks.' },
+  { name: 'onCloseStart / onCloseEnd', desc: 'Close animation lifecycle callbacks.' },
+]
 
-  card: { backgroundColor: '#fff', borderRadius: 12, overflow: 'hidden', maxWidth: 520, width: '92%' },
-  cardImage: { width: '100%', height: 200, resizeMode: 'cover' },
-  cardContent: { padding: 16 },
-  cardTitle: { fontSize: 18, fontWeight: '600', color: '#1a1a1a', marginBottom: 8 },
-  cardDescription: { fontSize: 14, color: '#666', lineHeight: 20, marginBottom: 12 },
-  cardMetaText: { fontSize: 12, color: '#888', marginLeft: 6 },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  rowLeft: { flexDirection: 'row', alignItems: 'center' },
-  rowRight: { flexDirection: 'row', alignItems: 'center' },
-  chip: { backgroundColor: '#eef2ff', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 8 },
-  chipText: { color: '#3730a3', fontWeight: '600' },
-  primary: { backgroundColor: '#111827', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 10 },
-  primaryText: { color: 'white', fontWeight: '700' },
-  secondary: { backgroundColor: '#e5e7eb', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 10 },
-  secondaryText: { color: '#111827', fontWeight: '700' },
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.background },
+  container: { padding: spacing.lg },
+  intro: { ...t.muted, marginTop: spacing.sm, marginBottom: spacing.lg, lineHeight: 20 },
+
+  groupLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.textMuted,
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+    marginTop: spacing.sm,
+    marginBottom: spacing.md,
+  },
+
+  section: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    gap: spacing.md,
+  },
+  stepRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  stepBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepBadgeText: { color: colors.codeText, fontSize: 13, fontWeight: '800' },
+  sectionTitle: { fontSize: 17, fontWeight: '800', color: colors.text },
+  body: { fontSize: 14, color: colors.textMuted, lineHeight: 20 },
+  mono: { fontFamily: 'monospace', fontSize: 13, color: colors.text },
+
+  run: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
+    paddingVertical: spacing.md,
+  },
+  runText: { color: colors.codeText, fontWeight: '700', fontSize: 15 },
+
+  inlineDemo: { alignItems: 'flex-start' },
+  demoTile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.panel,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
+  demoTileText: { fontSize: 14, fontWeight: '700', color: colors.text },
+
+  scrollTitle: { fontSize: 18, fontWeight: '800', color: colors.text },
+  scrollBody: { fontSize: 14, color: colors.text, lineHeight: 21 },
+
+  optionsCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+  },
+  optionRow: { paddingHorizontal: spacing.lg, paddingVertical: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 3 },
+  optionName: { fontFamily: 'monospace', fontSize: 13, fontWeight: '700', color: colors.accent },
+  optionDesc: { fontSize: 13, color: colors.textMuted, lineHeight: 18 },
 })
