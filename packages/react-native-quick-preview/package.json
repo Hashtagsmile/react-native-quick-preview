@@ -7,11 +7,11 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "react-native": "dist/index.js",
+  "react-native": "src/index.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "react-native": "./dist/index.js",
+      "react-native": "./src/index.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "default": "./dist/index.js"
@@ -98,5 +98,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "source": "src/index.ts"
 }

@@ -62,7 +62,7 @@ If you want haptic feedback on long-press, install `expo-haptics` in your app an
 - **React Native** ≥ 0.64 (peer). Tested on RN 0.81.
 - **React** ≥ 18.2.
 - **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2), `react-native-safe-area-context` (≥ 4), `react-native-portalize`.
-- **Reanimated's Babel plugin** must be configured. Expo does this for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3).
+- **Reanimated's Babel plugin** must be configured — this is required, not optional. React Native consumes this library's TypeScript source (the standard distribution model for Reanimated libraries), so the plugin transforms its worklets as part of your app's build. Expo configures it for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3). On Expo SDK 54, do **not** also add the plugin by hand — `babel-preset-expo` already includes it, and a duplicate breaks worklets.
 - Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (see Quick start).
 - `expo-haptics` is **optional** — only needed if you want haptics on `QuickPreviewPressable`.
 

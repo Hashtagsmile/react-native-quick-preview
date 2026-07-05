@@ -35,6 +35,7 @@ Complete rewrite from a single controlled component to a headless provider + con
 - The `size` option is now actually applied: a number caps the preview's height, an object caps `maxHeight`/`maxWidth`, on both the popover and the sheet.
 - `QuickPreviewPressable` no longer `require`s `expo-haptics` at module load. The optional require broke Metro bundling for every app that didn't have expo-haptics installed. Haptics are now injected via the new `onLongPressStart` callback (the `haptics` prop is gone).
 - `QuickPreviewPressable` gesture callbacks are now worklet-safe: preview content is created on the JS thread via `runOnJS`, and the press-scale animation mutates the shared value directly inside the worklet instead of calling back into JS.
+- **The `react-native` entry now points to the TypeScript source, not the bundled `dist`.** A library that uses Reanimated worklets must let the *consumer's* Babel plugin transform them — esbuild-bundled output leaves the worklets untransformed, which on Reanimated 4 fails at runtime with "native module that doesn't exist". React Native / Metro now consumes `src`, so the consumer's Reanimated Babel plugin transforms the library's worklets correctly. The compiled `dist` (CJS/ESM/types) is retained for non-RN consumers via `main`/`module`/`types`. (This is the standard distribution model for Reanimated libraries — see [reanimated#4979](https://github.com/software-mansion/react-native-reanimated/discussions/4979).)
 
 ### Internal
 
