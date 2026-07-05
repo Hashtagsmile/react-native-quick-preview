@@ -18,7 +18,7 @@ export default function TabsLayout() {
         options={{
           title: 'Feed',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'grid' : 'grid-outline'} size={22} color={color} />
           ),
         }}
       />

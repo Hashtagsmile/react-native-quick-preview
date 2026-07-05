@@ -124,6 +124,96 @@ export const posts: Item[] = [
     description: 'Every wall a different shade of blue.',
     tags: ['morocco', 'chefchaouen', 'blue'],
   },
+  {
+    id: 'post_7',
+    kind: 'post',
+    title: 'Fresh pour',
+    subtitle: 'Oslo',
+    image:
+      'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=1400&q=80&auto=format&fit=crop',
+    username: 'ida',
+    avatar:
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=774&q=80&auto=format&fit=crop',
+    likes: 388,
+    views: 1502,
+    description: 'Slow mornings and good coffee ☕',
+    tags: ['coffee', 'oslo', 'morning'],
+  },
+  {
+    id: 'post_8',
+    kind: 'post',
+    title: 'Desert road',
+    subtitle: 'Arizona',
+    image:
+      'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1400&q=80&auto=format&fit=crop',
+    username: 'theo',
+    avatar:
+      'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=774&q=80&auto=format&fit=crop',
+    likes: 1024,
+    views: 4102,
+    description: 'Nowhere to be, all day.',
+    tags: ['roadtrip', 'desert', 'arizona'],
+  },
+  {
+    id: 'post_9',
+    kind: 'post',
+    title: 'Market colors',
+    subtitle: 'Marrakech',
+    image:
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&q=80&auto=format&fit=crop',
+    username: 'amira',
+    avatar:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=774&q=80&auto=format&fit=crop',
+    likes: 866,
+    views: 3320,
+    description: 'Spices, silk and sunlight.',
+    tags: ['market', 'marrakech', 'color'],
+  },
+  {
+    id: 'post_10',
+    kind: 'post',
+    title: 'Cliff jump',
+    subtitle: 'Amalfi',
+    image:
+      'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1400&q=80&auto=format&fit=crop',
+    username: 'marco',
+    avatar:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=774&q=80&auto=format&fit=crop',
+    likes: 1543,
+    views: 6210,
+    description: 'Summer, on repeat.',
+    tags: ['amalfi', 'summer', 'sea'],
+  },
+  {
+    id: 'post_11',
+    kind: 'post',
+    title: 'Green hour',
+    subtitle: 'Kyoto',
+    image:
+      'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1400&q=80&auto=format&fit=crop',
+    username: 'yuki',
+    avatar:
+      'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=774&q=80&auto=format&fit=crop',
+    likes: 512,
+    views: 1980,
+    description: 'Bamboo and quiet.',
+    tags: ['kyoto', 'bamboo', 'green'],
+  },
+  {
+    id: 'post_12',
+    kind: 'post',
+    title: 'Night market',
+    subtitle: 'Taipei',
+    image:
+      'https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?w=1400&q=80&auto=format&fit=crop',
+    username: 'chen',
+    avatar:
+      'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=774&q=80&auto=format&fit=crop',
+    likes: 977,
+    views: 3890,
+    description: 'Neon and noodles.',
+    tags: ['taipei', 'night', 'food'],
+  },
 ];
 
 export const products: Item[] = [
