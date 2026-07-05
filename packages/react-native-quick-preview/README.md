@@ -9,9 +9,9 @@ Long-press an item to peek at its content, swipe down to dismiss. The kind of pr
 I wanted this pattern in my own apps and couldn't find a maintained library for it, so I built one. The API follows the approach popularized by [Gorhom's bottom sheet](https://github.com/gorhom/react-native-bottom-sheet): mount a provider once, then present from anywhere.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif" width="46%" alt="Social feed — long-press a photo to peek the post, tap to open" />
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif?v=2" width="46%" alt="Social feed — long-press a photo to peek the post, tap to open" />
   &nbsp;
-  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif" width="46%" alt="Shop — long-press a product for a bottom-sheet quick-view" />
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif?v=2" width="46%" alt="Shop — long-press a product for a bottom-sheet quick-view" />
 </p>
 
 What you get:
