@@ -4,7 +4,7 @@ All notable changes to `react-native-quick-preview` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [2.0.0] - Unreleased
+## [2.0.0] - 2026-07-05
 
 Complete rewrite from a single controlled component to a headless provider + controller architecture.
 
@@ -41,19 +41,11 @@ Complete rewrite from a single controlled component to a headless provider + con
 
 ### Internal
 
-- Unit test suite (Jest + Testing Library) covering the provider contract, the static handle, size resolution, and the headless component; tests run in CI on Node 18/20/22.
-- Removed a dead v1 types file; the library now lints with zero warnings.
-- Documented the entire public API with TSDoc — every `present()` option, the controller methods, the hook, the provider, the headless component props, and the scroll view — with `@example` blocks on the main entry points. The docs flow into the shipped `.d.ts` (verified), so consumers get full autocomplete and hover documentation in their editor.
-- Added a seventh example — **Files (Quick Look)** — a file browser where images peek as a popover and documents peek as a scrollable bottom sheet (`QuickPreviewScrollView`). Named after the interaction the library is built for.
-- Excluded `__tests__` from the published npm tarball.
-- README now documents when to use this library versus native context-menu libraries and Expo Router's `Link.Preview`.
-- Upgraded the example app to Expo SDK 54 (React Native 0.81, React 19.1, Reanimated 4, expo-router v6) so it runs in current Expo Go; `expo-doctor` passes 18/18. The library is now dev-tested against Reanimated 4 while keeping its peer range at `>=3.0.0` (both 3 and 4 supported).
-- Replaced the example app's placeholder "New Version" screen (which faked the API with a local `Modal` instead of using the library) with a real **Showcase** screen that demonstrates every flow — popover, sheet, present-from-anywhere, scrollable preview, and long-press-to-peek — using the actual API. Added a [recording guide](apps/expo-quick-preview-example/RECORDING.md) for producing demo GIFs.
-- README: added **Requirements**, **Compatibility**, and **Limitations** sections so it's clear when to use the library and when to reach for a native option instead.
-- Pinned `semver` to `^7.7.2` via a root override. Reanimated 4's worklets-version check does `require('semver/functions/satisfies')`, which fails when npm hoists `semver@6` (no `functions/` dir) to the workspace root — a nondeterministic monorepo install would break the dev bundle with "Unable to resolve semver/functions/satisfies".
-- Removed the manual `react-native-worklets/plugin` from the example app's `babel.config.js`. On SDK 54, `babel-preset-expo` adds the Reanimated 4 / Worklets plugin automatically; the manual entry double-transformed worklets and broke Reanimated's native binding at runtime in Expo Go ("native module doesn't exist").
-- Rebuilt the example app as a **gallery of real-world use cases** so it *sells* the library instead of listing its API — and so new examples never bloat the tab bar. Two tabs: **Examples** (a gallery; each card opens a full example screen) and **API** (the code reference). The gallery ships six recognizable contexts, each demonstrating quick preview: **Social Feed** (Explore grid → popover peek), **Shopping** (product grid → bottom-sheet quick-view), **Music** (track list → peek with Play), **Messages** (long-press a shared link → peek its destination — the cross-platform answer to Expo Router's iOS-only `Link.Preview`), **Places** (map cards → sheet peek), and **Team** (directory → profile peek with Message/Call). Each context has its own peek component (`PostPreview`, `ProductPreview`, `TrackPreview`, `PlacePreview`, `PersonPreview`, `LinkPreview`); `detail.tsx` is a real post/product page. Earlier abstract Start/Components tabs and the 612-line kitchen-sink `examples.tsx` are gone.
-- Verified the example app bundles end-to-end on both iOS and Android, in both dev and production modes (`expo export`).
+- Full **TSDoc** across the public API — every `present()` option, the controller methods, the hook, the provider, the headless component props, and the scroll view, with `@example` blocks on the main entry points. The docs are preserved in the shipped `.d.ts`, so consumers get complete autocomplete and hover documentation in their editor.
+- Unit test suite (Jest + Testing Library) covering the provider contract, the static handle, size resolution, and the headless component; runs in CI on Node 20/22/24. The library lints with zero warnings.
+- Ships the TypeScript **source** to React Native (so the consumer's Reanimated Babel plugin transforms the worklets — see above) alongside compiled CJS/ESM/types for other tools; `__tests__` are excluded from the tarball.
+- README documents when to use this library versus native context-menu libraries and Expo Router's `Link.Preview`, with **Requirements**, **Compatibility**, and **Limitations** sections and a 3-step "Add it to your app" guide.
+- The example app is a **gallery of seven real-world use cases** — Social Feed (grid → popover peek), Shopping (grid → sheet quick-view), Music (list → peek with Play), Messages (long-press a shared link → peek its destination, the cross-platform answer to Expo Router's iOS-only `Link.Preview`), Places (map with pins → sheet peek), Team (directory → profile peek with quick actions), and Files (Quick Look → image popover / document scroll-sheet) — on Expo SDK 54, verified to bundle on both iOS and Android.
 
 ### Migration from 1.x
 

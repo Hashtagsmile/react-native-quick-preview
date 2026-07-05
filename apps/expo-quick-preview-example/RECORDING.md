@@ -5,7 +5,7 @@ A step-by-step guide to capturing the GIFs used in the README. Open the **Exampl
 
 ## What the demo covers
 
-The **Examples** gallery opens six real-world screens, each demonstrating quick preview in a
+The **Examples** gallery opens seven real-world screens, each demonstrating quick preview in a
 context developers recognize:
 
 | Example | Shows |

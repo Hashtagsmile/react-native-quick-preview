@@ -40,7 +40,7 @@ This is the development monorepo. **If you just want to use the library, read th
 
 ## Development
 
-Requires Node 18+ and npm 10 (npm workspaces).
+Requires Node 20+ and npm 10 (npm workspaces).
 
 ```bash
 git clone https://github.com/Hashtagsmile/react-native-quick-preview.git

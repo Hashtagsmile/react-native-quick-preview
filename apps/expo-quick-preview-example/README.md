@@ -11,7 +11,7 @@ It demonstrates the library in real-world scenarios:
 
 ## Running the example
 
-Prerequisites: Node 18+, dependencies installed in the monorepo root (`npm install`), and the library built (`npm run build`).
+Prerequisites: Node 20+, dependencies installed in the monorepo root (`npm install`), and the library built (`npm run build`).
 
 ```bash
 # from the repo root
@@ -52,5 +52,5 @@ reference. New use cases are added as gallery cards, so the tab bar never grows.
 ## What you'll see
 
 Long-press anything to peek, tap the peek to open it. Across the examples you'll see both
-variants (popover / sheet) and the tap-through pattern in six real contexts — plus the
+variants (popover / sheet) and the tap-through pattern in seven real contexts — plus the
 cross-platform link preview in **chat** that Expo Router's `Link.Preview` only does on iOS.
