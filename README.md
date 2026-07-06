@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-Long-press an item to peek at its content, swipe down to dismiss. A headless quick-preview library for React Native: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
+Long-press an item to peek at its content, tap outside or swipe to dismiss. A headless quick-preview library for React Native: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
 
 **Why it exists:** the long-press peek is well-served on iOS (Expo Router's `Link.Preview`, native context-menu libraries) but those are all iOS-only, and most preview a route or a menu rather than arbitrary content. This library covers the intersection none of them do — *a long-press peek that renders any React node identically on iOS **and** Android, with no native module, presentable from anywhere, no router required.* See [Why use this](packages/react-native-quick-preview/README.md#why-use-this) for the honest comparison, including when to reach for a native library instead.
 

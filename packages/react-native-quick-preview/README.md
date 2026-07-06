@@ -4,7 +4,7 @@
 [![CI](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml/badge.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/LICENSE)
 
-Long-press an item to peek at its content, swipe down to dismiss. The kind of preview you know from Instagram or iOS Peek & Pop, as a small headless library for React Native.
+Long-press an item to peek at its content, tap outside or swipe to dismiss. The kind of preview you know from Instagram or iOS Peek & Pop, as a small headless library for React Native.
 
 I wanted this pattern in my own apps and couldn't find a maintained library for it, so I built one. The API follows the approach popularized by [Gorhom's bottom sheet](https://github.com/gorhom/react-native-bottom-sheet): mount a provider once, then present from anywhere.
 
@@ -130,6 +130,14 @@ import { QuickPreview, QuickPreviewPressable } from 'react-native-quick-preview'
 That's the whole integration — three files touched, reusing your existing detail route as the destination.
 
 > Prefer to trigger it yourself? Grab the hook — `const { present } = useQuickPreview()` — and call `present(node, options)` from any handler, or use the static `QuickPreview.present(node, options)` from outside React (below).
+
+**Sizing the peek.** The popover is already a finished card: rounded, clipped, and 92% of the screen wide (up to 520pt). Inside `renderPreview`, let your content fill it. Don't put a fixed `width` on the content or you'll get a gap on one side. To make the peek smaller, size the *card* with the `size` option instead of the content:
+
+```tsx
+present(<ProductCard product={product} />, { variant: 'popover', size: { maxWidth: 340 } })
+```
+
+For an image that should span the card, `width: '100%'` with an `aspectRatio` is enough; the card's `overflow: 'hidden'` rounds the corners for you.
 
 ## Requirements
 
