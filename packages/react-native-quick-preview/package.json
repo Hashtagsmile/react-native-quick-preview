@@ -1,6 +1,6 @@
 {
   "name": "react-native-quick-preview",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Headless long-press quick preview for React Native. Peek at any content in a popover or sheet, swipe down to dismiss.",
   "author": "Oliver Lindblad",
   "license": "MIT",

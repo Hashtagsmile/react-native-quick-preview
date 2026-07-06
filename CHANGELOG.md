@@ -4,6 +4,12 @@ All notable changes to `react-native-quick-preview` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.2] - 2026-07-06
+
+### Fixed
+
+- The preview no longer crashes the host app when no `<SafeAreaProvider>` is mounted. `QuickPreviewRoot` read its insets via `useSafeAreaInsets()`, which **throws** ("No safe area value available…") when there's no provider — a harsh failure mode for a drop-in peek utility. It now reads `SafeAreaInsetsContext` directly and falls back to zero insets, so `<SafeAreaProvider>` is **recommended** (for correct notch / home-indicator spacing) but no longer **required**. The README quick-start and Requirements now show and describe the provider accordingly.
+
 ## [2.0.1] - 2026-07-05
 
 Documentation and CI only — no library code changes.
@@ -84,6 +90,7 @@ Initial public release.
 
 - `<QuickPreview>` controlled modal component with fade/scale animations, swipe-to-close, backdrop press handling, light/dark theme, and long-press-to-open examples.
 
+[2.0.2]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v1.0.5...v2.0.0
 [1.0.5]: https://www.npmjs.com/package/react-native-quick-preview/v/1.0.5

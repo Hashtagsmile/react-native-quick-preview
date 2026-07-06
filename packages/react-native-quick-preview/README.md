@@ -83,15 +83,22 @@ If Reanimated and Gesture Handler are already installed, adding this library is 
 
 ```tsx
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { PreviewProvider } from 'react-native-quick-preview'
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <PreviewProvider>
-        <YourApp />
-      </PreviewProvider>
-    </GestureHandlerRootView>
+    // SafeAreaProvider is recommended so the peek clears the notch / home
+    // indicator. It's optional — without it the peek falls back to zero insets
+    // rather than crashing. Most apps already have one (React Navigation /
+    // Expo Router mount it for you).
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <PreviewProvider>
+          <YourApp />
+        </PreviewProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   )
 }
 ```
@@ -131,6 +138,7 @@ That's the whole integration — three files touched, reusing your existing deta
 - **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2), `react-native-safe-area-context` (≥ 4), `react-native-portalize`.
 - **Reanimated's Babel plugin** must be configured — this is required, not optional. React Native consumes this library's TypeScript source (the standard distribution model for Reanimated libraries), so the plugin transforms its worklets as part of your app's build. Expo configures it for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3). On Expo SDK 54, do **not** also add the plugin by hand — `babel-preset-expo` already includes it, and a duplicate breaks worklets.
 - Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (step 2 above).
+- `<SafeAreaProvider>` (from `react-native-safe-area-context`) is **recommended** so the peek clears the notch and home indicator, but **not required** — without one the peek falls back to zero insets instead of crashing. React Navigation and Expo Router already mount it, so most apps have it.
 - `expo-haptics` is **optional** — only needed if you want haptics; pass it to `QuickPreviewPressable` via `onLongPressStart`.
 
 ## Presenting from outside components

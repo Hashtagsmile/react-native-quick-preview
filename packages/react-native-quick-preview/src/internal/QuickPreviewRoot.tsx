@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { QuickPreviewOptions } from '../types'
 import { Backdrop } from './components/Backdrop'
 import { SheetContainer } from './components/SheetContainer'
@@ -16,7 +16,13 @@ export function QuickPreviewRoot({
   onRequestClose: () => void
   children: React.ReactNode
 }) {
-  const { top, bottom } = useSafeAreaInsets()
+  // Read insets from context directly so a missing <SafeAreaProvider> degrades
+  // to zero insets instead of throwing. useSafeAreaInsets() would crash the host
+  // app when no provider is mounted; the peek only needs insets to clear the
+  // notch / home indicator, so zero is a safe fallback (provider still recommended).
+  const insets = React.useContext(SafeAreaInsetsContext)
+  const top = insets?.top ?? 0
+  const bottom = insets?.bottom ?? 0
   const variant = options?.variant ?? 'popover'
   const dismissOnBackdropPress = options?.dismissOnBackdropPress ?? true
 
