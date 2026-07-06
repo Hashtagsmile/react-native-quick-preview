@@ -4,6 +4,7 @@
 [![CI](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml/badge.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Try it in Expo Snack](https://img.shields.io/badge/Expo_Snack-Try_it_live-4630EB?logo=expo&logoColor=white)](https://snack.expo.dev/@oliver.at.sellpy/react-native-quick-preview)
 
 Long-press an item to peek at its content, tap outside or swipe to dismiss. A headless quick-preview library for React Native: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
 
@@ -16,6 +17,8 @@ This is the development monorepo. **If you just want to use the library, read th
   &nbsp;
   <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif?v=2" alt="Shop — long-press a product for a bottom-sheet quick-view" width="46%" />
 </p>
+
+<p align="center"><a href="https://snack.expo.dev/@oliver.at.sellpy/react-native-quick-preview"><b>▶ Try it live in your browser (Expo Snack)</b></a> — long-press a product for a quick look, tap to open it. Best on the iOS/Android tabs.</p>
 
 ## Repository layout
 
