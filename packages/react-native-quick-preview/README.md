@@ -10,10 +10,14 @@
 Expo Router's `Link.Preview`, zeego and `react-native-ios-context-menu` all stop at iOS. This library covers both platforms with one API. That API follows the approach of [Gorhom's bottom sheet](https://github.com/gorhom/react-native-bottom-sheet): mount a provider once, then present from anywhere.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif?v=2" width="46%" alt="Social feed — long-press a photo to peek the post, tap to open" />
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-android.gif" width="31%" alt="Android — long-press a photo: the peek grows out of it with a context menu underneath" />
   &nbsp;
-  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif?v=2" width="46%" alt="Shop — long-press a product for a bottom-sheet quick-view" />
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif?v=2" width="31%" alt="Social feed — long-press a photo to peek the post, tap to open" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif?v=2" width="31%" alt="Shop — long-press a product for a bottom-sheet quick-view" />
 </p>
+
+<p align="center"><sub>Left: Android, peek + context menu. Middle and right: feed peek and shop bottom sheet.</sub></p>
 
 What you get:
 

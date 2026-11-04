@@ -13,10 +13,14 @@
 This is the development monorepo. **If you just want to use the library, read the [package README](packages/react-native-quick-preview/README.md)** for installation, quick start and the full API. It's the same document you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif?v=2" alt="Social feed — long-press a photo to peek the post, tap to open" width="46%" />
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-android.gif" width="31%" alt="Android — long-press a photo: the peek grows out of it with a context menu underneath" />
   &nbsp;
-  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif?v=2" alt="Shop — long-press a product for a bottom-sheet quick-view" width="46%" />
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif?v=2" alt="Social feed — long-press a photo to peek the post, tap to open" width="31%" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-shop.gif?v=2" alt="Shop — long-press a product for a bottom-sheet quick-view" width="31%" />
 </p>
+
+<p align="center"><sub>Left: Android, peek + context menu. Middle and right: feed peek and shop bottom sheet.</sub></p>
 
 <p align="center"><a href="https://snack.expo.dev/@oliver.at.sellpy/react-native-quick-preview"><b>▶ Try it live in your browser (Expo Snack)</b></a> — long-press a product for a quick look, tap to open it. Best on the iOS/Android tabs.</p>
 
@@ -64,7 +68,7 @@ The example app in `apps/expo-quick-preview-example` shows the patterns the libr
 
 CI ([ci.yml](.github/workflows/ci.yml)) runs on every push and PR to `main`: install, type check, lint, unit tests, build, and a `npm pack --dry-run` to verify what would be published.
 
-Releases are automatic. When the package version changes on `main`, the [release workflow](.github/workflows/release.yml) re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. If the version is already on npm it does nothing, so ordinary pushes are safe. It needs an `NPM_TOKEN` repository secret (npm automation token). It can also be run manually from the Actions tab, including as a dry run.
+Releases are automatic. When the package version changes on `main`, the [release workflow](.github/workflows/release.yml) re-runs all checks, publishes to npm with provenance, then tags `v<version>` and creates a GitHub Release. If the version is already on npm it does nothing, so ordinary pushes are safe. It authenticates with [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC), so there's no token to rotate; the trusted publisher is configured once in the package settings on npmjs.com. It can also be run manually from the Actions tab, including as a dry run.
 
 To cut a release:
 
