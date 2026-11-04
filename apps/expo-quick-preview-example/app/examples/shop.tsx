@@ -15,7 +15,7 @@ import { colors, radius, spacing } from '../../theme'
 
 const { width } = Dimensions.get('window')
 const COL_GAP = spacing.md
-const CARD_W = (width - spacing.lg * 2 - COL_GAP) / 2
+const CARD_W = Math.floor((width - spacing.lg * 2 - COL_GAP) / 2)
 
 const money = (p?: number | string) =>
   p === undefined ? '' : typeof p === 'number' ? `$${p.toFixed(0)}` : p

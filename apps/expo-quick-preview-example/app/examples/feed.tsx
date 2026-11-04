@@ -18,7 +18,9 @@ import { colors, spacing } from '../../theme'
 
 const { width } = Dimensions.get('window')
 const GAP = 2
-const TILE = (width - GAP * 2) / 3
+// Floor: three exact thirds can sum past the row width after layout rounding,
+// which wraps the third tile onto the next line.
+const TILE = Math.floor((width - GAP * 2) / 3)
 
 export default function Feed() {
   const router = useRouter()
