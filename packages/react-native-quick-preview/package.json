@@ -1,6 +1,6 @@
 {
   "name": "react-native-quick-preview",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Long-press quick preview (peek) for React Native on iOS and Android. Shows any content in a popover or sheet. Pure JS, works in Expo Go.",
   "author": "Oliver Lindblad",
   "license": "MIT",

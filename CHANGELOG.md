@@ -4,6 +4,26 @@ All notable changes to `react-native-quick-preview` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] - 2026-11-04
+
+### Added
+
+- **Context-menu actions.** `actions: [{ title, onPress, icon?, destructive?, disabled? }]` renders a menu under the popover, or at the bottom of the sheet, on iOS and Android. Pressing an action closes the preview, then runs it. `QuickPreviewPressable` takes `actions` directly.
+- **Grow from the item.** The popover morphs out of the pressed item's on-screen rect instead of fading in at the center. `QuickPreviewPressable` measures the item automatically (opt out with `animateFromItem={false}`); imperative callers can pass `origin: { x, y, width, height }`.
+- **Theming and dark mode.** `colorScheme: 'light' | 'dark' | 'system'`, `containerStyle`, `backdropColor`, and `renderBackdrop` (e.g. a blur view). The default stays light, so existing apps look the same.
+- **`PreviewProvider defaultOptions`** sets app-wide defaults; options passed to `present()` override them.
+- New public types: `QuickPreviewAction`, `QuickPreviewColorScheme`, `QuickPreviewOrigin`.
+
+### Changed
+
+- **`react-native-portalize` is no longer a peer dependency.** It's unmaintained (last release 2022); the provider now renders its own overlay, and the headless `QuickPreviewComponent` portals into it. Apps can uninstall portalize. Keeping it installed is harmless.
+- Supports Expo SDK 58 / React Native 0.88, Reanimated 4.7 and Gesture Handler 3. The library's dev setup and the example app are on SDK 58; Jest now uses `@react-native/jest-preset`.
+- The `react-native` peer range is now `>=0.72` (was `>=0.64`, which the Reanimated 3+ / Gesture Handler 2+ requirement never actually allowed).
+
+### Notes
+
+- With Gesture Handler 3, a missing `<GestureHandlerRootView>` now throws in development. The library has always required it; GH2 just failed silently.
+
 ## [2.0.2] - 2026-07-06
 
 ### Fixed
@@ -90,6 +110,7 @@ Initial public release.
 
 - `<QuickPreview>` controlled modal component with fade/scale animations, swipe-to-close, backdrop press handling, light/dark theme, and long-press-to-open examples.
 
+[2.1.0]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v1.0.5...v2.0.0
