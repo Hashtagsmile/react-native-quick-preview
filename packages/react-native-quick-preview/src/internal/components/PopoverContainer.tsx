@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet, useWindowDimensions } from 'react-native'
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -22,12 +23,16 @@ export function PopoverContainer({
   palette,
   insets: _insets,
   onRequestClose,
+  closing = false,
+  onExited,
 }: {
   children: React.ReactNode
   options?: QuickPreviewOptions
   palette: Palette
   insets: { top: number; bottom: number }
   onRequestClose: () => void
+  closing?: boolean
+  onExited?: () => void
 }) {
   const origin = options?.origin
   const actions = options?.actions
@@ -35,6 +40,9 @@ export function PopoverContainer({
 
   const frameRef = React.useRef<View>(null)
   const startedRef = React.useRef(false)
+  // Where the card started (relative to its resting place), so it can shrink
+  // back into the same item on close.
+  const originTransformRef = React.useRef<{ x: number; y: number; scale: number } | null>(null)
 
   const scale = useSharedValue(0.96)
   const translateX = useSharedValue(0)
@@ -73,12 +81,37 @@ export function PopoverContainer({
     frameRef.current?.measureInWindow((x, y, w, h) => {
       if (startedRef.current || !w || !h) return
       const s = Math.min(Math.max(Math.min(origin.width / w, origin.height / h), 0.2), 1)
-      translateX.value = origin.x + origin.width / 2 - (x + w / 2)
-      translateY.value = origin.y + origin.height / 2 - (y + h / 2)
+      const dx = origin.x + origin.width / 2 - (x + w / 2)
+      const dy = origin.y + origin.height / 2 - (y + h / 2)
+      originTransformRef.current = { x: dx, y: dy, scale: s }
+      translateX.value = dx
+      translateY.value = dy
       scale.value = s
       animateIn()
     })
   }, [origin, animateIn, translateX, translateY, scale])
+
+  // Exit: shrink back into the item it grew from, or a quick fade without one.
+  React.useEffect(() => {
+    if (!closing) return
+    const done = () => onExited?.()
+    const ease = Easing.in(Easing.cubic)
+    const back = originTransformRef.current
+    menuOpacity.value = withTiming(0, { duration: 90 })
+    if (back) {
+      translateX.value = withTiming(back.x, { duration: 220, easing: ease })
+      translateY.value = withTiming(back.y, { duration: 220, easing: ease })
+      scale.value = withTiming(back.scale, { duration: 220, easing: ease })
+      opacity.value = withDelay(120, withTiming(0, { duration: 100 }, finished => {
+        if (finished) runOnJS(done)()
+      }))
+    } else {
+      scale.value = withTiming(0.96, { duration: 150, easing: ease })
+      opacity.value = withTiming(0, { duration: 150 }, finished => {
+        if (finished) runOnJS(done)()
+      })
+    }
+  }, [closing])
 
   const card = useAnimatedStyle(() => ({
     opacity: opacity.value,

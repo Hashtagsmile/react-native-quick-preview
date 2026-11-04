@@ -5,18 +5,28 @@ import { render, screen, act, renderHook } from '@testing-library/react-native'
 import type { QuickPreviewOptions } from '../types'
 
 // Record the options QuickPreviewRoot receives so option semantics can be
-// asserted precisely, without rendering reanimated/gesture internals.
+// asserted precisely, without rendering reanimated/gesture internals. Like the
+// real root, it reports the exit as finished once it's asked to close.
 const mockRootSpy = jest.fn()
-jest.mock('../internal/QuickPreviewRoot', () => ({
-  QuickPreviewRoot: (props: {
-    options?: QuickPreviewOptions
-    onRequestClose: () => void
-    children: React.ReactNode
-  }) => {
-    mockRootSpy(props)
-    return props.children as React.ReactElement
-  },
-}))
+jest.mock('../internal/QuickPreviewRoot', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires -- jest.mock factories are hoisted above imports, so require is required here
+  const { useEffect } = require('react')
+  return {
+    QuickPreviewRoot: (props: {
+      options?: QuickPreviewOptions
+      onRequestClose: () => void
+      closing?: boolean
+      onClosed?: () => void
+      children: React.ReactNode
+    }) => {
+      mockRootSpy(props)
+      useEffect(() => {
+        if (props.closing) props.onClosed?.()
+      }, [props.closing])
+      return props.children as React.ReactElement
+    },
+  }
+})
 
 // Imported after the mock so the provider picks it up.
 import { PreviewProvider } from '../context'

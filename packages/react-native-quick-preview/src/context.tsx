@@ -34,6 +34,11 @@ export function PreviewProvider({
 }) {
   const [content, setContent] = React.useState<React.ReactNode | null>(null)
   const [options, setOptions] = React.useState<QuickPreviewOptions | undefined>(undefined)
+  const [closing, setClosing] = React.useState(false)
+  // Each presentation gets an id: a new present() mounts a fresh root even if
+  // the previous one is still animating out, and a stale exit can't clear it.
+  const [presentationId, setPresentationId] = React.useState(0)
+  const presentationRef = React.useRef(0)
   const openRef = React.useRef(false)
   const { api: overlayApi, layer: overlayLayer } = useOverlayLayer()
 
@@ -42,13 +47,21 @@ export function PreviewProvider({
     try { AccessibilityInfo.announceForAccessibility?.(msg) } catch {}
   }, [])
 
+  // close() starts the exit animation; isOpen() is false from this moment.
   const close = React.useCallback(() => {
     if (!openRef.current) return
     openRef.current = false
-    setContent(null)
-    setOptions(undefined)
+    setClosing(true)
     announce('Quick preview closed')
   }, [announce])
+
+  // Called by the root once the exit animation has finished.
+  const finishClose = React.useCallback((id: number) => {
+    if (id !== presentationRef.current || openRef.current) return
+    setContent(null)
+    setOptions(undefined)
+    setClosing(false)
+  }, [])
 
   const present = React.useCallback(
     (node: React.ReactNode, opts?: Partial<QuickPreviewOptions>) => {
@@ -56,6 +69,9 @@ export function PreviewProvider({
       // leak into the next one. Merging is what update() is for.
       setOptions(opts)
       openRef.current = true
+      presentationRef.current += 1
+      setPresentationId(presentationRef.current)
+      setClosing(false)
       setContent(() => node)
       announce('Quick preview opened')
     },
@@ -94,7 +110,13 @@ export function PreviewProvider({
           {children}
           {overlayLayer}
           {content ? (
-            <QuickPreviewRoot options={resolvedOptions} onRequestClose={close}>
+            <QuickPreviewRoot
+              key={presentationId}
+              options={resolvedOptions}
+              onRequestClose={close}
+              closing={closing}
+              onClosed={() => finishClose(presentationId)}
+            >
               {content}
             </QuickPreviewRoot>
           ) : null}

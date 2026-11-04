@@ -7,17 +7,23 @@ export function Backdrop({
   dismissOnBackdropPress = true,
   color,
   renderBackdrop,
+  closing = false,
 }: {
   onPress?: () => void
   dismissOnBackdropPress?: boolean
   color: string
   renderBackdrop?: () => React.ReactNode
+  closing?: boolean
 }) {
   const opacity = useSharedValue(0)
   React.useEffect(() => {
     opacity.value = withTiming(1, { duration: 160 })
     return () => { opacity.value = 0 }
   }, [opacity])
+
+  React.useEffect(() => {
+    if (closing) opacity.value = withTiming(0, { duration: 180 })
+  }, [closing, opacity])
 
   const style = useAnimatedStyle(() => ({ opacity: opacity.value }))
   const interactive = dismissOnBackdropPress && !!onPress
