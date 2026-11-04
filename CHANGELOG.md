@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Context-menu actions.** `actions: [{ title, onPress, icon?, destructive?, disabled? }]` renders a menu under the popover, or at the bottom of the sheet, on iOS and Android. Pressing an action closes the preview, then runs it. `QuickPreviewPressable` takes `actions` directly.
 - **Grow from the item.** The popover morphs out of the pressed item's on-screen rect instead of fading in at the center. `QuickPreviewPressable` measures the item automatically (opt out with `animateFromItem={false}`); imperative callers can pass `origin: { x, y, width, height }`.
 - **Theming and dark mode.** `colorScheme: 'light' | 'dark' | 'system'`, `containerStyle`, `backdropColor`, and `renderBackdrop` (e.g. a blur view). The default stays light, so existing apps look the same.
+- **Shrinks back on close.** Closing now animates out instead of disappearing: the popover shrinks back into the item it grew from (or fades without an origin), the sheet slides down from wherever it is, and the backdrop fades. Touches pass through to the app while it animates. `isOpen()` turns false immediately; `onCloseEnd` fires when the animation finishes.
+- **`onPreviewPress`** on `QuickPreviewPressable`: tapping the open peek closes it and runs the callback ("peek and pop"). This replaces the hand-rolled "gesture-handler `Pressable` + `QuickPreview.close()`" wrapper.
+- **Screen-reader support for the long-press.** `QuickPreviewPressable` exposes a "Show preview" accessibility action (label via `accessibilityPreviewLabel`) and maps "activate" to `onPress`, so VoiceOver / TalkBack users can open the peek without performing a long-press.
 - **`PreviewProvider defaultOptions`** sets app-wide defaults; options passed to `present()` override them.
 - New public types: `QuickPreviewAction`, `QuickPreviewColorScheme`, `QuickPreviewOrigin`.
 
@@ -19,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **`react-native-portalize` is no longer a peer dependency.** It's unmaintained (last release 2022); the provider now renders its own overlay, and the headless `QuickPreviewComponent` portals into it. Apps can uninstall portalize. Keeping it installed is harmless.
 - Supports Expo SDK 58 / React Native 0.88, Reanimated 4.7 and Gesture Handler 3. The library's dev setup and the example app are on SDK 58; Jest now uses `@react-native/jest-preset`.
 - The `react-native` peer range is now `>=0.72` (was `>=0.64`, which the Reanimated 3+ / Gesture Handler 2+ requirement never actually allowed).
+
+### Fixed
+
+- `onOpenEnd` was called directly from the UI-thread animation callback; it now goes through `runOnJS`, so it fires reliably.
+- If the pressed item can't be measured (the host never answers `measureInWindow`), the peek still opens, centered, instead of not opening at all.
 
 ### Notes
 
