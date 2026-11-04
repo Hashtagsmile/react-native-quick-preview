@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import * as Haptics from 'expo-haptics'
-import { QuickPreview, QuickPreviewPressable } from 'react-native-quick-preview'
+import { QuickPreviewPressable } from 'react-native-quick-preview'
 import { products, destinations, articles, type Item } from '../../data/examples'
 import { LinkPreview } from '../../components/LinkPreview'
 import { ExampleHeader } from '../../components/ExampleHeader'
@@ -54,7 +54,8 @@ export default function Chat() {
             <View key={i} style={[styles.bubbleRow, mine ? styles.right : styles.left]}>
               <QuickPreviewPressable
                 onPress={() => router.push({ pathname: '/detail', params: { id: item.id } })}
-                renderPreview={() => <PeekWrapper id={item.id} item={item} />}
+                renderPreview={() => <LinkPreview item={item} />}
+                onPreviewPress={() => router.push({ pathname: '/detail', params: { id: item.id } })}
                 previewOptions={{ variant: 'popover', accessibilityLabel: `Preview ${item.title}` }}
                 onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
                 style={styles.linkCard}
@@ -80,21 +81,6 @@ export default function Chat() {
         <Ionicons name="arrow-up-circle" size={32} color={colors.accent} />
       </View>
     </SafeAreaView>
-  )
-}
-
-function PeekWrapper({ id, item }: { id: string; item: Item }) {
-  const router = useRouter()
-  return (
-    <Pressable
-      style={{ alignSelf: 'stretch' }}
-      onPress={() => {
-        QuickPreview.close()
-        router.push({ pathname: '/detail', params: { id } })
-      }}
-    >
-      <LinkPreview item={item} />
-    </Pressable>
   )
 }
 

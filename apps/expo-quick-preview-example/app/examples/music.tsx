@@ -8,8 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import * as Haptics from 'expo-haptics'
-import { QuickPreview, QuickPreviewPressable } from 'react-native-quick-preview'
-import { tracks, type Item } from '../../data/examples'
+import { QuickPreviewPressable } from 'react-native-quick-preview'
+import { tracks } from '../../data/examples'
 import { TrackPreview } from '../../components/TrackPreview'
 import { ExampleHeader } from '../../components/ExampleHeader'
 import { colors, radius, spacing } from '../../theme'
@@ -25,7 +25,8 @@ export default function Music() {
           <QuickPreviewPressable
             key={track.id}
             onPress={() => router.push({ pathname: '/detail', params: { id: track.id } })}
-            renderPreview={() => <PeekWrapper id={track.id} item={track} />}
+            renderPreview={() => <TrackPreview item={track} />}
+            onPreviewPress={() => router.push({ pathname: '/detail', params: { id: track.id } })}
             previewOptions={{ variant: 'popover', accessibilityLabel: `Preview ${track.title}` }}
             onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
             style={styles.row}
@@ -46,21 +47,6 @@ export default function Music() {
         ))}
       </ScrollView>
     </SafeAreaView>
-  )
-}
-
-function PeekWrapper({ id, item }: { id: string; item: Item }) {
-  const router = useRouter()
-  return (
-    <Pressable
-      style={{ alignSelf: 'stretch' }}
-      onPress={() => {
-        QuickPreview.close()
-        router.push({ pathname: '/detail', params: { id } })
-      }}
-    >
-      <TrackPreview item={item} />
-    </Pressable>
   )
 }
 

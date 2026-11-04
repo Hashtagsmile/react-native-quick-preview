@@ -5,13 +5,12 @@
 // Android alike.
 import React from 'react'
 import { View, StyleSheet, ScrollView, Image, Dimensions, Share } from 'react-native'
-import { Pressable } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import * as Haptics from 'expo-haptics'
 import * as Clipboard from 'expo-clipboard'
-import { QuickPreview, QuickPreviewPressable } from 'react-native-quick-preview'
-import { posts, type Item } from '../../data/examples'
+import { QuickPreviewPressable } from 'react-native-quick-preview'
+import { posts } from '../../data/examples'
 import { PostPreview } from '../../components/PostPreview'
 import { ExampleHeader } from '../../components/ExampleHeader'
 import { colors, spacing } from '../../theme'
@@ -30,44 +29,33 @@ export default function Feed() {
       <ExampleHeader title="Feed" hint="Long-press a photo" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.grid}>
-          {posts.map((post) => (
-            <QuickPreviewPressable
-              key={post.id}
-              onPress={() => router.push({ pathname: '/detail', params: { id: post.id } })}
-              renderPreview={() => <PeekWrapper id={post.id} item={post} />}
-              previewOptions={{ variant: 'popover', accessibilityLabel: `Preview ${post.username}'s post` }}
-              actions={[
-                { title: 'Open post', onPress: () => router.push({ pathname: '/detail', params: { id: post.id } }) },
-                { title: 'Share', onPress: () => Share.share({ message: `Check out ${post.username}'s post` }) },
-                { title: 'Copy link', onPress: () => Clipboard.setStringAsync(`https://example.com/p/${post.id}`) },
-                { title: 'Report', destructive: true, onPress: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning) },
-              ]}
-              onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
-              style={styles.tile}
-              testID={`post-${post.id}`}
-            >
-              {!!post.image && <Image source={{ uri: post.image }} style={styles.tileImage} />}
-            </QuickPreviewPressable>
-          ))}
+          {posts.map((post) => {
+            const open = () => router.push({ pathname: '/detail', params: { id: post.id } })
+            return (
+              <QuickPreviewPressable
+                key={post.id}
+                onPress={open}
+                renderPreview={() => <PostPreview item={post} />}
+                onPreviewPress={open}
+                previewOptions={{ variant: 'popover', accessibilityLabel: `Preview ${post.username}'s post` }}
+                actions={[
+                  { title: 'Open post', onPress: open },
+                  { title: 'Share', onPress: () => Share.share({ message: `Check out ${post.username}'s post` }) },
+                  { title: 'Copy link', onPress: () => Clipboard.setStringAsync(`https://example.com/p/${post.id}`) },
+                  { title: 'Report', destructive: true, onPress: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning) },
+                ]}
+                onLongPressStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+                style={styles.tile}
+                testID={`post-${post.id}`}
+              >
+                {!!post.image && <Image source={{ uri: post.image }} style={styles.tileImage} />}
+              </QuickPreviewPressable>
+            )
+          })}
         </View>
         <View style={{ height: spacing.xl }} />
       </ScrollView>
     </SafeAreaView>
-  )
-}
-
-function PeekWrapper({ id, item }: { id: string; item: Item }) {
-  const router = useRouter()
-  return (
-    <Pressable
-      style={{ alignSelf: 'stretch' }}
-      onPress={() => {
-        QuickPreview.close()
-        router.push({ pathname: '/detail', params: { id } })
-      }}
-    >
-      <PostPreview item={item} />
-    </Pressable>
   )
 }
 
