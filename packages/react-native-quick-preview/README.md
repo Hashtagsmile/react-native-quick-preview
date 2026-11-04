@@ -5,9 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/LICENSE)
 [![Try it in Expo Snack](https://img.shields.io/badge/Expo_Snack-Try_it_live-4630EB?logo=expo&logoColor=white)](https://snack.expo.dev/@oliver.at.sellpy/react-native-quick-preview)
 
-Long-press an item to peek at its content, tap outside or swipe to dismiss. The kind of preview you know from Instagram or iOS Peek & Pop, as a small headless library for React Native.
+**The iOS long-press peek, on Android too.** Long-press an item and a preview of it grows out of your finger, with a context menu underneath. It looks and behaves the same on iOS and Android, shows any React content, and works in Expo Go because it has no native code.
 
-I wanted this pattern in my own apps and couldn't find a maintained library for it, so I built one. The API follows the approach popularized by [Gorhom's bottom sheet](https://github.com/gorhom/react-native-bottom-sheet): mount a provider once, then present from anywhere.
+Expo Router's `Link.Preview`, zeego and `react-native-ios-context-menu` all stop at iOS. This library covers both platforms with one API. That API follows the approach of [Gorhom's bottom sheet](https://github.com/gorhom/react-native-bottom-sheet): mount a provider once, then present from anywhere.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Hashtagsmile/react-native-quick-preview/main/demo-feed.gif?v=2" width="46%" alt="Social feed — long-press a photo to peek the post, tap to open" />
@@ -17,12 +17,27 @@ I wanted this pattern in my own apps and couldn't find a maintained library for 
 
 What you get:
 
-- Headless: you render the preview content, the library handles presentation, gestures and dismissal
-- Two variants: centered `popover` and bottom `sheet`
-- Present from a hook, or from a static handle that also works outside React components
-- Swipe-to-dismiss, backdrop press, Android back button handling
-- Screen reader announcements and accessibility labels
-- TypeScript types, CJS + ESM builds, zero dependencies of its own
+- **Peek + context menu on both platforms.** Pass `actions` and get the iOS-style "preview with a menu under it" on Android too.
+- **Grows from the item.** `QuickPreviewPressable` measures the pressed item, so the peek morphs out of it like the native one instead of popping up as a modal.
+- **Any content.** You render the preview (a product, a post, a profile, a file). It isn't limited to a route or a menu.
+- **Dark mode and theming.** `colorScheme: 'system'`, `containerStyle`, `backdropColor`, or a custom backdrop (e.g. a blur).
+- **Present from anywhere.** Use a hook, or a static `QuickPreview.present()` that also works outside React.
+- **Two variants:** a centered `popover` and a bottom `sheet` with swipe-to-dismiss. Backdrop press and the Android back button close both.
+- Screen reader announcements, TypeScript types, CJS + ESM builds, and no dependencies of its own.
+
+## How it compares
+
+| | **react-native-quick-preview** | Expo Router `Link.Preview` | zeego / ios-context-menu | @gorhom/bottom-sheet |
+| --- | --- | --- | --- | --- |
+| Long-press peek on **Android** | ✅ same as iOS | ❌ iOS only | ❌ iOS only (Android gets a plain menu) | ❌ no peek |
+| Context-menu actions | ✅ both platforms | ✅ iOS | ✅ iOS | ❌ |
+| Previews **any content** | ✅ | ❌ the linked route | ✅ | ✅ |
+| Grows from the pressed item | ✅ | ✅ | ✅ | ❌ |
+| Expo Go, no native build | ✅ | needs Expo Router + native stack | ❌ native module | ✅ |
+| Callable outside React | ✅ `QuickPreview.present()` | ❌ | ❌ | ❌ needs a ref |
+| Pixel-perfect native iOS feel | ≈ close re-creation | ✅ | ✅ | n/a |
+
+**Pick this** when you ship on both platforms and want the same peek everywhere. **Pick a native library** if you're iOS-only and want the exact system look (blur, system haptics).
 
 ## Why use this
 
@@ -39,6 +54,7 @@ This library fills the intersection none of them cover:
 Concretely, reach for it when you want:
 
 - **The same peek on both platforms.** Pure JS + Reanimated renders your content the same way on iOS and Android.
+- **A preview with a menu on Android.** `actions` gives you the "peek above a context menu" layout that otherwise only exists on iOS.
 - **To preview arbitrary content, not a route or a menu.** A product card, an image, a profile — anything, without navigating.
 - **No native build.** Works in Expo Go and bare React Native; no config plugin, no prebuild.
 - **To present from anywhere.** `QuickPreview.present(node)` is importable and callable from a service, a store action, or any non-React code (after `PreviewProvider` is mounted once at the root).
@@ -64,11 +80,10 @@ You build **one new thing per item: the preview content** — usually a compact 
 npm install react-native-quick-preview
 ```
 
-It has four peer dependencies. **Most apps already have the first three** — React Navigation and Expo Router both pull them in — so install whatever's missing:
+It has three peer dependencies, and **most apps already have all of them** (React Navigation and Expo Router pull them in). Install whatever's missing:
 
 ```bash
 npx expo install react-native-reanimated react-native-gesture-handler react-native-safe-area-context
-npm install react-native-portalize
 ```
 
 | Peer dependency | What it's for | Native? |
@@ -76,7 +91,8 @@ npm install react-native-portalize
 | `react-native-reanimated` | The peek animation (worklets) | yes |
 | `react-native-gesture-handler` | Long-press & swipe gestures | yes |
 | `react-native-safe-area-context` | Sheet insets | yes |
-| `react-native-portalize` | Renders the peek above your app | no — pure JS |
+
+> Upgrading from 2.0? `react-native-portalize` is no longer needed. The library now ships its own overlay, so you can uninstall it.
 
 If Reanimated and Gesture Handler are already installed, adding this library is **JS-only — no native rebuild**. (Reanimated needs its Babel plugin; Expo sets this up via `babel-preset-expo`. Versions and bare-RN notes are under [Requirements](#requirements).)
 
@@ -142,11 +158,11 @@ For an image that should span the card, `width: '100%'` with an `aspectRatio` is
 
 ## Requirements
 
-- **React Native** ≥ 0.64 (peer). Tested on RN 0.81.
+- **React Native** ≥ 0.72 (peer). Tested on RN 0.88 (Expo SDK 58).
 - **React** ≥ 18.2.
-- **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2), `react-native-safe-area-context` (≥ 4), `react-native-portalize`.
-- **Reanimated's Babel plugin** must be configured — this is required, not optional. React Native consumes this library's TypeScript source (the standard distribution model for Reanimated libraries), so the plugin transforms its worklets as part of your app's build. Expo configures it for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3). On Expo SDK 54, do **not** also add the plugin by hand — `babel-preset-expo` already includes it, and a duplicate breaks worklets.
-- Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (step 2 above).
+- **Peer dependencies** (must be installed in your app): `react-native-reanimated` (≥ 3; both Reanimated 3 and 4 are supported), `react-native-gesture-handler` (≥ 2; 2.x and 3.x are supported), `react-native-safe-area-context` (≥ 4).
+- **Reanimated's Babel plugin** must be configured — this is required, not optional. React Native consumes this library's TypeScript source (the standard distribution model for Reanimated libraries), so the plugin transforms its worklets as part of your app's build. Expo configures it for you via `babel-preset-expo`; bare RN apps add it manually (`react-native-worklets/plugin` on Reanimated 4, `react-native-reanimated/plugin` on Reanimated 3). On Expo SDK 54 and later, do **not** also add the plugin by hand — `babel-preset-expo` already includes it, and a duplicate breaks worklets.
+- Your app must render `<PreviewProvider>` once, inside a `<GestureHandlerRootView>` (step 2 above). With Gesture Handler 3 this is enforced: a missing `GestureHandlerRootView` throws in development instead of silently ignoring gestures.
 - `<SafeAreaProvider>` (from `react-native-safe-area-context`) is **recommended** so the peek clears the notch and home indicator, but **not required** — without one the peek falls back to zero insets instead of crashing. React Navigation and Expo Router already mount it, so most apps have it.
 - `expo-haptics` is **optional** — only needed if you want haptics; pass it to `QuickPreviewPressable` via `onLongPressStart`.
 
@@ -183,6 +199,61 @@ import { QuickPreviewPressable } from 'react-native-quick-preview'
 ```
 
 `onLongPressStart` fires on the JS thread right before the preview opens. Use it for haptics or analytics. The library doesn't import `expo-haptics` itself, so you stay in control of the dependency (and Metro never has to resolve a package you don't use).
+
+## Context-menu actions
+
+Pass `actions` and the preview gets a menu: under the popover card, or at the bottom of the sheet. It works the same on iOS and Android, which is the "peek + menu" combination only native iOS libraries offered before. Pressing an action closes the preview, then runs it.
+
+```tsx
+<QuickPreviewPressable
+  onPress={() => router.push(`/post/${post.id}`)}
+  renderPreview={() => <PostPreview post={post} />}
+  actions={[
+    { title: 'Share', icon: <ShareIcon />, onPress: () => share(post) },
+    { title: 'Copy link', onPress: () => copyLink(post) },
+    { title: 'Report', destructive: true, onPress: () => report(post) },
+  ]}
+>
+  <Thumbnail post={post} />
+</QuickPreviewPressable>
+```
+
+Each action takes `title`, `onPress`, and optionally `icon` (any element, shown at the trailing edge), `destructive` (red) and `disabled`. With `present()`, pass them as `present(node, { actions })`.
+
+## Grow from the item
+
+`QuickPreviewPressable` measures the item you long-pressed, and the popover grows out of it, the way the native iOS peek does. It's on by default. Turn it off with `animateFromItem={false}` to get a centered fade-in.
+
+When presenting imperatively, pass the item's rect yourself:
+
+```tsx
+ref.current?.measureInWindow((x, y, width, height) => {
+  present(<Card />, { origin: { x, y, width, height } })
+})
+```
+
+## Theming and dark mode
+
+The built-in chrome (container, menu, grabber, backdrop) has a light and a dark palette. Your own content is never restyled.
+
+```tsx
+// App-wide: follow the device appearance
+<PreviewProvider defaultOptions={{ colorScheme: 'system' }}>
+
+// Per preview
+present(<Card />, {
+  colorScheme: 'dark',
+  containerStyle: { borderRadius: 24 },
+  backdropColor: 'rgba(0,0,0,0.7)',
+})
+
+// A blurred backdrop (expo-blur is your dependency, not ours)
+present(<Card />, {
+  renderBackdrop: () => <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />,
+})
+```
+
+`defaultOptions` on `PreviewProvider` sets defaults for every preview. Options passed to `present()` override them.
 
 ## Tappable preview content
 
@@ -230,6 +301,12 @@ Available from `useQuickPreview()` and the static `QuickPreview`. Presents `node
 | `size` | `'auto' \| number \| { maxHeight?, maxWidth? }` | `'auto'` | Constrains the preview container |
 | `dismissOnBackdropPress` | `boolean` | `true` | Close when the backdrop is tapped |
 | `dismissOnPanDown` | `boolean` | `true` | Close on swipe-down gesture |
+| `actions` | `QuickPreviewAction[]` | | Context-menu rows shown with the preview |
+| `origin` | `{ x, y, width, height }` | | Grow the popover out of this window rect (set by `QuickPreviewPressable`) |
+| `colorScheme` | `'light' \| 'dark' \| 'system'` | `'light'` | Palette for the built-in container, menu and backdrop |
+| `containerStyle` | `StyleProp<ViewStyle>` | | Extra style for the popover card / sheet |
+| `backdropColor` | `string` | `'rgba(0,0,0,0.5)'` | Backdrop color |
+| `renderBackdrop` | `() => ReactNode` | | Custom backdrop (e.g. a blur view) |
 | `accessibilityLabel` | `string` | | Label announced for the preview container |
 | `onOpenStart` / `onOpenEnd` | `() => void` | | Open animation lifecycle |
 | `onCloseStart` / `onCloseEnd` | `() => void` | | Close animation lifecycle |
@@ -249,13 +326,13 @@ Both `useQuickPreview()` and the static `QuickPreview` expose:
 
 | Export | Purpose |
 | --- | --- |
-| `PreviewProvider` | Hosts the preview layer; mount once at the root |
+| `PreviewProvider` | Hosts the preview layer; mount once at the root. Optional `defaultOptions` prop |
 | `useQuickPreview` | Controller from React context (throws outside the provider) |
 | `QuickPreview` | Static controller handle (safe no-op before mount) |
 | `QuickPreviewPressable` | Long-press-to-preview wrapper with tap-through |
 | `QuickPreviewScrollView` | Gesture-aware ScrollView for preview content |
 | `QuickPreviewComponent` | Low-level headless component, for fully custom hosts |
-| `QuickPreviewOptions`, `QuickPreviewVariant`, `QuickPreviewSize`, `QuickPreviewController` | Public TypeScript types |
+| `QuickPreviewOptions`, `QuickPreviewVariant`, `QuickPreviewSize`, `QuickPreviewController`, `QuickPreviewAction`, `QuickPreviewColorScheme`, `QuickPreviewOrigin` | Public TypeScript types |
 
 ## Accessibility
 
@@ -273,7 +350,7 @@ npm run build
 npm run example
 ```
 
-The example app is on **Expo SDK 54** (React Native 0.81, Reanimated 4) and runs in Expo Go on iOS and Android. See its [recording guide](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/apps/expo-quick-preview-example/RECORDING.md) if you want to reproduce the demo GIFs.
+The example app is on **Expo SDK 58** (React Native 0.88, Reanimated 4.7, Gesture Handler 3) and runs in Expo Go on iOS and Android. See its [recording guide](https://github.com/Hashtagsmile/react-native-quick-preview/blob/main/apps/expo-quick-preview-example/RECORDING.md) if you want to reproduce the demo GIFs.
 
 ## Compatibility
 
@@ -282,19 +359,20 @@ The example app is on **Expo SDK 54** (React Native 0.81, Reanimated 4) and runs
 | **Platforms** | iOS and Android (identical rendering — it's pure JS/Reanimated) |
 | **Expo** | Works in Expo Go and dev clients. No config plugin, no prebuild, no native module. |
 | **Bare React Native** | Supported (configure the Reanimated Babel plugin yourself). |
-| **New Architecture** | Supported. Verified on RN 0.81 + Reanimated 4 (New-Arch-only). |
+| **New Architecture** | Supported. Tested on RN 0.88 + Reanimated 4.7 + Gesture Handler 3 (Expo SDK 58), and RN 0.81 + Reanimated 4 (Expo SDK 54). |
 | **Old Architecture** | Supported via Reanimated 3. |
-| **Web (react-native-web)** | Not a target. It may partially work, but gestures/portals aren't tested there. |
+| **Web (react-native-web)** | Not a target. It may partially work, but gestures and the overlay aren't tested there. |
 
 ## Limitations
 
 Be clear-eyed about what this is and isn't:
 
-- **It's a re-creation, not the native OS peek.** On iOS, `react-native-ios-context-menu` and Expo Router's `Link.Preview` use the system `UIContextMenuInteraction` (system blur, morph, tuned haptics). This library approximates that feel with Reanimated — it does not reproduce it pixel-for-pixel. If you're iOS-only and want native fidelity, use one of those instead (see [Why use this](#why-use-this)).
-- **No built-in action menu.** This presents a *preview*, not a context menu with actions. Render your own buttons inside the preview if you need them.
+- **It's a re-creation, not the native OS peek.** On iOS, `react-native-ios-context-menu` and Expo Router's `Link.Preview` use the system `UIContextMenuInteraction` (system blur, morph, tuned haptics). This library re-creates that feel (grow-from-item, menu) with Reanimated. It's close, not pixel-identical. If you're iOS-only and want native fidelity, use one of those instead (see [Why use this](#why-use-this)).
+- **The menu is one level.** Actions are flat rows; there are no submenus, and you can't slide your finger onto an action without lifting it as you can in the native menu.
+- **It closes without a reverse animation.** The peek grows out of the item on open but doesn't shrink back into it on close.
 - **Haptics aren't automatic.** Native context menus fire system haptics for free; here you wire them via `onLongPressStart` (one line — see `QuickPreviewPressable`).
 - **One preview at a time.** Calling `present()` while a preview is open replaces the content; previews don't stack.
-- **Light theme by default.** The popover/sheet containers use a white background. Style your own content freely; a dark container background isn't a built-in option yet.
+- **Light theme by default.** Opt into `colorScheme: 'system'` (or `'dark'`). The default stays light so upgrading from 2.0 doesn't change your app's look.
 - **Screen-reader announcements are English** ("Quick preview opened/closed"). Labels you pass are used verbatim, but the built-in announcement strings aren't localized yet.
 - **Requires the peer setup.** No `GestureHandlerRootView` + `PreviewProvider`, or a missing Reanimated Babel plugin, and it won't work — this is not a drop-in with zero configuration.
 

@@ -1,7 +1,7 @@
 {
   "name": "react-native-quick-preview",
   "version": "2.0.2",
-  "description": "Headless long-press quick preview for React Native. Peek at any content in a popover or sheet, swipe down to dismiss.",
+  "description": "Long-press quick preview (peek) for React Native on iOS and Android. Shows any content in a popover or sheet. Pure JS, works in Expo Go.",
   "author": "Oliver Lindblad",
   "license": "MIT",
   "main": "dist/index.js",
@@ -49,7 +49,15 @@
     "headless",
     "typescript",
     "ui",
-    "component"
+    "component",
+    "android",
+    "ios",
+    "context-menu",
+    "link-preview",
+    "peek-and-pop",
+    "haptic-touch",
+    "reanimated",
+    "gesture-handler"
   ],
   "peerDependencies": {
     "react": ">=18.2.0 <21",

@@ -6,9 +6,9 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Try it in Expo Snack](https://img.shields.io/badge/Expo_Snack-Try_it_live-4630EB?logo=expo&logoColor=white)](https://snack.expo.dev/@oliver.at.sellpy/react-native-quick-preview)
 
-Long-press an item to peek at its content, tap outside or swipe to dismiss. A headless quick-preview library for React Native: mount one `PreviewProvider`, then `present()` any content from a hook or a static handle.
+**The iOS long-press peek, on Android too.** Long-press an item and a preview grows out of it, with an optional context menu. It renders the same on iOS and Android, shows any React content, and works in Expo Go because there's no native code. Mount one `PreviewProvider`, then `present()` from a hook or a static handle.
 
-**Why it exists:** the long-press peek is well-served on iOS (Expo Router's `Link.Preview`, native context-menu libraries) but those are all iOS-only, and most preview a route or a menu rather than arbitrary content. This library covers the intersection none of them do — *a long-press peek that renders any React node identically on iOS **and** Android, with no native module, presentable from anywhere, no router required.* See [Why use this](packages/react-native-quick-preview/README.md#why-use-this) for the honest comparison, including when to reach for a native library instead.
+**Why it exists:** the long-press peek and context menu are well served on iOS (Expo Router's `Link.Preview`, zeego, `react-native-ios-context-menu`), but those are all iOS-only, and most preview a route rather than arbitrary content. This library covers what none of them do: *a peek with a context menu that renders any React node identically on iOS **and** Android, with no native module, presentable from anywhere, no router required.* See [How it compares](packages/react-native-quick-preview/README.md#how-it-compares) for the table, including when to reach for a native library instead.
 
 This is the development monorepo. **If you just want to use the library, read the [package README](packages/react-native-quick-preview/README.md)** for installation, quick start and the full API. It's the same document you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
 
@@ -43,7 +43,7 @@ This is the development monorepo. **If you just want to use the library, read th
 
 ## Development
 
-Requires Node 20+ and npm 10 (npm workspaces).
+Requires Node 22.13+ (React Native 0.88 tooling) and npm 10 (npm workspaces).
 
 ```bash
 git clone https://github.com/Hashtagsmile/react-native-quick-preview.git
