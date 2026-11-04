@@ -1,7 +1,7 @@
 {
   "name": "rn-quick-preview-workspace",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.1.0",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -24,13 +24,13 @@
     "typescript": "^5.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.13"
   },
   "packageManager": "npm@10",
   "overrides": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-test-renderer": "19.1.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-test-renderer": "19.3.0",
     "semver": "^7.7.2"
   }
 }
