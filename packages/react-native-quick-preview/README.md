@@ -84,6 +84,20 @@ That's it: a long-press peek with a context menu, on iOS and Android, in Expo Go
 
 **When not to use it:** if you're iOS-only and want the exact system look (system blur, system haptics), use `react-native-ios-context-menu`, zeego or Expo Router's `Link.Preview`. A Reanimated re-creation gets close; it isn't identical. If you only need a bottom sheet, use `@gorhom/bottom-sheet`.
 
+## Coming from zeego or `Link.Preview`
+
+If you already use an iOS-only peek and need it on Android too, the pieces map roughly one to one:
+
+| zeego / ios-context-menu | Expo Router `Link.Preview` | react-native-quick-preview |
+| --- | --- | --- |
+| `ContextMenu.Trigger` | `Link.Trigger` | the children of `QuickPreviewPressable` |
+| `ContextMenu.Preview` | `Link.Preview` (renders the route) | `renderPreview` (renders any element) |
+| `ContextMenu.Item` + `onSelect` | `Link.MenuAction` + `onPress` | `actions: [{ title, onPress }]` |
+| `destructive` item | `destructive` action | `destructive: true` |
+| tap the preview | tap the preview (navigates to `href`) | `onPreviewPress` |
+
+You can also keep the native library on iOS and use this one on Android only, by choosing the component with `Platform.OS`. Using this one on both platforms gives you a single code path and the same look everywhere.
+
 ## How it works
 
 Wrap each list or grid item in `QuickPreviewPressable`:
