@@ -33,9 +33,13 @@ export default function App() {
 const PRESSABLE = `import { QuickPreviewPressable } from 'react-native-quick-preview'
 
 <QuickPreviewPressable
-  onPress={() => router.push(\`/product/\${id}\`)}
+  onPress={openProduct}
   renderPreview={() => <ProductPreview product={product} />}
-  previewOptions={{ variant: 'sheet' }}
+  onPreviewPress={openProduct}
+  actions={[
+    { title: 'Share', onPress: share },
+    { title: 'Remove', destructive: true, onPress: remove },
+  ]}
 >
   <Thumbnail source={product.image} />
 </QuickPreviewPressable>`
