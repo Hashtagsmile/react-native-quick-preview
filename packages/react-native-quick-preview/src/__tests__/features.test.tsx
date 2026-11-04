@@ -34,6 +34,7 @@ import { QuickPreviewRoot } from '../internal/QuickPreviewRoot'
 import { PreviewProvider } from '../context'
 import { QuickPreview } from '../QuickPreviewAPI'
 import { QuickPreview as QuickPreviewComponent } from '../headless/QuickPreview'
+import { QuickPreviewPressable } from '../addons/QuickPreviewPressable'
 
 function bg(testIdOrLabel: string) {
   const el = screen.getByLabelText(testIdOrLabel)
@@ -169,5 +170,121 @@ describe('built-in overlay (no react-native-portalize)', () => {
 
     rerender(<App visible={false} />)
     expect(screen.queryByText('overlay content')).toBeNull()
+  })
+})
+
+describe('exit animation', () => {
+  it('keeps the preview mounted while it animates out, then removes it', () => {
+    jest.useFakeTimers()
+    render(
+      <PreviewProvider>
+        <View />
+      </PreviewProvider>
+    )
+    act(() => QuickPreview.present(<Text>leaving</Text>))
+    act(() => QuickPreview.close())
+    // Closed for the API straight away, still on screen for the animation.
+    expect(QuickPreview.isOpen()).toBe(false)
+    expect(screen.getByText('leaving', { includeHiddenElements: true })).toBeTruthy()
+
+    act(() => jest.advanceTimersByTime(500))
+    expect(screen.queryByText('leaving', { includeHiddenElements: true })).toBeNull()
+    jest.useRealTimers()
+  })
+
+  it('a new present() during the exit wins over the old exit', () => {
+    jest.useFakeTimers()
+    render(
+      <PreviewProvider>
+        <View />
+      </PreviewProvider>
+    )
+    act(() => QuickPreview.present(<Text>first</Text>))
+    act(() => QuickPreview.close())
+    act(() => QuickPreview.present(<Text>second</Text>))
+    act(() => jest.advanceTimersByTime(500))
+    expect(screen.getByText('second')).toBeTruthy()
+    expect(QuickPreview.isOpen()).toBe(true)
+    act(() => QuickPreview.close())
+    act(() => jest.advanceTimersByTime(500))
+    jest.useRealTimers()
+  })
+
+  it('fires onCloseStart, then onCloseEnd after the exit', () => {
+    jest.useFakeTimers()
+    const onCloseStart = jest.fn()
+    const onCloseEnd = jest.fn()
+    render(
+      <PreviewProvider>
+        <View />
+      </PreviewProvider>
+    )
+    act(() => QuickPreview.present(<Text>x</Text>, { onCloseStart, onCloseEnd }))
+    act(() => QuickPreview.close())
+    expect(onCloseStart).toHaveBeenCalledTimes(1)
+    expect(onCloseEnd).not.toHaveBeenCalled()
+    act(() => jest.advanceTimersByTime(500))
+    expect(onCloseEnd).toHaveBeenCalledTimes(1)
+    expect(onCloseStart).toHaveBeenCalledTimes(1)
+    jest.useRealTimers()
+  })
+})
+
+describe('QuickPreviewPressable', () => {
+  function setup(props: Partial<React.ComponentProps<typeof QuickPreviewPressable>> = {}) {
+    const onPress = jest.fn()
+    const onPreviewPress = jest.fn()
+    render(
+      <PreviewProvider>
+        <QuickPreviewPressable
+          accessibilityLabel="Item"
+          onPress={onPress}
+          onPreviewPress={onPreviewPress}
+          renderPreview={() => <Text>peek body</Text>}
+          {...props}
+        >
+          <Text>item</Text>
+        </QuickPreviewPressable>
+      </PreviewProvider>
+    )
+    return { onPress, onPreviewPress }
+  }
+  const a11y = (name: string) => ({ nativeEvent: { actionName: name } })
+
+  it('opens the preview from the screen-reader "Show preview" action', () => {
+    jest.useFakeTimers()
+    setup()
+    const item = screen.getByLabelText('Item')
+    expect(item.props.accessibilityActions).toContainEqual({ name: 'longpress', label: 'Show preview' })
+    act(() => fireEvent(item, 'accessibilityAction', a11y('longpress')))
+    act(() => jest.advanceTimersByTime(150))
+    expect(screen.getByText('peek body')).toBeTruthy()
+    act(() => QuickPreview.close())
+    act(() => jest.advanceTimersByTime(500))
+    jest.useRealTimers()
+  })
+
+  it('maps the "activate" action to onPress', () => {
+    const { onPress } = setup()
+    fireEvent(screen.getByLabelText('Item'), 'accessibilityAction', a11y('activate'))
+    expect(onPress).toHaveBeenCalledTimes(1)
+  })
+
+  it('tapping the preview closes it and calls onPreviewPress (peek and pop)', () => {
+    jest.useFakeTimers()
+    const { onPreviewPress } = setup()
+    act(() => fireEvent(screen.getByLabelText('Item'), 'accessibilityAction', a11y('longpress')))
+    act(() => jest.advanceTimersByTime(150))
+    fireEvent.press(screen.getByText('peek body'))
+    expect(onPreviewPress).toHaveBeenCalledTimes(1)
+    expect(QuickPreview.isOpen()).toBe(false)
+    act(() => jest.advanceTimersByTime(500))
+    jest.useRealTimers()
+  })
+
+  it('ignores accessibility actions when disabled', () => {
+    const { onPress } = setup({ disabled: true })
+    fireEvent(screen.getByLabelText('Item'), 'accessibilityAction', a11y('activate'))
+    expect(onPress).not.toHaveBeenCalled()
   })
 })

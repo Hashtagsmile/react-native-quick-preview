@@ -1,6 +1,6 @@
 import React from 'react'
-import type { StyleProp, View, ViewStyle } from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import type { AccessibilityActionEvent, StyleProp, View, ViewStyle } from 'react-native'
+import { Gesture, GestureDetector, Pressable } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -16,6 +16,13 @@ export type QuickPreviewPressableProps = {
   onPress?: () => void
   /** Return the preview node to present */
   renderPreview: () => React.ReactNode
+  /**
+   * Called when the open preview itself is tapped ("peek and pop"). The
+   * preview closes first, then this runs. Usually the same as `onPress`:
+   * `onPreviewPress={openProduct}`. Without it, tapping the preview does
+   * nothing (it stays until dismissed).
+   */
+  onPreviewPress?: () => void
   /** Options forwarded to QuickPreview.present */
   previewOptions?: Partial<QuickPreviewOptions>
   /**
@@ -44,9 +51,15 @@ export type QuickPreviewPressableProps = {
   disabled?: boolean
   /** Style applied to the animated wrapper (the thing that scales) */
   style?: StyleProp<ViewStyle>
-  /** Accessibility */
+  /**
+   * Accessibility. The item is exposed as a button; screen-reader users get an
+   * "activate" action (same as a tap) and a "Show preview" action, since a
+   * long-press is hard to perform with VoiceOver / TalkBack.
+   */
   accessible?: boolean
   accessibilityLabel?: string
+  /** Label of the screen-reader action that opens the preview. Default "Show preview" */
+  accessibilityPreviewLabel?: string
   testID?: string
 }
 
@@ -54,6 +67,7 @@ export function QuickPreviewPressable({
   children,
   onPress,
   renderPreview,
+  onPreviewPress,
   previewOptions,
   actions,
   animateFromItem = true,
@@ -64,6 +78,7 @@ export function QuickPreviewPressable({
   style,
   accessible,
   accessibilityLabel,
+  accessibilityPreviewLabel = 'Show preview',
   testID,
 }: QuickPreviewPressableProps) {
   const s = useSharedValue(1)
@@ -71,10 +86,28 @@ export function QuickPreviewPressable({
 
   // Runs on the JS thread: renderPreview() creates React elements, which must
   // never happen on the UI thread inside a worklet.
+  const buildPreview = () => {
+    const content = renderPreview()
+    if (!onPreviewPress) return content
+    // gesture-handler's Pressable: RN's own touchables don't reliably receive
+    // taps inside the preview overlay.
+    return (
+      <Pressable
+        onPress={() => {
+          QuickPreview.close()
+          onPreviewPress()
+        }}
+        accessibilityRole="button"
+      >
+        {content}
+      </Pressable>
+    )
+  }
+
   const openPreview = () => {
     onLongPressStart?.()
     const present = (origin?: QuickPreviewOptions['origin']) =>
-      QuickPreview.present(renderPreview(), {
+      QuickPreview.present(buildPreview(), {
         variant: 'popover',
         dismissOnBackdropPress: true,
         ...(actions ? { actions } : null),
@@ -86,9 +119,18 @@ export function QuickPreviewPressable({
       present()
       return
     }
-    // Measure the item so the popover can grow out of it.
+    // Measure the item so the popover can grow out of it. If the host never
+    // answers, open anyway (centered) rather than not at all.
+    let presented = false
+    const once = (origin?: QuickPreviewOptions['origin']) => {
+      if (presented) return
+      presented = true
+      clearTimeout(fallback)
+      present(origin)
+    }
+    const fallback = setTimeout(() => once(), 100)
     node.measureInWindow((x, y, width, height) => {
-      present(width && height ? { x, y, width, height } : undefined)
+      once(width && height ? { x, y, width, height } : undefined)
     })
   }
 
@@ -120,6 +162,12 @@ export function QuickPreviewPressable({
 
   const gesture = Gesture.Exclusive(longPress, tap)
 
+  const onAccessibilityAction = (e: AccessibilityActionEvent) => {
+    if (disabled) return
+    if (e.nativeEvent.actionName === 'activate') onPress?.()
+    if (e.nativeEvent.actionName === 'longpress') openPreview()
+  }
+
   const animated = useAnimatedStyle(() => ({
     transform: [{ scale: s.value }],
   }))
@@ -130,9 +178,15 @@ export function QuickPreviewPressable({
         ref={ref}
         collapsable={false}
         style={[animated, style]}
-        accessible={accessible}
+        accessible={accessible ?? true}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
+        accessibilityState={{ disabled }}
+        accessibilityActions={[
+          { name: 'activate' },
+          { name: 'longpress', label: accessibilityPreviewLabel },
+        ]}
+        onAccessibilityAction={onAccessibilityAction}
         testID={testID}
       >
         {children}
