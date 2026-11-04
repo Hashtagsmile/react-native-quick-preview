@@ -4,15 +4,19 @@ import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming, runOnJS
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import type { QuickPreviewOptions } from '../../types'
 import { resolveSizeStyle } from '../resolveSize'
+import type { Palette } from '../theme'
+import { ActionMenu } from './ActionMenu'
 
 export function SheetContainer({
   children,
   options,
+  palette,
   insets,
   onRequestClose,
 }: {
   children: React.ReactNode
   options?: QuickPreviewOptions
+  palette: Palette
   insets: { top: number; bottom: number }
   onRequestClose: () => void
 }) {
@@ -49,12 +53,26 @@ export function SheetContainer({
   return (
     <GestureDetector gesture={pan}>
       <Animated.View
-        style={[styles.sheet, sizeStyle, style, { paddingBottom: Math.max(insets.bottom, 12) }]}
+        style={[
+          styles.sheet,
+          { backgroundColor: palette.container, paddingBottom: Math.max(insets.bottom, 12) },
+          sizeStyle,
+          options?.containerStyle,
+          style,
+        ]}
         accessibilityRole={options?.accessibilityRole}
         accessibilityLabel={options?.accessibilityLabel ?? 'Quick preview'}
       >
-        <View style={styles.grabber} />
+        <View style={[styles.grabber, { backgroundColor: palette.grabber }]} />
         {children}
+        {options?.actions && options.actions.length > 0 ? (
+          <ActionMenu
+            actions={options.actions}
+            palette={palette}
+            onRequestClose={onRequestClose}
+            variant="sheet"
+          />
+        ) : null}
       </Animated.View>
     </GestureDetector>
   )
@@ -69,7 +87,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingTop: 8,
-    backgroundColor: 'white',
     overflow: 'hidden',
     elevation: 3,
   },
@@ -78,7 +95,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(0,0,0,0.2)',
     marginBottom: 8,
   },
 })

@@ -20,8 +20,18 @@ export const QuickPreviewContext = React.createContext<QuickPreviewController | 
  *   </PreviewProvider>
  * </GestureHandlerRootView>
  * ```
+ *
+ * Pass `defaultOptions` to set app-wide defaults (e.g. `colorScheme: 'system'`);
+ * options passed to `present()` override them.
  */
-export function PreviewProvider({ children }: { children: React.ReactNode }) {
+export function PreviewProvider({
+  children,
+  defaultOptions,
+}: {
+  children: React.ReactNode
+  /** App-wide defaults merged under every presentation's options. */
+  defaultOptions?: Partial<QuickPreviewOptions>
+}) {
   const [content, setContent] = React.useState<React.ReactNode | null>(null)
   const [options, setOptions] = React.useState<QuickPreviewOptions | undefined>(undefined)
   const openRef = React.useRef(false)
@@ -75,6 +85,8 @@ export function PreviewProvider({ children }: { children: React.ReactNode }) {
     return () => QuickPreviewStatic._set(null)
   }, [value])
 
+  const resolvedOptions = defaultOptions ? { ...defaultOptions, ...options } : options
+
   return (
     <QuickPreviewContext.Provider value={value}>
       <OverlayContext.Provider value={overlayApi}>
@@ -82,7 +94,7 @@ export function PreviewProvider({ children }: { children: React.ReactNode }) {
           {children}
           {overlayLayer}
           {content ? (
-            <QuickPreviewRoot options={options} onRequestClose={close}>
+            <QuickPreviewRoot options={resolvedOptions} onRequestClose={close}>
               {content}
             </QuickPreviewRoot>
           ) : null}

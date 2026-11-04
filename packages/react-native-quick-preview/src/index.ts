@@ -16,9 +16,11 @@ export type {
   QuickPreviewVariant,
   QuickPreviewSize,
   QuickPreviewController,
+  QuickPreviewAction,
+  QuickPreviewColorScheme,
+  QuickPreviewOrigin,
 } from './types'
 export { QuickPreviewScrollView } from './internal/components/QuickPreviewScrollView'
-
 
 // Addons
 export { QuickPreviewPressable } from './addons/QuickPreviewPressable'

@@ -6,6 +6,7 @@ import { QuickPreviewOptions } from '../types'
 import { Backdrop } from './components/Backdrop'
 import { SheetContainer } from './components/SheetContainer'
 import { PopoverContainer } from './components/PopoverContainer'
+import { usePalette } from './theme'
 
 export function QuickPreviewRoot({
   options,
@@ -25,6 +26,7 @@ export function QuickPreviewRoot({
   const bottom = insets?.bottom ?? 0
   const variant = options?.variant ?? 'popover'
   const dismissOnBackdropPress = options?.dismissOnBackdropPress ?? true
+  const palette = usePalette(options?.colorScheme)
 
   const opacity = useSharedValue(0)
 
@@ -63,13 +65,15 @@ export function QuickPreviewRoot({
         <Backdrop
           onPress={dismissOnBackdropPress ? onRequestClose : undefined}
           dismissOnBackdropPress={dismissOnBackdropPress}
+          color={options?.backdropColor ?? palette.backdrop}
+          renderBackdrop={options?.renderBackdrop}
         />
         {variant === 'sheet' ? (
-          <SheetContainer insets={{ top, bottom }} options={options} onRequestClose={onRequestClose}>
+          <SheetContainer palette={palette} insets={{ top, bottom }} options={options} onRequestClose={onRequestClose}>
             {children}
           </SheetContainer>
         ) : (
-          <PopoverContainer insets={{ top, bottom }} options={options} onRequestClose={onRequestClose}>
+          <PopoverContainer palette={palette} insets={{ top, bottom }} options={options} onRequestClose={onRequestClose}>
             {children}
           </PopoverContainer>
         )}
