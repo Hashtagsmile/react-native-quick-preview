@@ -1,5 +1,5 @@
 import React from 'react'
-import type { StyleProp, ViewStyle } from 'react-native'
+import type { StyleProp, View, ViewStyle } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { QuickPreview } from '../QuickPreviewAPI'
-import type { QuickPreviewOptions } from '../types'
+import type { QuickPreviewAction, QuickPreviewOptions } from '../types'
 
 export type QuickPreviewPressableProps = {
   children: React.ReactNode
@@ -18,6 +18,16 @@ export type QuickPreviewPressableProps = {
   renderPreview: () => React.ReactNode
   /** Options forwarded to QuickPreview.present */
   previewOptions?: Partial<QuickPreviewOptions>
+  /**
+   * Context-menu actions shown with the preview. Shorthand for
+   * `previewOptions.actions`.
+   */
+  actions?: QuickPreviewAction[]
+  /**
+   * Grow the preview out of this item (native peek feel) instead of fading in
+   * at the center. Applies to the popover variant. Default true
+   */
+  animateFromItem?: boolean
   /** Long-press delay (ms). Default 350 */
   delay?: number
   /** Press-down scale. Default 0.98 */
@@ -45,6 +55,8 @@ export function QuickPreviewPressable({
   onPress,
   renderPreview,
   previewOptions,
+  actions,
+  animateFromItem = true,
   delay = 350,
   scale = 0.98,
   onLongPressStart,
@@ -55,15 +67,28 @@ export function QuickPreviewPressable({
   testID,
 }: QuickPreviewPressableProps) {
   const s = useSharedValue(1)
+  const ref = React.useRef<View>(null)
 
   // Runs on the JS thread: renderPreview() creates React elements, which must
   // never happen on the UI thread inside a worklet.
   const openPreview = () => {
     onLongPressStart?.()
-    QuickPreview.present(renderPreview(), {
-      variant: 'popover',
-      dismissOnBackdropPress: true,
-      ...previewOptions,
+    const present = (origin?: QuickPreviewOptions['origin']) =>
+      QuickPreview.present(renderPreview(), {
+        variant: 'popover',
+        dismissOnBackdropPress: true,
+        ...(actions ? { actions } : null),
+        ...(origin ? { origin } : null),
+        ...previewOptions,
+      })
+    const node = ref.current
+    if (!animateFromItem || !node?.measureInWindow) {
+      present()
+      return
+    }
+    // Measure the item so the popover can grow out of it.
+    node.measureInWindow((x, y, width, height) => {
+      present(width && height ? { x, y, width, height } : undefined)
     })
   }
 
@@ -102,6 +127,8 @@ export function QuickPreviewPressable({
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
+        ref={ref}
+        collapsable={false}
         style={[animated, style]}
         accessible={accessible}
         accessibilityRole="button"

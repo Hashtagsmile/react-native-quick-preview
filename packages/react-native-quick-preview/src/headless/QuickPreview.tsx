@@ -1,7 +1,7 @@
 import React from 'react'
-import { Portal } from 'react-native-portalize'
 import { QuickPreviewOptions } from '../types'
 import { QuickPreviewRoot } from '../internal/QuickPreviewRoot'
+import { OverlayPortal } from '../internal/Overlay'
 
 /**
  * Props for the controlled, headless `QuickPreviewComponent`. Extends
@@ -14,8 +14,8 @@ export type HeadlessQuickPreviewProps = {
   /** Called when the preview requests to close (backdrop press, swipe, back button). */
   onClose: () => void
   /**
-   * Render into a portal above the app. Disable only if you're providing your
-   * own host/overlay.
+   * Render into the `PreviewProvider` overlay above the app. Disable to render
+   * in place (e.g. inside your own full-screen overlay).
    * @defaultValue `true`
    */
   portal?: boolean
@@ -52,5 +52,5 @@ export function QuickPreview({
       {children}
     </QuickPreviewRoot>
   )
-  return portal ? <Portal>{node}</Portal> : node
+  return portal ? <OverlayPortal>{node}</OverlayPortal> : node
 }

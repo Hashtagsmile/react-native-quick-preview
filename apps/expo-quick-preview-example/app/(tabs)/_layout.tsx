@@ -18,7 +18,7 @@ export default function TabsLayout() {
         options={{
           title: 'Examples',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={22} color={color} />
+            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} size={22} color={color as string} />
           ),
         }}
       />
@@ -27,7 +27,7 @@ export default function TabsLayout() {
         options={{
           title: 'API',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'code-slash' : 'code-slash-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'code-slash' : 'code-slash-outline'} size={24} color={color as string} />
           ),
         }}
       />

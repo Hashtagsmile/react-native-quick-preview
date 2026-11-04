@@ -11,7 +11,6 @@ const external = [
   'react-native-reanimated',
   'react-native-worklets',
   'react-native-safe-area-context',
-  'react-native-portalize',
 ]
 
 export default defineConfig({

@@ -1,5 +1,48 @@
 import type React from 'react'
-import type { AccessibilityRole } from 'react-native'
+import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native'
+
+/**
+ * Color scheme for the built-in chrome (container background, action menu,
+ * grabber, backdrop). Your own content is never restyled.
+ * - `'light'` — white containers (default, matches 2.0).
+ * - `'dark'` — dark containers.
+ * - `'system'` — follows the device appearance via `useColorScheme()`.
+ *
+ * @defaultValue `'light'`
+ */
+export type QuickPreviewColorScheme = 'light' | 'dark' | 'system'
+
+/**
+ * A row in the context menu shown with the preview (below the popover, or at
+ * the bottom of the sheet). Pressing an action closes the preview, then calls
+ * `onPress`.
+ *
+ * @example
+ * ```tsx
+ * { title: 'Share', icon: <ShareIcon />, onPress: share }
+ * { title: 'Delete', destructive: true, onPress: remove }
+ * ```
+ */
+export type QuickPreviewAction = {
+  /** Row label. */
+  title: string
+  /** Called after the preview closes. */
+  onPress: () => void
+  /** Optional element rendered at the trailing edge of the row (e.g. an icon). */
+  icon?: React.ReactNode
+  /** Render the row in the destructive (red) style. */
+  destructive?: boolean
+  /** Show the row dimmed and ignore presses. */
+  disabled?: boolean
+}
+
+/**
+ * The on-screen rect (window coordinates, as returned by `measureInWindow`) of
+ * the element the preview was opened from. When set, the popover grows out of
+ * this rect instead of fading in at the center. `QuickPreviewPressable` sets it
+ * for you.
+ */
+export type QuickPreviewOrigin = { x: number; y: number; width: number; height: number }
 
 /**
  * How the preview is presented.
@@ -58,6 +101,39 @@ export type QuickPreviewOptions = {
    * @defaultValue `true`
    */
   dismissOnPanDown?: boolean
+  /**
+   * Context-menu actions rendered with the preview — below the popover card,
+   * or at the bottom of the sheet. Works identically on iOS and Android.
+   */
+  actions?: QuickPreviewAction[]
+  /**
+   * Grow the popover out of this rect (window coordinates). Set automatically
+   * by `QuickPreviewPressable`; pass it yourself when presenting imperatively
+   * from a measured view. Ignored by the `'sheet'` variant.
+   */
+  origin?: QuickPreviewOrigin
+  /**
+   * Color scheme for the built-in container, menu and backdrop.
+   * @defaultValue `'light'`
+   */
+  colorScheme?: QuickPreviewColorScheme
+  /**
+   * Extra style for the preview container (the popover card or the sheet) —
+   * e.g. `backgroundColor`, `borderRadius`, shadows.
+   */
+  containerStyle?: StyleProp<ViewStyle>
+  /**
+   * Backdrop color behind the preview.
+   * @defaultValue `'rgba(0,0,0,0.5)'` (light), `'rgba(0,0,0,0.6)'` (dark)
+   */
+  backdropColor?: string
+  /**
+   * Render a custom backdrop instead of the solid color — e.g. a blur:
+   * `renderBackdrop: () => <BlurView intensity={40} style={StyleSheet.absoluteFill} />`.
+   * It's rendered full-screen under the preview and fades in; backdrop-press
+   * dismissal still works on top of it.
+   */
+  renderBackdrop?: () => React.ReactNode
   /** Accessibility label announced for the preview container. */
   accessibilityLabel?: string
   /** Accessibility role for the preview container. */

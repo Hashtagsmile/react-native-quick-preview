@@ -5,15 +5,6 @@ jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock
 
 require('react-native-gesture-handler/jestSetup')
 
-// Portalize renders through a host context; in tests a plain passthrough is enough.
-jest.mock('react-native-portalize', () => {
-  const React = require('react')
-  return {
-    Host: ({ children }) => React.createElement(React.Fragment, null, children),
-    Portal: ({ children }) => React.createElement(React.Fragment, null, children),
-  }
-})
-
 // Faithful mock: SafeAreaInsetsContext is a real React context whose value is
 // null when no <SafeAreaProvider> is mounted (matching the real package), so the
 // library's zero-inset fallback is exercised. SafeAreaProvider supplies insets.

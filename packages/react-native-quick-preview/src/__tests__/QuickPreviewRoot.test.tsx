@@ -16,6 +16,7 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (v: unknown) => ({ value: v }),
     withTiming: (v: unknown) => v,
     withSpring: (v: unknown) => v,
+    withDelay: (_ms: number, v: unknown) => v,
     Easing: new Proxy({}, { get: () => (x: unknown) => x }),
     runOnJS:
       (fn: (...args: unknown[]) => unknown) =>
