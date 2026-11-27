@@ -4,6 +4,16 @@ All notable changes to `react-native-quick-preview` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.1.1] - 2026-11-27
+
+Documentation only — no library code changes. Published so the README on npm matches the one on GitHub.
+
+### Changed
+
+- The README's tables now fit npm's page. The props and `present()` option tables were four columns wide, which pushed the Description column off-screen on npmjs.com; they're now two columns (name | description, with the type and default leading the description). The comparison table uses short cells with footnotes instead of being cut off.
+- Documented the `accessibilityRole` option, gave `backdropColor`'s real default (`rgba(0,0,0,0.5)` light, `rgba(0,0,0,0.6)` dark), and noted that swipe-to-close is sheet-only and that the sheet ignores `origin`.
+- The example app is described as the seven-screen gallery it is, instead of "e-commerce, article and travel" patterns.
+
 ## [2.1.0] - 2026-11-27
 
 ### Added
@@ -118,6 +128,7 @@ Initial public release.
 
 - `<QuickPreview>` controlled modal component with fade/scale animations, swipe-to-close, backdrop press handling, light/dark theme, and long-press-to-open examples.
 
+[2.1.1]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/Hashtagsmile/react-native-quick-preview/compare/v2.0.0...v2.0.1
