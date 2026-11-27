@@ -72,15 +72,17 @@ That's it: a long-press peek with a context menu, on iOS and Android, in Expo Go
 - **No native build.** Pure JS on top of Reanimated and Gesture Handler. Works in Expo Go, needs no prebuild or config plugin.
 - **Callable from anywhere.** A hook, or a static `QuickPreview.present(<Card />)` that works from a store, a service or a notification handler.
 
-| | **react-native-quick-preview** | Expo Router `Link.Preview` | zeego / ios-context-menu | @gorhom/bottom-sheet |
-| --- | --- | --- | --- | --- |
-| Long-press peek on **Android** | ✅ same as iOS | ❌ iOS only | ❌ iOS only (Android gets a plain menu) | ❌ no peek |
-| Context-menu actions | ✅ both platforms | ✅ iOS | ✅ iOS | ❌ |
-| Previews **any content** | ✅ | ❌ the linked route | ✅ | ✅ |
-| Grows from / shrinks back into the item | ✅ | ✅ | ✅ | ❌ |
-| Expo Go, no native build | ✅ | needs Expo Router + native stack | ❌ native module | ✅ |
-| Callable outside React | ✅ `QuickPreview.present()` | ❌ | ❌ | ❌ needs a ref |
-| Pixel-perfect native iOS feel | ≈ close re-creation | ✅ | ✅ | n/a |
+| | **This library** | `Link.Preview` | zeego / ios-context-menu | gorhom bottom-sheet |
+| --- | :---: | :---: | :---: | :---: |
+| Peek on **Android** | ✅ | ❌ | ❌ ¹ | ❌ |
+| Context-menu actions | ✅ | iOS only | iOS only | ❌ |
+| Previews **any content** | ✅ | ❌ ² | ✅ | ✅ |
+| Grows out of the item | ✅ | ✅ | ✅ | ❌ |
+| No native build | ✅ | Expo Router only | ❌ | ✅ |
+| Callable outside React | ✅ | ❌ | ❌ | ❌ |
+| Exact native iOS look | close | ✅ | ✅ | n/a |
+
+<sub>¹ Android gets a plain menu, without the peek. ² `Link.Preview` (Expo Router) shows the route the link points to.</sub>
 
 **When not to use it:** if you're iOS-only and want the exact system look (system blur, system haptics), use `react-native-ios-context-menu`, zeego or Expo Router's `Link.Preview`. A Reanimated re-creation gets close; it isn't identical. If you only need a bottom sheet, use `@gorhom/bottom-sheet`.
 
@@ -175,21 +177,21 @@ import { QuickPreviewPressable } from 'react-native-quick-preview'
 </QuickPreviewPressable>
 ```
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `renderPreview` | `() => ReactNode` | required | The peek content. Called when the long-press fires |
-| `onPress` | `() => void` | | Normal tap on the item |
-| `onPreviewPress` | `() => void` | | Tap on the open peek ("peek and pop"). The peek closes first, then this runs |
-| `actions` | `QuickPreviewAction[]` | | Context-menu rows under the peek |
-| `previewOptions` | `Partial<QuickPreviewOptions>` | | Any `present()` option, e.g. `{ variant: 'sheet' }`, `size`, `colorScheme` |
-| `animateFromItem` | `boolean` | `true` | Grow the peek out of the item (popover variant) |
-| `delay` | `number` | `350` | Long-press delay in ms |
-| `scale` | `number` | `0.98` | Press-down scale of the item |
-| `onLongPressStart` | `() => void` | | Fires right before the peek opens. Use it for haptics or analytics |
-| `disabled` | `boolean` | `false` | Ignore taps, long-presses and accessibility actions |
-| `style` | `StyleProp<ViewStyle>` | | Style of the wrapper (the part that scales) |
-| `accessibilityLabel` | `string` | | Label of the item for screen readers |
-| `accessibilityPreviewLabel` | `string` | `'Show preview'` | Name of the screen-reader action that opens the peek |
+| Prop | Description |
+| --- | --- |
+| `renderPreview` | `() => ReactNode`, **required**. The peek content, rendered when the long-press fires. |
+| `onPress` | `() => void`. A normal tap on the item. |
+| `onPreviewPress` | `() => void`. A tap on the open peek ("peek and pop"): the peek closes first, then this runs. |
+| `actions` | `QuickPreviewAction[]`. Context-menu rows under the peek. |
+| `previewOptions` | `Partial<QuickPreviewOptions>`. Any `present()` option, e.g. `{ variant: 'sheet' }`, `size` or `colorScheme`. |
+| `animateFromItem` | `boolean`, default `true`. Grow the peek out of the item (popover variant). |
+| `delay` | `number`, default `350`. Long-press delay in ms. |
+| `scale` | `number`, default `0.98`. How far the item shrinks while pressed. |
+| `onLongPressStart` | `() => void`. Fires right before the peek opens. Use it for haptics or analytics. |
+| `disabled` | `boolean`, default `false`. Ignore taps, long-presses and accessibility actions. |
+| `style` | `StyleProp<ViewStyle>`. Style of the wrapper (the part that scales). |
+| `accessibilityLabel` | `string`. Label of the item for screen readers. |
+| `accessibilityPreviewLabel` | `string`, default `'Show preview'`. Name of the screen-reader action that opens the peek. |
 
 The library doesn't import `expo-haptics` itself, so you stay in control of that dependency (and Metro never has to resolve a package you don't use).
 
@@ -290,21 +292,22 @@ present(
 
 Available from `useQuickPreview()` and the static `QuickPreview`. Presents `node` as the preview content. Calling it while a preview is open replaces the content.
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `'popover' \| 'sheet'` | `'popover'` | Centered card or bottom sheet |
-| `size` | `'auto' \| number \| { maxHeight?, maxWidth? }` | `'auto'` | Constrains the preview container |
-| `dismissOnBackdropPress` | `boolean` | `true` | Close when the backdrop is tapped |
-| `dismissOnPanDown` | `boolean` | `true` | Close on swipe-down gesture |
-| `actions` | `QuickPreviewAction[]` | | Context-menu rows shown with the preview |
-| `origin` | `{ x, y, width, height }` | | Grow the popover out of this window rect (set by `QuickPreviewPressable`) |
-| `colorScheme` | `'light' \| 'dark' \| 'system'` | `'light'` | Palette for the built-in container, menu and backdrop |
-| `containerStyle` | `StyleProp<ViewStyle>` | | Extra style for the popover card / sheet |
-| `backdropColor` | `string` | `'rgba(0,0,0,0.5)'` | Backdrop color |
-| `renderBackdrop` | `() => ReactNode` | | Custom backdrop (e.g. a blur view) |
-| `accessibilityLabel` | `string` | | Label announced for the preview container |
-| `onOpenStart` / `onOpenEnd` | `() => void` | | Open animation lifecycle |
-| `onCloseStart` / `onCloseEnd` | `() => void` | | Close animation lifecycle |
+| Option | Description |
+| --- | --- |
+| `variant` | `'popover' \| 'sheet'`, default `'popover'`. Centered card or bottom sheet. |
+| `size` | `'auto' \| number \| { maxHeight?, maxWidth? }`, default `'auto'`. A number caps the height, an object caps height and/or width, `'auto'` fits the content. |
+| `dismissOnBackdropPress` | `boolean`, default `true`. Close when the area outside the preview is tapped. |
+| `dismissOnPanDown` | `boolean`, default `true`. Close on a swipe down (sheet only). |
+| `actions` | `QuickPreviewAction[]`. Context-menu rows: under the popover, or at the bottom of the sheet. |
+| `origin` | `{ x, y, width, height }`. Grow the popover out of this window rect. `QuickPreviewPressable` sets it for you; the sheet ignores it. |
+| `colorScheme` | `'light' \| 'dark' \| 'system'`, default `'light'`. Palette for the built-in container, menu and backdrop. |
+| `containerStyle` | `StyleProp<ViewStyle>`. Extra style for the popover card or the sheet. |
+| `backdropColor` | `string`, default `rgba(0,0,0,0.5)` (light) or `rgba(0,0,0,0.6)` (dark). |
+| `renderBackdrop` | `() => ReactNode`. Custom backdrop, e.g. a blur view. Tapping it still closes the preview. |
+| `accessibilityLabel` | `string`. Label announced for the preview container. |
+| `accessibilityRole` | `AccessibilityRole`. Role of the preview container. |
+| `onOpenStart`, `onOpenEnd` | `() => void`. The open animation starts / finishes. |
+| `onCloseStart`, `onCloseEnd` | `() => void`. The close animation starts / finishes (the preview is unmounted). |
 
 ### Controller
 
@@ -327,7 +330,8 @@ Both `useQuickPreview()` and the static `QuickPreview` expose:
 | `QuickPreviewPressable` | Long-press-to-preview wrapper with tap-through |
 | `QuickPreviewScrollView` | Gesture-aware ScrollView for preview content |
 | `QuickPreviewComponent` | Low-level headless component, for fully custom hosts |
-| `QuickPreviewOptions`, `QuickPreviewVariant`, `QuickPreviewSize`, `QuickPreviewController`, `QuickPreviewAction`, `QuickPreviewColorScheme`, `QuickPreviewOrigin` | Public TypeScript types |
+
+TypeScript types: `QuickPreviewOptions`, `QuickPreviewVariant`, `QuickPreviewSize`, `QuickPreviewController`, `QuickPreviewAction`, `QuickPreviewColorScheme`, `QuickPreviewOrigin`.
 
 ## Accessibility
 
@@ -342,7 +346,7 @@ Also:
 
 ## Example app
 
-The [repo](https://github.com/Hashtagsmile/react-native-quick-preview) contains an Expo example app with e-commerce, article and travel preview patterns:
+The [repo](https://github.com/Hashtagsmile/react-native-quick-preview) contains an Expo example app with seven real-world screens: a social feed, a shop, a music list, a chat with link previews, a map with places, a team directory and a file browser. To run it:
 
 ```bash
 git clone https://github.com/Hashtagsmile/react-native-quick-preview.git

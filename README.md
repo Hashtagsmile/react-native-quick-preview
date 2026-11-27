@@ -8,7 +8,7 @@
 
 **The iOS long-press peek, on Android too.** Long-press an item and a preview grows out of it, with an optional context menu. It renders the same on iOS and Android, shows any React content, and works in Expo Go because there's no native code. Mount one `PreviewProvider`, then `present()` from a hook or a static handle.
 
-**Why it exists:** the long-press peek and context menu are well served on iOS (Expo Router's `Link.Preview`, zeego, `react-native-ios-context-menu`), but those are all iOS-only, and most preview a route rather than arbitrary content. This library covers what none of them do: *a peek with a context menu that renders any React node identically on iOS **and** Android, with no native module, presentable from anywhere, no router required.* See [How it compares](packages/react-native-quick-preview/README.md#how-it-compares) for the table, including when to reach for a native library instead.
+**Why it exists:** the long-press peek and context menu are well served on iOS (Expo Router's `Link.Preview`, zeego, `react-native-ios-context-menu`), but those are all iOS-only, and most preview a route rather than arbitrary content. This library covers what none of them do: *a peek with a context menu that renders any React node identically on iOS **and** Android, with no native module, presentable from anywhere, no router required.* See [Why use it](packages/react-native-quick-preview/README.md#why-use-it) for the comparison table, including when to reach for a native library instead.
 
 This is the development monorepo. **If you just want to use the library, read the [package README](packages/react-native-quick-preview/README.md)** for installation, quick start and the full API. It's the same document you see on [npm](https://www.npmjs.com/package/react-native-quick-preview).
 
@@ -36,7 +36,7 @@ This is the development monorepo. **If you just want to use the library, read th
 │       │   ├── useQuickPreview.ts     # Hook
 │       │   ├── types.ts               # Public types
 │       │   ├── headless/              # Low-level headless component
-│       │   ├── internal/              # Containers, backdrop, scroll view
+│       │   ├── internal/              # Overlay, containers, action menu, backdrop, theme
 │       │   └── addons/                # QuickPreviewPressable
 │       └── tsup.config.ts             # CJS + ESM + d.ts build
 ├── apps/
@@ -62,7 +62,7 @@ npm run example      # start the Expo example app
 
 The example app consumes the library through a `file:` reference, so rebuild with `npm run build` to see library changes in the example.
 
-The example app in `apps/expo-quick-preview-example` shows the patterns the library is meant for: product previews in a grid, article teasers, travel cards. Long-press to open, swipe down to close, tap to navigate. Run it with Expo Go or a simulator (`npm run example:ios` / `npm run example:android`).
+The example app in `apps/expo-quick-preview-example` is a gallery of seven real-world screens: social feed, shop, music, chat link previews, places map, team directory and files. Long-press to peek, tap the peek to open it. Run it with Expo Go or a simulator (`npm run example:ios` / `npm run example:android`).
 
 ## CI and releases
 

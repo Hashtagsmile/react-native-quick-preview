@@ -2,16 +2,11 @@
 
 The example app for [`react-native-quick-preview`](../../packages/react-native-quick-preview), built with Expo Router.
 
-It demonstrates the library in real-world scenarios:
-
-- E-commerce product previews
-- News article teasers
-- Travel destination quick views
-- The `QuickPreviewPressable` addon and custom layouts
+It shows the library in seven real-world screens: a social feed, a shop, a music list, a chat with link previews, a map with places, a team directory and a file browser, plus an API tab with the code for each entry point.
 
 ## Running the example
 
-Prerequisites: Node 20+, dependencies installed in the monorepo root (`npm install`), and the library built (`npm run build`).
+Prerequisites: Node 22.13+, dependencies installed in the monorepo root (`npm install`), and the library built (`npm run build`).
 
 ```bash
 # from the repo root
@@ -46,7 +41,7 @@ apps/expo-quick-preview-example/
 ```
 
 Two tabs: **Examples** — a gallery of real-world screens (feed, shop, music, chat, places,
-team), each showing quick preview in a context you already know — and **API**, the code
+team, files), each showing quick preview in a context you already know — and **API**, the code
 reference. New use cases are added as gallery cards, so the tab bar never grows.
 
 ## What you'll see
